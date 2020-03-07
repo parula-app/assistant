@@ -28,7 +28,7 @@ async function loadSongs() {
   let startTime = new Date();
   let mpc = new MPC();
   let config = configFile();
-  console.info("Connecting to MPD at " + config.mpc.server);
+  console.info("Loading from MPD at " + config.mpc.server);
   await mpc.connectTCP(config.mpc.server, config.mpc.port || 6600);
   // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
   let artistSongs = await mpc.database.list('Title', [], [ 'Artist' ]);
