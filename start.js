@@ -18,10 +18,9 @@ async function load() {
 
   let apps = [ mpd ]; // TODO dynamically
 
-  for (let app of apps) {
-    await app.load();
-  }
-
+  await Promise.all(apps.map(app =>
+    app.load()
+  ));
   await intentParser.load(apps);
 }
 

@@ -1,4 +1,6 @@
 apps API
+  list of commands
+  list of variables and their values
 intent parser
   string matching with variables
   numbers
@@ -7,3 +9,6 @@ fix audio output
 TTS tacotron (faster)
 integrate STT with valid input
 context
+
+config
+dynamically load apps
