@@ -29,6 +29,12 @@ async function start() {
   let inputAudioBuffer = await audioInOut.audioInput();
   let text = await speechToText.speechToText(inputAudioBuffer);
   await intentParser.startApp(text);
+  await quit();
+}
+
+async function quit() {
+  await speechToText.unload();
+  process.exit(0);
 }
 
 start()
