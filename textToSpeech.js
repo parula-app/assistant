@@ -1,3 +1,10 @@
+/**
+ * Reads text into speech as audio stream.
+ *
+ * Based on Mozilla TTS and tacotron 1/2.
+ * Calls it via local web server.
+ */
+
 import fetch from 'node-fetch';
 
 const kTTS_URL = "http://localhost:5002";

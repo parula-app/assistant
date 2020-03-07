@@ -1,24 +1,21 @@
-import portAudio from 'naudiodon';
-import MemoryStream from 'memory-stream';
+/**
+ * Reads microphone input from the local soundcard,
+ * and plays result over local speaker.
+ */
+
 //import Sox from 'sox-stream';
 //import { Duplex } from 'stream';
-import { wait } from './util.js';
+import portAudio from 'naudiodon';
+import MemoryStream from 'memory-stream';
 import { sampleRate as inputSampleRate } from './speechToText.js';
 import { sampleRate as outputSampleRate } from './textToSpeech.js';
+import { wait, commandlineArgs } from './util.js';
 
 var args;
 
 export async function load() {
   args = commandlineArgs();
   listDevices();
-}
-
-function commandlineArgs() {
-  var parser = new argparse.ArgumentParser({addHelp: true, description: 'Pia'});
-  parser.addArgument(['--audio_input_device'], {help: 'ID of the microphone audio device. You see a list of devices when omitting this parameter.', type: 'int'});
-  parser.addArgument(['--audio_output_device'], {help: 'ID of the speaker audio device.', defaultValue: -1, type: 'int'});
-  parser.addArgument(['--capture_seconds'], {help: 'Record N seconds of audio', defaultValue: 4, type: 'int'});
-  return parser.parseArgs();
 }
 
 function listDevices() {

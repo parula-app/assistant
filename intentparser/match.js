@@ -1,11 +1,54 @@
+/**
+ * Intent parser
+ *
+ * Accepts a string from speech input,
+ * and selects the right app, command and variables,
+ * based on the valid input possibilities of each app.
+ */
+
 //import stringSimilarity from 'string-similarity';
 import didYouMean2 from 'didyoumean2';
 
-var validInput = null;
+var gApps;
 
-export async function load() {
-  await loadValidInputFromFile(args);
+export async function load(apps) {
+  gApps = apps;
 }
+
+export function matchApp(inputText) {
+  // TODO match against commands of each app
+  let app = gApps[0];
+  let command = "playMusic";
+  let params = {
+    song: inputText, // TODO only the variable text
+  }
+
+  for (let name in params) {
+    params[name] = matchVariable(params[name], app.validVariableValues(name));
+  }
+  app[command](params);
+}
+
+/**
+ * @param inputText {string} user input, only the part for this variable
+ * @param validValues {Array of string}
+ * @returns {string} one line from validValues, the closest match
+ */
+function matchVariable(inputText, validValues) {
+  if (!validValues) {
+    return inputText;
+  }
+  //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
+  //console.log("stringSimilarity:", similarity);
+  const startTime = new Date();
+  let match = didYouMean2(inputText, validValues);
+  console.log("didyoumean2:", match);
+  console.log("string matching took", (new Date() - startTime) + "ms");
+  return match;
+}
+
+
+
 
 /*
 export async function load() {
@@ -27,27 +70,3 @@ function commandlineArgs() {
   parser.addArgument(['--valid_input'], {help: 'File with all possible inputs, one per line. The recognition result text will be one line from this file.', nargs: '?'});
 }
 */
-
-/**
- * @param lines {Array of string} each entry is a one valid input
- */
-function addValidInput(lines) {
-  validInput = validInput.concat(lines);
-}
-
-/**
- * @param inputText {string}
- * @returns {string} one line from validInput, the closest match
- */
-export function matchValid(inputText) {
-  if (!validInput) {
-    return inputText;
-  }
-  //let similarity = stringSimilarity.findBestMatch(inputText, validInput).bestMatch.target;
-  //console.log("stringSimilarity:", similarity);
-  const startTime = new Date();
-  let match = didYouMean2(inputText, validInput);
-  console.log("didyoumean2:", match);
-  console.log("string matching took", (new Date() - startTime) + "ms");
-  return match;
-}
