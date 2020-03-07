@@ -27,8 +27,8 @@ async function load() {
 
 async function start() {
   await load();
-  //let text = await speechToText.speechToText();
-  let text = 'pretty woman by roy orberston';
+  let inputAudioBuffer = await audioInOut.audioInput();
+  let text = await speechToText.speechToText(inputAudioBuffer);
   await intentParser.startApp(text);
 }
 

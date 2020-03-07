@@ -46,7 +46,6 @@ function playbackAudio(waveStream) {
 }
 
 export async function audioInput() {
-  console.info('Listening to your command.');
   let ai = new portAudio.AudioIO({
     inOptions: {
       channelCount: 1,
@@ -57,14 +56,17 @@ export async function audioInput() {
       closeOnError: true,
     }
   });
+  console.info('Listening to your command.');
+  ai.start();
   let audioStream = new MemoryStream();
   ai.pipe(audioStream);
-  ai.start();
-  await wait(args['capture_seconds']);
-  ai.unpipe();
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    /* Not called
     audioStream.on('finish', () => {
       resolve(audioStream.toBuffer());
-    });
+    }); */
+    await wait(args['capture_seconds']);
+    ai.unpipe();
+    resolve(audioStream.toBuffer());
   });
 }

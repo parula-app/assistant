@@ -43,9 +43,8 @@ function matchVariable(inputText, validValues) {
   //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
   //console.log("stringSimilarity:", similarity);
   const startTime = new Date();
-  console.log(validValues);
   let match = didYouMean2(inputText, validValues);
-  console.log("didyoumean2:", match);
+  console.log("did you mean:", match);
   console.log("string matching took", (new Date() - startTime) + "ms");
   return match;
 }
