@@ -1,0 +1,9 @@
+apps API
+intent parser
+  string matching with variables
+  numbers
+  command, then variables
+fix audio output
+TTS tacotron (faster)
+integrate STT with valid input
+context
