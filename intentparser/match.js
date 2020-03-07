@@ -7,7 +7,8 @@
  */
 
 //import stringSimilarity from 'string-similarity';
-import didYouMean2 from 'didyoumean2';
+import didYouMean from 'didyoumean2';
+const didYouMean2 = didYouMean.default;
 
 var gApps;
 
@@ -15,7 +16,7 @@ export async function load(apps) {
   gApps = apps;
 }
 
-export function matchApp(inputText) {
+export async function startApp(inputText) {
   // TODO match against commands of each app
   let app = gApps[0];
   let command = "playMusic";
@@ -24,9 +25,10 @@ export function matchApp(inputText) {
   }
 
   for (let name in params) {
-    params[name] = matchVariable(params[name], app.validVariableValues(name));
+    let validValues = await app.validVariableValues(name);
+    params[name] = matchVariable(params[name], validValues);
   }
-  app[command](params);
+  await app[command](params);
 }
 
 /**
@@ -41,6 +43,7 @@ function matchVariable(inputText, validValues) {
   //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
   //console.log("stringSimilarity:", similarity);
   const startTime = new Date();
+  console.log(validValues);
   let match = didYouMean2(inputText, validValues);
   console.log("didyoumean2:", match);
   console.log("string matching took", (new Date() - startTime) + "ms");

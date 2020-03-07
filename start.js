@@ -27,8 +27,9 @@ async function load() {
 
 async function start() {
   await load();
-  let text = await speechToText.speechToText();
-  intentParser.matchApp(text);
+  //let text = await speechToText.speechToText();
+  let text = 'pretty woman by roy orberston';
+  await intentParser.startApp(text);
 }
 
 start()

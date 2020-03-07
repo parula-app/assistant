@@ -15,7 +15,7 @@ export async function wait(seconds) {
 
 var configData;
 
-export function config() {
+export function configFile() {
   if (configData) {
     return configData;
   }

@@ -1,7 +1,7 @@
 //import { MPC } from 'mpc-js';
 import * as mpcjs from 'mpc-js';
-const MPC = mpcjs.MPC;
-import { config } from '../../util.js';
+const MPC = mpcjs.default.MPC;
+import { configFile } from '../../util.js';
 
 var gArtists = [];
 var gSongs = [];
@@ -26,8 +26,8 @@ export async function load() {
 
 async function loadSongs() {
   let startTime = new Date();
-  return; // TODO MPC not loaded
   let mpc = new MPC();
+  let config = configFile();
   console.info("Connecting to MPD at " + config.mpc.server);
   await mpc.connectTCP(config.mpc.server, config.mpc.port || 6600);
   // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
@@ -52,14 +52,18 @@ async function loadSongs() {
  *    song {string}
  *    artist {string}
  */
-async function playMusic(args) {
+export async function playMusic(args) {
   let song = args.song;
   let artist = args.artist;
+  if (!song && !artist) {
+    throw new Error("Nothing to play");
+  }
   if (!artist && song.includes(" by ")) {
     [ song, artist ] = song.split(" by ");
   }
 
   let mpc = new MPC();
+  let config = configFile();
   console.info("Connecting to MPD at " + config.mpc.server);
   await mpc.connectTCP(config.mpc.server, config.mpc.port || 6600);
   // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
