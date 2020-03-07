@@ -1,0 +1,26 @@
+{
+    "name": "Pia",
+    "version": "0.1",
+    "description": "Voice assistant",
+    "main": "./start.js",
+    "author": "Ben Bucksch",
+    "license": "GPL-3.0",
+    "homepage": "https://pia.bucksch.org",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/benbucksch/pia.git"
+    },
+    "dependencies": {
+        "argparse": "^1.0.10",
+        "deepspeech": "^0.6.1",
+        "didyoumean2": "^4.0.0",
+        "mpc-js": "^1.2.1",
+        "naudiodon": "^2.1.2",
+        "node-fetch": "^2.6.0"
+    },
+    "devDependencies": {},
+    "type": "module",
+    "scripts": {
+        "start": "node --experimental-modules start.js --model ../deepspeech/deepspeech-0.6.1-models/output_graph.pbmm --valid_input=../mymodel/songs.txt --audio_input_device=3 --audio_output_device=3"
+    }
+}
