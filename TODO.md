@@ -2,6 +2,10 @@
 * intent parser
    * string matching with variables
    * numbers
+   * Recognize first words, then go from there
+* LM
+  * Train language model based on commands and values from apps
+  * Create Text data type with english vocabulary
 * context
 * config
 * dynamically load apps
