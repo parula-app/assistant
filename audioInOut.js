@@ -9,18 +9,18 @@ import portAudio from 'naudiodon';
 import MemoryStream from 'memory-stream';
 import { sampleRate as inputSampleRate } from './speechToText.js';
 import { sampleRate as outputSampleRate } from './textToSpeech.js';
-import { commandlineArgs } from './util/config.js';
+import { getConfig } from './util/config.js';
 import { wait } from './util/util.js';
 
-var args;
+var config;
 
 export async function load() {
-  args = commandlineArgs();
+  config = getConfig().audio;
   listDevices();
 }
 
 function listDevices() {
-  if (!args['audio_input_device']) {
+  if (!config.inputDevice || config.inputDevice == -2) {
     let devices = portAudio.getDevices();
     console.log("\nAudio devices:");
     for (let device of devices) {
@@ -36,7 +36,7 @@ function playbackAudio(waveStream) {
       channelCount: 1,
       sampleFormat: portAudio.SampleFormat16Bit,
       sampleRate: outputSampleRate(),
-      deviceId: args['audio_output_device'],
+      deviceId: config.outputDevice,
       closeOnError: true,
     }
   });
@@ -53,7 +53,7 @@ export async function audioInput() {
       sampleFormat: portAudio.SampleFormat16Bit,
       sampleRate: inputSampleRate(),
       // Use -1 to select the default device
-      deviceId: args['audio_input_device'],
+      deviceId: config.inputDevice,
       closeOnError: true,
     }
   });
@@ -66,7 +66,7 @@ export async function audioInput() {
     audioStream.on('finish', () => {
       resolve(audioStream.toBuffer());
     }); */
-    await wait(args['capture_seconds']);
+    await wait(config.captureSeconds);
     ai.unpipe();
     resolve(audioStream.toBuffer());
   });

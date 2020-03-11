@@ -1,0 +1,20 @@
+{
+  "language": "Language for speech input and output. 2-letter ISO language code.",
+  "mpc": {
+    "server": "Hostname of the MPD server on your local network",
+    "port": "Port number of the MPD server on your local network"
+  },
+  "audio": {
+    "captureSeconds": "Record N seconds of audio",
+    "inputDevice": "ID of the microphone audio device. You see a list of devices when you pass --audio.inputDevice -2",
+    "outputDevice": "ID of the speaker audio device."
+  },
+  "deepSpeech": {
+    "model": "DeepSpeech Model -- output_graph.pbmm",
+    "lm": "Language model binary file, created with deepspeech/data/lm/generate_lm",
+    "trie": "Language model trie file, created with deepspeech/native_client/generate_trie",
+    "lm_alpha": "DeepSpeech: Language model weight (lm_alpha)",
+    "lm_beta": "DeepSpeech: Word insertion bonus (lm_beta)",
+    "beamWidth": "DeepSpeech: Beam width for the CTC decoder"
+  }
+}
