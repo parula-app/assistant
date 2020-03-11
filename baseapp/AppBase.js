@@ -1,5 +1,6 @@
 import { Intent } from './Intent.js';
-import { DataType, loadBuiltinTypes } from './DataType.js';
+import { DataType } from './datatype/DataType.js';
+import { loadBuiltinTypes } from './datatype/builtin.js';
 import { assert } from '../util/util.js';
 
 /**

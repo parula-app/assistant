@@ -1,5 +1,5 @@
 import { AppBase } from './AppBase.js';
-import { DataType } from './DataType.js';
+import { DataType } from './datatype/DataType.js';
 import { assert } from '../util/util.js';
 
 export class Intent {

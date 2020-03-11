@@ -11,7 +11,7 @@ import didYouMean from 'didyoumean2';
 const didYouMean2 = didYouMean.default;
 import { AppBase } from '../baseapp/AppBase.js';
 import { Intent } from '../baseapp/Intent.js';
-import { DataType } from '../baseapp/DataType.js';
+import { DataType } from '../baseapp/datatype/DataType.js';
 import { assert } from '../util/util.js';
 
 export default class IntentParser {
