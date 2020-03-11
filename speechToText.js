@@ -4,7 +4,7 @@
  */
 
 import Ds from 'deepspeech';
-import { commandlineArgs } from './util.js';
+import { commandlineArgs } from './util/config.js';
 
 var model;
 

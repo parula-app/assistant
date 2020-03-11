@@ -1,7 +1,7 @@
 import { AppBase } from './AppBase.js';
 import { Intent } from './Intent.js';
 import { DataType, EnumDataType, ListDataType } from './DataType.js';
-import { assert, loadJSONFile } from '../util.js';
+import { assert, loadJSONFile } from '../util/util.js';
 
 /**
  * Reads intents and commands from a JSON file.

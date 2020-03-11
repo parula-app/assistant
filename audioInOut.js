@@ -9,7 +9,8 @@ import portAudio from 'naudiodon';
 import MemoryStream from 'memory-stream';
 import { sampleRate as inputSampleRate } from './speechToText.js';
 import { sampleRate as outputSampleRate } from './textToSpeech.js';
-import { wait, commandlineArgs } from './util.js';
+import { commandlineArgs } from './util/config.js';
+import { wait } from './util/util.js';
 
 var args;
 

@@ -2,7 +2,7 @@
 import * as mpcjs from 'mpc-js';
 const MPC = mpcjs.default.MPC;
 import { JSONApp } from '../../baseapp/JSONApp.js';
-import { configFile } from '../../util.js';
+import { getConfig } from '../../util/config.js';
 
 export default class MPD extends JSONApp {
   constructor() {
@@ -41,7 +41,7 @@ export default class MPD extends JSONApp {
    */
   async connect() {
     let mpc = new MPC();
-    let config = configFile();
+    let config = getConfig();
     console.info("Loading from MPD at " + config.mpc.server);
     await mpc.connectTCP(config.mpc.server, config.mpc.port || 6600);
     return mpc;

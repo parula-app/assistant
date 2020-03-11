@@ -5,13 +5,13 @@
  * This is the central code that calls all the other modules.
  */
 
-import { configFile } from './util.js';
 import * as speechToText from './speechToText.js';
 import * as textToSpeech from './textToSpeech.js';
 import * as audioInOut from './audioInOut.js';
 import IntentParser from './intentparser/match.js';
 import MPD from './app/mpd/mpd.js';
 import Bible from './app/bible/bible.js';
+import { getConfig } from './util/config.js';
 
 class Starter {
   constructor() {
@@ -19,7 +19,7 @@ class Starter {
   }
 
   async load() {
-    let lang = configFile().language;
+    let lang = getConfig().language;
 
     await speechToText.load(lang);
     await textToSpeech.load(lang);

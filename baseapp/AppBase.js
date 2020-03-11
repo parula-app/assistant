@@ -1,6 +1,6 @@
 import { Intent } from './Intent.js';
 import { DataType, loadBuiltinTypes } from './DataType.js';
-import { assert } from '../util.js';
+import { assert } from '../util/util.js';
 
 /**
  * Base class for all voice apps.
