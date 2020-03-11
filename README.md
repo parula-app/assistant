@@ -1,11 +1,12 @@
-Pia
+# Pia
+
 Personal Information Assistant
 
 Pia is a voice assistant. You can talk to her and give her reasonably
 natural commands and she will try to understand them and execute them.
 The commands are defined by voice apps.
 
-== Completely local ==
+## Completely local
 
 Pia works entirely local and without Internet connection.
 Speech recognition and voice generation happen on your device,
@@ -22,7 +23,7 @@ To ensure that, Pia encourages apps that keep all their data local.
 Obviously, Google searches, news, weather updates etc. will still
 call out to the Internet.
 
-== Context ==
+## Context
 
 Pia will keep context of what you said and allow you to make
 follow up questions, e.g. using pronous like "it".

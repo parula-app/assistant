@@ -1,4 +1,4 @@
-== Core
+## Core
 * intent parser
    * string matching with variables
    * numbers
@@ -6,14 +6,14 @@
 * config
 * dynamically load apps
 
-== Speech
+## Speech
 * fix audio output
 * silence detection
 * wake word detection
 * TTS faster (tacotron?)
 * integrate STT with valid input
 
-== Apps
+## Apps
 * MPD
 * Bible
 * Shopping list
