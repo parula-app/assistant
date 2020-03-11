@@ -59,31 +59,26 @@ export default class IntentParser {
     assert(app instanceof AppBase);
 
     const kCommandMinLength = 4;
-    const kPlaceholder = " ";
-
-    console.log("Loading commands for app " + app.id, app);
+    const kPlaceholder = "";
 
     for (let intent of Object.values(app.intents)) {
-      console.log("Commands for intent " + intent.id, intent.commands);
-      let commandsWithoutPlaceholders = intent.commands.map(command =>
-          command.replace(/{[a-zA-Z0-9]+}/g, kPlaceholder))
-          .filter(command => command.trim().length < kCommandMinLength);
-      let commandsBeforePlaceholders = intent.commands.map(command =>
-          command.replace(/{.*/, ""))
-          .filter(command => command.trim().length < kCommandMinLength);
-      for (let command of commandsWithoutPlaceholders) {
-        this.commandsWithoutPlaceholders.set(command, intent);
-      }
-      for (let command of commandsBeforePlaceholders) {
-        this.commandsBeforePlaceholders.set(command, intent);
-        if (command.length > this.longestCommand) {
-          this.longestCommand = command.length;
+      //console.log("Command for intent " + intent.id + ":");
+      for (let command of intent.commands) {
+        let withoutPlaceholders = command.replace(/{[a-zA-Z0-9]+}/g, kPlaceholder);
+        if (withoutPlaceholders.length >= kCommandMinLength) {
+          this.commandsWithoutPlaceholders.set(withoutPlaceholders, intent);
         }
+        this.commandsWithoutPlaceholdersFlat.push(withoutPlaceholders);
+        let beforePlaceholders = command.replace(/{.*/, "");
+        if (beforePlaceholders.length >= kCommandMinLength) {
+          this.commandsBeforePlaceholders.set(beforePlaceholders, intent);
+          this.commandsWithoutPlaceholdersFlat.push(beforePlaceholders);
+          if (beforePlaceholders.length > this.longestCommand) {
+            this.longestCommand = beforePlaceholders.length;
+          }
+        }
+        //console.log("  " + command, "=", withoutPlaceholders, "=", beforePlaceholders);
       }
-      this.commandsWithoutPlaceholdersFlat = this.commandsWithoutPlaceholdersFlat
-        .concat(commandsWithoutPlaceholders);
-      this.commandsBeforePlaceholdersFlat = this.commandsBeforePlaceholdersFlat
-        .concat(commandsBeforePlaceholders);
     }
   }
 
@@ -93,11 +88,11 @@ export default class IntentParser {
    */
   async startApp(inputText) {
     let inputBeforeCommand = inputText.substr(0, this.longestCommand); // HACK
-    let beforeCommand = didYouMean2(inputBeforeCommand, this.commandsBeforePlaceholdersFlat);
+    let beforeCommand = didYouMean2(inputBeforeCommand, this.commandsBeforePlaceholdersFlat, { threshold: 0.01 });
     console.log("did you mean command (before): ", beforeCommand);
 
     const startTime = new Date();
-    let command = didYouMean2(inputText, this.commandsWithoutPlaceholdersFlat);
+    let command = didYouMean2(inputText, this.commandsWithoutPlaceholdersFlat, { threshold: 0.1 });
     if (!command) {
       return "I did not understand you";
     }
@@ -109,9 +104,9 @@ export default class IntentParser {
     let args = {
       song: inputText, // TODO only the variable text
     }
-    for (let name in params) {
+    for (let name in args) {
       let validValues = await app.validVariableValues(name);
-      params[name] = matchVariable(params[name], validValues);
+      args[name] = matchVariable(args[name], validValues);
     }
 
     try {
