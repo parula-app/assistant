@@ -1,6 +1,16 @@
 import argparse from 'argparse';
 import fs from 'fs';
 
+/**
+ * @param test {boolean}
+ * @param errorMsg {string}
+ */
+export function assert(test, errorMsg) {
+  if (!test) {
+    throw new Error(errorMsg || "Assertion failed");
+  }
+}
+
 export async function wait(seconds) {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
@@ -19,9 +29,12 @@ export function configFile() {
   if (configData) {
     return configData;
   }
-  const load = filepath => JSON.parse(fs.readFileSync(filepath, 'utf8'));
-  configData = load('./config.json');
+  configData = loadJSONFile('./config.json');
   return configData;
+}
+
+export function loadJSONFile(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 export function commandlineArgs() {

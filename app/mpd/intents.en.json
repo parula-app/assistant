@@ -1,0 +1,69 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "mpd",
+            "intents": [
+                {
+                    "name": "Pia.Fallback",
+                    "samples": []
+                },
+                {
+                    "name": "Pia.Help",
+                    "samples": []
+                },
+                {
+                    "name": "Pia.Stop",
+                    "samples": []
+                },
+                {
+                    "name": "PlaySong",
+                    "slots": [
+                        {
+                            "name": "Song",
+                            "type": "SongTitle"
+                        },
+                        {
+                            "name": "Artist",
+                            "type": "Artist"
+                        }
+                    ],
+                    "samples": [
+                        "Play {Song} (from|by) {Artist}",
+                        "{Artist} {Song}",
+                        "Play (songs|music) (from|by) {Artist}",
+                        "Play {Artist}",
+                        "{Artist}",
+                        "Play {Song}",
+                        "{Song}"
+                    ]
+                },
+                {
+                    "name": "Pia.Next"
+                },
+                {
+                    "name": "Pia.Previous"
+                },
+                {
+                    "name": "Pia.More",
+                    "samples": [
+                        "More music like this",
+                        "More songs like this",
+                        "More like this"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "SongTitle",
+                    "values": [
+                    ]
+                },
+                {
+                    "name": "Artist",
+                    "values": [
+                    ]
+                }
+            ]
+        }
+    }
+}

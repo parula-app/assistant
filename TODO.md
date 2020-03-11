@@ -1,15 +1,22 @@
-* apps API
-   * list of commands
-   * list of variables and their values
+== Core
 * intent parser
    * string matching with variables
    * numbers
-   * command, then variables
+* context
+* config
+* dynamically load apps
+
+== Speech
 * fix audio output
 * silence detection
 * wake word detection
 * TTS faster (tacotron?)
 * integrate STT with valid input
-* context
-* config
-* dynamically load apps
+
+== Apps
+* MPD
+* Bible
+* Shopping list
+* Reminders, Alarm
+* Wikipedia
+* Google search

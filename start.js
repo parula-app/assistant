@@ -5,30 +5,38 @@
  * This is the central code that calls all the other modules.
  */
 
+import { configFile } from './util.js';
 import * as speechToText from './speechToText.js';
 import * as textToSpeech from './textToSpeech.js';
 import * as audioInOut from './audioInOut.js';
-import * as intentParser from './intentparser/match.js';
-import * as mpd from './app/mpd/mpd.js';
+import IntentParser from './intentparser/match.js';
+import MPD from './app/mpd/mpd.js';
+import Bible from './app/bible/bible.js';
+
+var gIntentParser;
 
 async function load() {
   await speechToText.load();
   await textToSpeech.load();
   await audioInOut.load();
 
-  let apps = [ mpd ]; // TODO dynamically
+  let Apps = [ MPD, Bible ]; // TODO dynamically
 
+  let apps = Apps.map(App => new App());
+  let lang = configFile().language;
   await Promise.all(apps.map(app =>
-    app.load()
+    app.load(lang)
   ));
-  await intentParser.load(apps);
+  gIntentParser = new IntentParser();
+  await gIntentParser.load(apps);
 }
 
 async function start() {
   await load();
   let inputAudioBuffer = await audioInOut.audioInput();
   let text = await speechToText.speechToText(inputAudioBuffer);
-  await intentParser.startApp(text);
+  let response = await gIntentParser.startApp(text);
+  console.log("\n" + response + "\n");
   await quit();
 }
 
