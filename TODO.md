@@ -7,8 +7,10 @@
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary
 * context
-* config
 * dynamically load apps
+* Apps via commandline (stdin/out) and HTTPS
+   * Load language model as JSON via special command parameter / URL suffix
+   * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
 * fix audio output

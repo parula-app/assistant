@@ -9,11 +9,12 @@
     "outputDevice": -1
   },
   "deepSpeech": {
-    "model": "./model/output_graph.pbmm",
-    "lm": null,
-    "trie": null,
-    "lm_alpha": 0.75,
-    "lm_beta": 1.85,
+    "modelDir": "./model/",
+    "model": "",
+    "lm": "",
+    "trie": "",
+    "lmAlpha": 0.75,
+    "lmBeta": 1.85,
     "beamWidth": 500
   }
 }

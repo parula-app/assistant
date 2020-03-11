@@ -10,6 +10,14 @@ var model;
 
 export async function load() {
   let config = getConfig().deepSpeech;
+  if (config.modelDir) {
+    if (!config.modelDir.endsWith("/")) {
+      config.modelDir += "/";
+    }
+    config.model = config.model || config.modelDir + "output_graph.pbmm";
+    config.lm = config.lm || config.modelDir + "lm.binary";
+    config.trie = config.trie || config.modelDir + "trie";
+  }
   console.info('Loading model from file %s', config.model);
   const startTime = new Date();
   model = new Ds.Model(config.model, config.beamWidth);

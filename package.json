@@ -21,6 +21,6 @@
     "devDependencies": {},
     "type": "module",
     "scripts": {
-        "start": "node --experimental-modules start.js --model ../deepspeech/deepspeech-0.6.1-models/output_graph.pbmm --audio_input_device=7 --audio_output_device=5"
+        "start": "node --experimental-modules start.js"
     }
 }

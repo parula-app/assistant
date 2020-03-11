@@ -10,11 +10,12 @@
     "outputDevice": "ID of the speaker audio device."
   },
   "deepSpeech": {
-    "model": "DeepSpeech Model -- output_graph.pbmm",
+    "modelDir": "DeepSpeech Model directory. Convenience parameter to specify model, lm and trie at the same time.",
+    "model": "DeepSpeech model -- output_graph.pbmm",
     "lm": "Language model binary file, created with deepspeech/data/lm/generate_lm",
     "trie": "Language model trie file, created with deepspeech/native_client/generate_trie",
-    "lm_alpha": "DeepSpeech: Language model weight (lm_alpha)",
-    "lm_beta": "DeepSpeech: Word insertion bonus (lm_beta)",
+    "lmAlpha": "DeepSpeech: Language model weight (lm alpha)",
+    "lmBeta": "DeepSpeech: Word insertion bonus (lm beta)",
     "beamWidth": "DeepSpeech: Beam width for the CTC decoder"
   }
 }
