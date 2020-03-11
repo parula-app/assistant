@@ -13,37 +13,47 @@ import IntentParser from './intentparser/match.js';
 import MPD from './app/mpd/mpd.js';
 import Bible from './app/bible/bible.js';
 
-var gIntentParser;
+class Starter {
+  constructor() {
+    this.intentParser = null;
+  }
 
-async function load() {
-  await speechToText.load();
-  await textToSpeech.load();
-  await audioInOut.load();
+  async load() {
+    let lang = configFile().language;
 
-  let Apps = [ MPD, Bible ]; // TODO dynamically
+    await speechToText.load(lang);
+    await textToSpeech.load(lang);
+    await audioInOut.load();
 
-  let apps = Apps.map(App => new App());
-  let lang = configFile().language;
-  await Promise.all(apps.map(app =>
-    app.load(lang)
-  ));
-  gIntentParser = new IntentParser();
-  await gIntentParser.load(apps);
+    let Apps = [ MPD, Bible ]; // TODO dynamically
+
+    let apps = Apps.map(App => new App());
+    await Promise.all(apps.map(app =>
+      app.load(lang)
+    ));
+    this.intentParser = new IntentParser();
+    await this.intentParser.load(apps);
+  }
+
+  async start() {
+    await this.load();
+    let inputAudioBuffer = await audioInOut.audioInput();
+    let inputText = await speechToText.speechToText(inputAudioBuffer);
+    let response = await this.intentParser.startApp(inputText);
+    console.log("\n" + response + "\n");
+    await this.quit();
+  }
+
+  async quit() {
+    await speechToText.unload();
+    process.exit(0);
+  }
 }
 
-async function start() {
-  await load();
-  let inputAudioBuffer = await audioInOut.audioInput();
-  let text = await speechToText.speechToText(inputAudioBuffer);
-  let response = await gIntentParser.startApp(text);
-  console.log("\n" + response + "\n");
-  await quit();
-}
-
-async function quit() {
-  await speechToText.unload();
-  process.exit(0);
-}
-
-start()
-  .catch(ex => console.error(ex));
+(async () => {
+  try {
+    await new Starter().start();
+  } catch (ex) {
+    console.error(ex);
+  }
+})();
