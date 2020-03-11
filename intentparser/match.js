@@ -9,7 +9,9 @@
 //import stringSimilarity from 'string-similarity';
 import didYouMean from 'didyoumean2';
 const didYouMean2 = didYouMean.default;
-import { AppBase, Intent, DataType } from '../baseapp/AppBase.js';
+import { AppBase } from '../baseapp/AppBase.js';
+import { Intent } from '../baseapp/Intent.js';
+import { DataType } from '../baseapp/DataType.js';
 import { assert } from '../util.js';
 
 export default class IntentParser {

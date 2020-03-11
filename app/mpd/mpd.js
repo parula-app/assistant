@@ -7,8 +7,6 @@ import { configFile } from '../../util.js';
 export default class MPD extends JSONApp {
   constructor() {
     super("mpd", "app/mpd/");
-    this.artists = [];
-    this.songs = [];
   }
 
   async load(lang) {
@@ -17,6 +15,8 @@ export default class MPD extends JSONApp {
   }
 
   async loadSongs() {
+    let songType = this.dataTypes["SongTitle"];
+    let artistType = this.dataTypes["Artist"];
     let startTime = new Date();
     let mpc = await this.connect();
     // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
@@ -24,12 +24,16 @@ export default class MPD extends JSONApp {
     for (let artistEntry of artistSongs.entries()) {
       let artist = artistEntry[0][0];
       let songs = artistEntry[1];
-      this.artists.push(artist);
+      if (artist) {
+        artistType.addValue(artist);
+      }
       for (let title of songs) {
-        this.songs.push(title);
+        if (title) {
+          songType.addValue(title);
+        }
       }
     }
-    console.info('Read %d songs in %dms', this.songs.length, new Date() - startTime);
+    console.info('Read %d songs in %dms', songType.valueIDs.length, new Date() - startTime);
   }
 
   /**

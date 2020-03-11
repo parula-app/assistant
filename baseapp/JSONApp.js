@@ -1,4 +1,6 @@
-import { AppBase, Intent, DataType } from './AppBase.js';
+import { AppBase } from './AppBase.js';
+import { Intent } from './Intent.js';
+import { DataType, EnumDataType, ListDataType } from './DataType.js';
 import { assert, loadJSONFile } from '../util.js';
 
 /**
@@ -66,12 +68,18 @@ export class JSONApp extends AppBase {
 
   async _loadDataType(typeJSON) {
     let id = this._typeID(typeJSON.name);
-    let type = new DataType(id);
-    for (let value of array(typeJSON.values)) {
-      let id = value.id;
-      let terms = [ value.name.value ];
-      terms = terms.concat(value.name.synonyms);
-      type.addValue(id, terms);
+    let values = array(typeJSON.values);
+    let type;
+    if (values.length) {
+      type = new EnumDataType(id);
+      for (let value of values) {
+        let id = value.id;
+        let terms = [ value.name.value ];
+        terms = terms.concat(value.name.synonyms);
+        type.addValue(id, terms);
+      }
+    } else {
+      type = new ListDataType(id);
     }
     this.dataTypes[id] = type;
   }
