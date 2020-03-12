@@ -1,0 +1,27 @@
+{
+  "name": "pia-bible",
+  "version": "0.1.0",
+  "description": "Pia app to read bible verses, chapters, or to give factual inforomation about biblical persons, places or events",
+  "main": "bible.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:benbucksch/pia-bible.git"
+  },
+  "keywords": [
+    "pia",
+    "bible",
+    "knowledge"
+  ],
+  "type": "module",
+  "author": "Ben Bucksch",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://gitlab.com/benbucksch/pia-bible/issues"
+  },
+  "homepage": "https://gitlab.com/benbucksch/pia-bible#readme"
+}
