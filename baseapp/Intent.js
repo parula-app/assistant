@@ -23,7 +23,7 @@ export class Intent {
      * Translates to the function name,
      * e.g. ID "PlaySong" invokes function playSong().
      *
-     * {sŧring}
+     * {string}
      */
     this.id = id;
 
@@ -139,7 +139,9 @@ export class Intent {
    */
   functionName() {
     // camelCase, e.g. "playSong" for intent ID "PlaySong".
-    return this.id[0].toLowerCase() + this.id.substr(1);
+    let name = this.id;
+    name = name.replace("Pia.", "");
+    return name[0].toLowerCase() + name.substr(1);
   }
 
   /**
@@ -148,9 +150,10 @@ export class Intent {
    * @param args {JS obj: Parameter ID {string} -> value }
    *   Before calling this function, the enum variables will already be translated
    *   from the translated word that the user spoke to their value ID.
+   * @param clientAPI {ClientAPI}
    * @returns {string} Text to say to the end user. Needs to be translated.
    */
-  async run(args) {
+  async run(args, clientAPI) {
     let intent = this;
     // validate
     for (let argID in args) {
@@ -169,7 +172,12 @@ export class Intent {
     // Call app implementation function
     // e.g. `this.playSong(args)`
     try {
-      return this.app[this.functionName()](args);
+      let functionName = this.functionName();
+      let func = this.app[functionName];
+      if (!func || typeof(func) != "function") {
+        throw new Error("No implementation for " + functionName + " found in app " + this.app.id);
+      }
+      return func.call(this.app, args, clientAPI);
     } catch (ex) {
       console.error(ex);
       return "I had a problem. " + (ex.message || ex);

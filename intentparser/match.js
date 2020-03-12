@@ -12,14 +12,22 @@ const didYouMean2 = didYouMean.default;
 import { AppBase } from '../baseapp/AppBase.js';
 import { Intent } from '../baseapp/Intent.js';
 import { DataType } from '../baseapp/datatype/DataType.js';
+import { ClientAPI } from '../client/ClientAPI.js';
 import { assert } from '../util/util.js';
 
 export default class IntentParser {
-  constructor() {
+  constructor(clientAPI) {
+    assert(clientAPI instanceof ClientAPI);
+
     /**
      * {Array of app {AppBase} }
      */
     this.apps = [];
+
+    /**
+     * {ClientAPI}
+     */
+    this.clientAPI = clientAPI;
 
     /**
      * "{name}" removed
@@ -91,7 +99,7 @@ export default class IntentParser {
 
     try {
       // Start the app
-      return await intent.run(args);
+      return await intent.run(args, this.clientAPI);
     } catch (ex) { // Exceptions should be caught by intent. This is a fallback.
       console.error(ex);
       return ex.message || ex;
