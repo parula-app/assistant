@@ -120,6 +120,15 @@ function getVariables(inputText, command, intent) {
   let iCommand = 0;
   for (let inputWord of inputWords) {
     let commandWord = commandWords[iCommand];
+    console.log("command word", commandWord);
+    if (!commandWord) {
+      // end of the phrase, no more command words, but still input
+      if (lastArgName) {
+        args[lastArgName] += " " + inputWord;
+        console.log("end added to variable:", lastArgName, "=", args[lastArgName]);
+      } // else: superflous command words
+      continue;
+    }
     if (commandWord[0] == "{") {
       // This is a placeholder
       let argName = commandWord.substr(1, commandWord.length - 2);

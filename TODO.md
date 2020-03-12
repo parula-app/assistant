@@ -1,8 +1,6 @@
 ## Core
 * intent parser
    * string matching with variables
-   * numbers
-   * Recognize first words, then go from there
 * context
 * dynamically load apps
 * Apps via commandline (stdin/out) and HTTPS
@@ -10,10 +8,10 @@
    * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
+* fix audio output
 * LM
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary
-* fix audio output
 * silence detection
 * wake word detection
 * TTS faster (tacotron?)

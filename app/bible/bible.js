@@ -211,7 +211,7 @@ export default class BibleApp extends JSONApp {
     var persons = getPerson(args, client);
     if (persons.length > 1) {
       client.say(getTranslation("person_multiple", lang,
-        { person: args.Person, count: persons.length }));
+        { person: "", count: persons.length }));
       pause(1000, client);
     }
     for (let person of persons) {
@@ -224,7 +224,7 @@ export default class BibleApp extends JSONApp {
     var places = getPlace(args, client);
     if (places.length > 1) {
       client.say(getTranslation("place_multiple", lang,
-        { place: args.Place, count: places.length }));
+        { place: "", count: places.length }));
       pause(1000, client);
     }
     for (let place of places) {
@@ -562,7 +562,7 @@ function outputBibleVersesList(bibleTexts, topHeaderText, args, client, lang) {
     });
     client.say(ssmlWrap(`<break time='500ms'/><s>${escapeText(headerText)}</s><break time='300ms'/>`, lang));
 
-    // TODO bibleText.readVerses(lang, args, client);
+    //bibleText.readVerses(lang, args, client);
   }
 }
 

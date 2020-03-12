@@ -33,7 +33,11 @@ export class ClientAPI {
     // remove <ssml> tags
     outputText = outputText.replace(/<[^>]*>/g, " ").replace(/ +/g, " ").trim();
     console.log(outputText);
-    //await textToSpeech.textToSpeech(outputText);
+    let sentences = outputText.split(". ");
+    for (let sentence of sentences) {
+      // TODO
+      //await textToSpeech.textToSpeech(sentence);
+    }
   }
 
   card(card) {
