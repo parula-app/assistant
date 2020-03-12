@@ -158,18 +158,3 @@ function matchVariable(inputText, validValues) {
   }
   return match;
 }
-
-
-
-/*
-async function loadValidInputFromFile(args) {
-  if (!args['valid_input']) {
-    return;
-  }
-  let startTime = new Date();
-  console.info('Loading valid input from file %s', args['valid_input']);
-  validInput = fs.readFileSync(args['valid_input'], 'utf8').split('\n');
-  console.info('Read %d lines in %dms', validInput.length, new Date() - startTime);
-}
-  parser.addArgument(['--valid_input'], {help: 'File with all possible inputs, one per line. The recognition result text will be one line from this file.', nargs: '?'});
-*/
