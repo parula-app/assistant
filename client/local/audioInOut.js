@@ -7,10 +7,10 @@
 //import { Duplex } from 'stream';
 import portAudio from 'naudiodon';
 import MemoryStream from 'memory-stream';
-import { sampleRate as inputSampleRate } from './speechToText.js';
-import { sampleRate as outputSampleRate } from './textToSpeech.js';
-import { getConfig } from './util/config.js';
-import { wait } from './util/util.js';
+import { sampleRate as inputSampleRate } from '../../speechToText.js';
+import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
+import { getConfig } from '../../util/config.js';
+import { wait } from '../../util/util.js';
 
 var config;
 
