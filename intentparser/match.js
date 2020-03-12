@@ -20,6 +20,7 @@ export default class IntentParser {
      * {Array of app {AppBase} }
      */
     this.apps = [];
+
     /**
      * "{name}" removed
      * E.g. "Play  from  " for "Play {Song} from {Artist}"
@@ -27,24 +28,9 @@ export default class IntentParser {
      */
     this.commandsWithoutPlaceholders = new Map();
     /**
-     * Only the part before the first "{name}"
-     * E.g. "Play" for "Play {Song} from {Artist}"
-     * {Map command {string} -> { Intent } }
-     */
-    this.commandsBeforePlaceholders = new Map();
-    /**
      * {Array of command {string} }
      */
     this.commandsWithoutPlaceholdersFlat = [];
-    /**
-     * {Array of command {string} }
-     */
-    this.commandsBeforePlaceholdersFlat = [];
-    /**
-     * Length of the longest string in `this.commandsBeforePlaceholdersFlat`
-     * {Integer}
-     */
-    this.longestCommand = 1;
   }
 
   /**
@@ -72,15 +58,6 @@ export default class IntentParser {
           this.commandsWithoutPlaceholders.set(withoutPlaceholders, { intent, command });
         }
         this.commandsWithoutPlaceholdersFlat.push(withoutPlaceholders);
-        let beforePlaceholders = command.replace(/{.*/, "")
-          .substr(0, kCommandMaxLength);
-        if (beforePlaceholders.length >= kCommandMinLength) {
-          this.commandsBeforePlaceholders.set(beforePlaceholders, { intent, command });
-          this.commandsBeforePlaceholdersFlat.push(beforePlaceholders);
-          if (beforePlaceholders.length > this.longestCommand) {
-            this.longestCommand = beforePlaceholders.length;
-          }
-        }
       }
     }
   }
@@ -90,10 +67,6 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startApp(inputText) {
-    let inputBeforeCommand = inputText.substr(0, this.longestCommand); // HACK
-    let beforeCommand = didYouMean2(inputBeforeCommand, this.commandsBeforePlaceholdersFlat, { threshold: 0.01 });
-    console.log("did you mean command (before): ", beforeCommand);
-
     const startTime = new Date();
     let commandWithout = didYouMean2(inputText, this.commandsWithoutPlaceholdersFlat, { threshold: 0.1 });
     if (!commandWithout) {
