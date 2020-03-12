@@ -9,7 +9,8 @@ import { Client } from './client/Client.js';
 class TestClient extends Client {
   async start() {
     await this.load();
-    let inputText = "open genesis chapter five verse three";
+    let inputText = "read genesis chapter one verse twenty two";
+    //let inputText = "open genesis chapter five verse three";
     let response = await this.intentParser.startApp(inputText);
     console.log("\n" + response + "\n");
     await this.quit();

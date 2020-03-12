@@ -116,6 +116,7 @@ function getVariables(inputText, command, intent) {
   let args = {};
   let inputWords = inputText.split(" ");
   let commandWords = command.split(" ");
+  let lastArgName;
   let iCommand = 0;
   for (let inputWord of inputWords) {
     let commandWord = commandWords[iCommand];
@@ -124,20 +125,26 @@ function getVariables(inputText, command, intent) {
       let argName = commandWord.substr(1, commandWord.length - 2);
       console.log("detected variable:", argName, "=", inputWord);
       if (args[argName]) {
-        args[argName] += inputWord;
+        args[argName] += " " + inputWord;
       } else {
         args[argName] = inputWord;
       }
       iCommand++;
+      lastArgName = argName;
     } else if (didYouMean2(inputWord, [ commandWord ])) {
       // Word is part of the static command
       console.log("detected command word:", inputWord, "=", commandWord);
       iCommand++;
+      lastArgName = null;
     } else if (didYouMean2(inputWord, [ commandWords[iCommand + 1] ])) {
       // Already next command word. Maybe there are superflous words in the sample command.
       console.log("detected command word:", inputWord, "=", commandWords[iCommand + 1], ", while skipping:", commandWord);
       iCommand++; // skip the superflous command word
       iCommand++;
+      lastArgName = null;
+    } else if (lastArgName) { // 2. word of the variable
+      args[lastArgName] += " " + inputWord;
+      console.log("added to variable:", lastArgName, "=", args[lastArgName]);
     } else { // neither placeholder nor detected command word
       console.log("skipping input word:", inputWord);
       // Superflous word in input, e.g. "could you". Just skip it.
