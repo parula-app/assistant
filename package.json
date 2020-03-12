@@ -16,7 +16,9 @@
         "didyoumean2": "^4.0.0",
         "mpc-js": "^1.2.1",
         "naudiodon": "^2.1.2",
-        "node-fetch": "^2.6.0"
+        "node-fetch": "^2.6.0",
+        "words-to-numbers": "^1.5.1",
+        "written-number": "^0.9.1"
     },
     "devDependencies": {},
     "type": "module",

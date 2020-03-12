@@ -33,7 +33,7 @@
                         },
                         {
                             "name": "Chapter",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "samples": [
                                 "{BibleBook} {Chapter} verse {Verse}",
                                 "{BibleBook} {Chapter}",
@@ -44,7 +44,7 @@
                         },
                         {
                             "name": "Verse",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "samples": [
                                 "{Verse}",
                                 "Verse {Verse}"
@@ -91,7 +91,7 @@
                         },
                         {
                             "name": "Chapter",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "samples": [
                                 "{BibleBook} {Chapter}",
                                 "Chapter {Chapter}",
@@ -183,14 +183,14 @@
                         },
                         {
                             "name": "Chapter",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "samples": [
                                 "Chapter {Chapter}"
                             ]
                         },
                         {
                             "name": "VerseFrom",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "samples": [
                                 "Verse {VerseFrom} to {VerseTo}",
                                 "Verse {VerseFrom}",
@@ -200,7 +200,7 @@
                         },
                         {
                             "name": "VerseTo",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "samples": [
                                 "Verse {VerseTo}"
                             ]
@@ -7591,7 +7591,7 @@
                         },
                         {
                             "name": "Chapter",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
@@ -7607,7 +7607,7 @@
                         },
                         {
                             "name": "Verse",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
@@ -7646,7 +7646,7 @@
                         },
                         {
                             "name": "Chapter",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
@@ -7717,7 +7717,7 @@
                         },
                         {
                             "name": "Chapter",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
@@ -7726,7 +7726,7 @@
                         },
                         {
                             "name": "VerseFrom",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
@@ -7735,7 +7735,7 @@
                         },
                         {
                             "name": "VerseTo",
-                            "type": "Pia.NUMBER",
+                            "type": "Pia.Number",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {

@@ -38,15 +38,42 @@ export function sampleRate() {
   return model.sampleRate();
 }
 
-
+/**
+ * Converts audio into text
+ */
 export function speechToText(audioBuffer) {
   console.info('Running speech recognition');
   let startTime = new Date();
 
+  // TODO blocking
   let text = model.stt(audioBuffer);
 
   let audioLength = (audioBuffer.length / 2) * (1 / model.sampleRate());
   console.info('Inference took %ds for %ds audio file.', (new Date() - startTime) / 1000, audioLength.toPrecision(4));
   console.log('Speech recognition result: ' + text);
   return text;
+}
+
+/**
+ * Converts audio into text, using a confined vocabulary.
+ *
+ * @param languageModel {LanguageModel} path to lm.binary file
+ */
+export function speechToTextWithLanguageModel(audioBuffer, languageModel) {
+  model.enableDecoderWithLM(languageModel, config.trie, config.lmAlpha, config.lmBeta);
+  return speechToText(audioBuffer);
+  // TODO switch back to default language model?
+}
+
+/**
+ * Allows you to restrict the recognized words,
+ * giving better recognition rates on a limited vocabulary.
+ *
+ * @param listOfSentences {Array of string}  A complete (!) list of
+ *    all allowed sentences that are valid when this model is active.
+ * @returns {LanguageModel}  LM
+ *    Pass this to `speechToTextWithLanguageModel()` and
+ *    `DataType.languageModel`.
+ */
+export function trainSpeechToTextOnVocabulary(listOfSentences) {
 }

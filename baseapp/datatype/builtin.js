@@ -1,17 +1,22 @@
-import { DataType } from './DataType.js';
-import { assert } from '../../util/util.js';
+import { TextDataType } from './TextDataType.js';
+import { NumberDataType } from './NumberDataType.js';
+import { LanguageDataType } from './LanguageDataType.js';
 
-// TODO
-var kBuiltinTypes = [];
-// export for AppBase.js only
+const kBuiltinTypes = [
+  new TextDataType(),
+  new NumberDataType(),
+  new LanguageDataType(),
+];
+
+/**
+ * For AppBase.js only
+ *
+ * Returns basic data types that are not defined by the app,
+ * but by the system.
+ *
+ * @param app {AppBase}
+ */
 export function loadBuiltinTypes(app) {
-  if (!kBuiltinTypes.length) {
-    for (let id of [ "Number", "Language" ]) {
-      let type = new DataType("Pia." + id);
-      type.finite = false;
-      kBuiltinTypes.push(type);
-    }
-  }
   for (let type of kBuiltinTypes) {
     app.dataTypes[type.id] = type;
   }
