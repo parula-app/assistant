@@ -37,6 +37,10 @@ export class ClientAPI {
   }
 
   card(card) {
-    console.log(card);
+    if (card.type == "simple") {
+      console.log("\n  " + card.title + "\n\n" + card.content + "\n");
+    } else {
+      console.log(card);
+    }
   }
 }
