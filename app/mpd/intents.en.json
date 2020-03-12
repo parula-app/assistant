@@ -28,6 +28,7 @@
                         }
                     ],
                     "samples": [
+                        "Play the song {Song} (from|by) {Artist}",
                         "Play {Song} (from|by) {Artist}",
                         "{Artist} {Song}",
                         "Play (songs|music) (from|by) {Artist}",

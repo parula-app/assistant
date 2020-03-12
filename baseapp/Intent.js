@@ -172,6 +172,7 @@ export class Intent {
     // Call app implementation function
     // e.g. `this.playSong(args)`
     try {
+      console.log("Calling " + this.app.id + "." + this.id + " with args", args);
       let functionName = this.functionName();
       let func = this.app[functionName];
       if (!func || typeof(func) != "function") {

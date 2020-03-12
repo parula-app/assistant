@@ -120,7 +120,6 @@ function getVariables(inputText, command, intent) {
   let iCommand = 0;
   for (let inputWord of inputWords) {
     let commandWord = commandWords[iCommand];
-    console.log("command word", commandWord);
     if (!commandWord) {
       // end of the phrase, no more command words, but still input
       if (lastArgName) {

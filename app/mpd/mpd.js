@@ -15,8 +15,8 @@ export default class MPD extends JSONApp {
   }
 
   async loadSongs() {
-    let songType = this.dataTypes["SongTitle"];
-    let artistType = this.dataTypes["Artist"];
+    let songType = this.dataTypes.SongTitle;
+    let artistType = this.dataTypes.Artist;
     let startTime = new Date();
     let mpc = await this.connect();
     // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
@@ -50,12 +50,13 @@ export default class MPD extends JSONApp {
   /**
    * Command
    * @param args {object}
-   *    song {string}
-   *    artist {string}
+   *    Song {string}
+   *    Artist {string}
+   * @param client {ClientAPI}
    */
-  async playMusic(args) {
-    let song = args.song;
-    let artist = args.artist;
+  async playSong(args, client) {
+    let song = args.Song;
+    let artist = args.Artist;
     if (!song && !artist) {
       throw new Error("I found no such song");
     }
