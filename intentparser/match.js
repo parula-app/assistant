@@ -61,6 +61,7 @@ export default class IntentParser {
     assert(app instanceof AppBase);
 
     const kCommandMinLength = 4;
+    const kCommandMaxLength = 10;
     const kPlaceholder = "";
 
     for (let intent of Object.values(app.intents)) {
@@ -68,18 +69,18 @@ export default class IntentParser {
       for (let command of intent.commands) {
         let withoutPlaceholders = command.replace(/{[a-zA-Z0-9]+}/g, kPlaceholder);
         if (withoutPlaceholders.length >= kCommandMinLength) {
-          this.commandsWithoutPlaceholders.set(withoutPlaceholders, intent);
+          this.commandsWithoutPlaceholders.set(withoutPlaceholders, { intent, command });
         }
         this.commandsWithoutPlaceholdersFlat.push(withoutPlaceholders);
-        let beforePlaceholders = command.replace(/{.*/, "");
+        let beforePlaceholders = command.replace(/{.*/, "")
+          .substr(0, kCommandMaxLength);
         if (beforePlaceholders.length >= kCommandMinLength) {
-          this.commandsBeforePlaceholders.set(beforePlaceholders, intent);
-          this.commandsWithoutPlaceholdersFlat.push(beforePlaceholders);
+          this.commandsBeforePlaceholders.set(beforePlaceholders, { intent, command });
+          this.commandsBeforePlaceholdersFlat.push(beforePlaceholders);
           if (beforePlaceholders.length > this.longestCommand) {
             this.longestCommand = beforePlaceholders.length;
           }
         }
-        //console.log("  " + command, "=", withoutPlaceholders, "=", beforePlaceholders);
       }
     }
   }
@@ -94,14 +95,15 @@ export default class IntentParser {
     console.log("did you mean command (before): ", beforeCommand);
 
     const startTime = new Date();
-    let command = didYouMean2(inputText, this.commandsWithoutPlaceholdersFlat, { threshold: 0.1 });
-    if (!command) {
+    let commandWithout = didYouMean2(inputText, this.commandsWithoutPlaceholdersFlat, { threshold: 0.1 });
+    if (!commandWithout) {
       return "I did not understand you";
     }
-    console.log("did you mean command: ", command);
+    console.log("did you mean command: ", commandWithout);
     console.log("string matching took", (new Date() - startTime) + "ms");
-    let intent = this.commandsWithoutPlaceholders.get(command);
+    let { intent, command } = this.commandsWithoutPlaceholders.get(commandWithout);
     let app = intent.app;
+    console.log("app", app.id, "command with placeholders:", command);
 
     let args = {
       song: inputText, // TODO only the variable text
