@@ -19,6 +19,10 @@
                     "name": "PlaySong",
                     "slots": [
                         {
+                            "name": "SongAndArtist",
+                            "type": "SongAndArtist"
+                        },
+                        {
                             "name": "Song",
                             "type": "SongTitle"
                         },
@@ -28,14 +32,14 @@
                         }
                     ],
                     "samples": [
-                        "Play the song {Song} (from|by) {Artist}",
-                        "Play {Song} (from|by) {Artist}",
-                        "{Artist} {Song}",
+                        "Play the song {SongAndArtist}",
+                        "Play {SongAndArtist}",
                         "Play (songs|music) (from|by) {Artist}",
                         "Play {Artist}",
-                        "{Artist}",
                         "Play {Song}",
-                        "{Song}"
+                        "{SongAndArtist}",
+                        "{Song}",
+                        "{Artist}"
                     ]
                 },
                 {
@@ -54,6 +58,10 @@
                 }
             ],
             "types": [
+                {
+                    "name": "SongAndArtist",
+                    "values": []
+                },
                 {
                     "name": "SongTitle",
                     "values": []

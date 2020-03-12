@@ -4,6 +4,8 @@ const MPC = mpcjs.default.MPC;
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
 
+const kArtistSeparator = " by ";
+
 export default class MPD extends JSONApp {
   constructor() {
     super("mpd", "app/mpd/");
@@ -17,6 +19,7 @@ export default class MPD extends JSONApp {
   async loadSongs() {
     let songType = this.dataTypes.SongTitle;
     let artistType = this.dataTypes.Artist;
+    let songAndArtistType = this.dataTypes.SongAndArtist;
     let startTime = new Date();
     let mpc = await this.connect();
     // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
@@ -31,9 +34,12 @@ export default class MPD extends JSONApp {
         if (title) {
           songType.addValue(title);
         }
+        if (title && artist) {
+          songAndArtistType.addValue(title + kArtistSeparator + artist);
+        }
       }
     }
-    console.info('Read %d songs in %dms', songType.valueIDs.length, new Date() - startTime);
+    console.info('Read %d songs in %dms', songAndArtistType.valueIDs.length, new Date() - startTime);
   }
 
   /**
@@ -57,6 +63,14 @@ export default class MPD extends JSONApp {
   async playSong(args, client) {
     let song = args.Song;
     let artist = args.Artist;
+    let songAndArtist = args.SongAndArtist;
+    if (!song && !artist && songAndArtist) {
+      let split = songAndArtist.split(kArtistSeparator);
+      if (split.length == 2) {
+        song = split[0];
+        artist = split[1];
+      }
+    }
     if (!song && !artist) {
       throw new Error("I found no such song");
     }
