@@ -10,18 +10,26 @@ export default class BibleApp extends JSONApp {
   }
 
   readBibleVerse(args) {
-    return "Reading bible verse: " + args;
+    console.log(args);
+    return "Reading bible verse: " + readObject(args);
   }
 
   readBibleVerseRange(args) {
-    return "Reading bible verse range: " + args;
+    console.log(args);
+    return "Reading bible verse range: " + readObject(args);
   }
 
   readBibleChapter(args) {
-    return "Reading bible chapter: " + args;
+    console.log(args);
+    return "Reading bible chapter: " + readObject(args);
   }
 
   openPerson(args) {
-    return "Person: " + args;
+    console.log(args);
+    return "Person: " + readObject(args);
   }
+}
+
+function readObject(obj) {
+  return JSON.stringify(obj).replace(/["{,:}]/g, " ").replace(/ +/g, " ").trim();
 }

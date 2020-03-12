@@ -43,6 +43,7 @@ export class DataType {
   }
 
   /**
+   * TODO make it a Set?
    * @returns {Array of string} IDs of the different enum values
    */
   get valueIDs() {

@@ -139,7 +139,7 @@ export class Intent {
    */
   functionName() {
     // camelCase, e.g. "playSong" for intent ID "PlaySong".
-    return intent.id[0].toLowerCase() + command.substr(1);
+    return this.id[0].toLowerCase() + this.id.substr(1);
   }
 
   /**
@@ -154,15 +154,14 @@ export class Intent {
     let intent = this;
     // validate
     for (let argID in args) {
-      let parameter = intent.parameters[argID];
-      if (!parameter) {
+      let type = intent.parameters[argID];
+      if (!type) {
         throw new Error("Parameter ID " + argID + " is unknown for intent " + intent.id);
       }
-      let type = parameter.type;
       if (type.finite) {
-        let argument = args[argID];
-        if (!type.values.has(argument)) {
-          throw new Error("Argument " + argument + " is unknown for datatype " + type.id + ". This happened while calling intent " + intent.id);
+        let valueID = args[argID];
+        if (!type.valueIDs.includes(valueID)) {
+          throw new Error("Argument " + valueID + " is unknown for datatype " + type.id + ". This happened while calling intent " + intent.id);
         }
       }
     }
@@ -170,8 +169,9 @@ export class Intent {
     // Call app implementation function
     // e.g. `this.playSong(args)`
     try {
-      return this.app[intent.functionName()](args);
+      return this.app[this.functionName()](args);
     } catch (ex) {
+      console.error(ex);
       return "I had a problem. " + (ex.message || ex);
     }
   }

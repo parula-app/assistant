@@ -1,4 +1,6 @@
-import wordsToNumbers from 'words-to-numbers';
+// import wordsToNumbers from 'words-to-numbers';
+import * as wtn from 'words-to-numbers';
+const wordsToNumbers = wtn.default.wordsToNumbers;
 import writtenNumber from 'written-number';
 import { OpenEndedDataType } from './OpenEndedDataType.js';
 import { getConfig } from '../../util/config.js';
@@ -14,6 +16,7 @@ import { assert } from '../../util/util.js';
 export class NumberDataType extends OpenEndedDataType {
   constructor() {
     super("Pia.Number");
+    this._terms = null;
   }
 
   valueIDForTerm(term) {
@@ -22,6 +25,9 @@ export class NumberDataType extends OpenEndedDataType {
   }
 
   get terms() {
+    if (this._terms) {
+      return this._terms;
+    }
     let lang = getConfig().language;
     // TODO German and Italian not supported :-(
     let samples = [];
@@ -34,6 +40,6 @@ export class NumberDataType extends OpenEndedDataType {
     for (let i = 1; i < 5; i++) {
       samples.push(writtenNumber(i, { lang: lang }));
     }
-    return samples;
+    return this._terms = samples;
   }
 }

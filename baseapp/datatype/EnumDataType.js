@@ -63,7 +63,7 @@ export class EnumDataType extends DataType {
    * @returns {Array of string} What the user can say
    */
   get terms() {
-    return this._termsFlat();
+    return this._termsFlat;
   }
 
   /**
