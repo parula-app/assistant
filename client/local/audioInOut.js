@@ -3,14 +3,10 @@
  * and plays result over local speaker.
  */
 
-//import Sox from 'sox-stream';
-//import { Duplex } from 'stream';
 import portAudio from 'naudiodon';
-import MemoryStream from 'memory-stream';
 import { sampleRate as inputSampleRate } from '../../speechToText.js';
 import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
 import { getConfig } from '../../util/config.js';
-import { wait } from '../../util/util.js';
 
 var config;
 
@@ -30,12 +26,13 @@ function listDevices() {
   }
 }
 
-function playbackAudio(waveStream) {
+export function playbackAudio(waveStream) {
   let ao = new portAudio.AudioIO({
     outOptions: {
       channelCount: 1,
       sampleFormat: portAudio.SampleFormat16Bit,
-      sampleRate: outputSampleRate(),
+      //sampleRate: outputSampleRate(),
+      sampleRate: inputSampleRate(),
       deviceId: config.outputDevice,
       closeOnError: true,
     }
@@ -46,8 +43,14 @@ function playbackAudio(waveStream) {
   });
 }
 
-export async function audioInput() {
-  let ai = new portAudio.AudioIO({
+/**
+ * Listens to microphone, and returns the audio data.
+ *
+ * @returns {InputStream} audio data as stream
+ *   Flows after this function returned.
+ */
+export function audioInput() {
+  let audioInputStream = new portAudio.AudioIO({
     inOptions: {
       channelCount: 1,
       sampleFormat: portAudio.SampleFormat16Bit,
@@ -57,17 +60,5 @@ export async function audioInput() {
       closeOnError: true,
     }
   });
-  console.info('Listening to your command.');
-  ai.start();
-  let audioStream = new MemoryStream();
-  ai.pipe(audioStream);
-  return new Promise(async (resolve, reject) => {
-    /* Not called
-    audioStream.on('finish', () => {
-      resolve(audioStream.toBuffer());
-    }); */
-    await wait(config.captureSeconds);
-    ai.unpipe();
-    resolve(audioStream.toBuffer());
-  });
+  return audioInputStream;
 }

@@ -39,7 +39,49 @@ export function sampleRate() {
 }
 
 /**
+ * Streaming voice recognition.
+ *
+ * 1. new SpeechRecognizer()
+ * 2. Call processAudio() several times, as your audio comes in
+ * 3. Call end() and get the text
+ * 4. Drop the object
+ */
+export class SpeechRecognizer {
+  /**
+   * @param customModel {DeepSpeech Model} (Optional) null = normal language
+  constructor(customModel) {
+    this.model = customModel || model;
+   */
+  constructor() {
+    this.model = model;
+    this.modelStream = this.model.createStream();
+  }
+
+  /**
+   * Add new voice audio data to an ongoing recognition.
+   * @param audioButton {Buffer} audio data from the microphone
+   *
+   * TODO should be async, but DeepSpeech is currently blocking :(
+   * Workaround: Wrap in `(async () => {...}();` ?
+   */
+  processAudio(audioBuffer) {
+    this.model.feedAudioContent(this.modelStream, audioBuffer); //audioBuffer.slice(0, audioBuffer.length / 2));
+  }
+
+  /**
+   * The audio stream finished.
+   * @returns {string} The text recognized from the audio
+   *
+   * TODO should be async, but DeepSpeech is currently blocking :(
+   */
+  end() {
+    return this.model.finishStream(this.modelStream);
+  }
+}
+
+/**
  * Converts audio into text
+ * Does it all at once, after the audio has finished, and is therefore slow.
  */
 export function speechToText(audioBuffer) {
   console.info('Running speech recognition');
@@ -54,11 +96,12 @@ export function speechToText(audioBuffer) {
   return text;
 }
 
+
 /**
  * Converts audio into text, using a confined vocabulary.
  *
  * @param languageModel {LanguageModel} path to lm.binary file
- */
+ *
 export function speechToTextWithLanguageModel(audioBuffer, languageModel) {
   model.enableDecoderWithLM(languageModel, config.trie, config.lmAlpha, config.lmBeta);
   return speechToText(audioBuffer);
@@ -74,6 +117,7 @@ export function speechToTextWithLanguageModel(audioBuffer, languageModel) {
  * @returns {LanguageModel}  LM
  *    Pass this to `speechToTextWithLanguageModel()` and
  *    `DataType.languageModel`.
- */
+ *
 export function trainSpeechToTextOnVocabulary(listOfSentences) {
 }
+*/
