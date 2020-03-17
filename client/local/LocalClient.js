@@ -34,7 +34,8 @@ export class LocalClient extends Client {
       memoryStream.put(buffer);
       recognizer.processAudio(buffer);
     }, () => { // command complete
-      audioInOut.playbackAudio(memoryStream);
+      audioFile.saveAudioFile(memoryStream);
+      memoryStream.stop();
       let inputText = recognizer.end(recognizer);
       console.log("Command: " + inputText);
       (async () => {
