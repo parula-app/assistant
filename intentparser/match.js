@@ -122,6 +122,7 @@ function matchVariable(inputText, validValues) {
     return inputText;
   }
   inputText = inputText.toLowerCase();
+  let lengthWithoutPlaceholders = inputText.replace(/{[a-zA-Z0-9]+}/g, "").length;
   //console.log("input:", inputText);
   //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
   //console.log("stringSimilarity:", similarity);
@@ -135,7 +136,7 @@ function matchVariable(inputText, validValues) {
       result.targetString = targetString;
       return result;
     })
-    .sort((a, b) => a.editDistance - b.editDistance);
+    .sort((a, b) => (a.editDistance - b.editDistance) / lengthWithoutPlaceholders);
   //console.log(results.slice(0, 5));
   let match = results[0].targetString;
   console.log("did you mean:", match);
