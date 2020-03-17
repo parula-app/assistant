@@ -79,13 +79,13 @@ export default class MPD extends JSONApp {
     // <https://hbenl.github.io/mpc-js-core/typedoc/classes/_mpccore_.mpccore.html>
     await mpc.currentPlaylist.clear();
     if (song && artist) {
-      await mpc.database.findAdd([['Title', song], ['Artist', artist]]);
+      mpc.database.findAdd([['Title', song], ['Artist', artist]]);
     } else if (song) {
-      await mpc.database.findAdd([['Title', song]]);
+      mpc.database.findAdd([['Title', song]]);
     } else if (artist) {
-      await mpc.database.findAdd([['Artist', artist]]);
+      mpc.database.findAdd([['Artist', artist]]);
     }
-    await mpc.playback.play();
+    mpc.playback.play();
 
     //let songs = await mpc.database.find([['Title', searchText]]);
     //console.log(songs.map(song => ({ title: song.title, artist: song.artist, file: song.path })));
