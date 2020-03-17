@@ -9,6 +9,7 @@
 //import stringSimilarity from 'string-similarity';
 import didYouMean from 'didyoumean2';
 const didYouMean2 = didYouMean.default;
+import wildLeven from './leven.js';
 import { AppBase } from '../baseapp/AppBase.js';
 import { Intent } from '../baseapp/Intent.js';
 import { DataType } from '../baseapp/datatype/DataType.js';
@@ -30,15 +31,15 @@ export default class IntentParser {
     this.clientAPI = clientAPI;
 
     /**
-     * "{name}" removed
-     * E.g. "Play  from  " for "Play {Song} from {Artist}"
-     * {Map command {string} -> { Intent } }
+     * All commands of all Intents
+     * E.g. "Play {Song} from {Artist}"
+     * {Map command {string} -> { intent {Intent}, command {string} (as original) } }
      */
-    this.commandsWithoutPlaceholders = new Map();
+    this.commands = new Map();
     /**
      * {Array of command {string} }
      */
-    this.commandsWithoutPlaceholdersFlat = [];
+    this.commandsFlat = [];
   }
 
   /**
@@ -55,17 +56,16 @@ export default class IntentParser {
     assert(app instanceof AppBase);
 
     const kCommandMinLength = 4;
-    const kCommandMaxLength = 10;
-    const kPlaceholder = "";
 
     for (let intent of Object.values(app.intents)) {
       //console.log("Command for intent " + intent.id + ":");
       for (let command of intent.commands) {
-        let withoutPlaceholders = command.replace(/{[a-zA-Z0-9]+}/g, kPlaceholder);
-        if (withoutPlaceholders.length >= kCommandMinLength) {
-          this.commandsWithoutPlaceholders.set(withoutPlaceholders, { intent, command });
+        let withoutPlaceholders = command.replace(/{[a-zA-Z0-9]+}/g, "");
+        if (withoutPlaceholders.length < kCommandMinLength) {
+          continue;
         }
-        this.commandsWithoutPlaceholdersFlat.push(withoutPlaceholders);
+        this.commands.set(command, { intent: intent, command: command });
+        this.commandsFlat.push(command);
       }
     }
   }
@@ -75,27 +75,32 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startApp(inputText) {
-    const startTime = new Date();
-    let commandWithout = didYouMean2(inputText, this.commandsWithoutPlaceholdersFlat, { threshold: 0.1 });
-    if (!commandWithout) {
+    console.log("input:", inputText);
+    let result = matchVariable(inputText, this.commandsFlat);
+    if (!result) {
       return "I did not understand you";
     }
-    console.log("did you mean command: ", commandWithout);
-    console.log("string matching took", (new Date() - startTime) + "ms");
-    let { intent, command } = this.commandsWithoutPlaceholders.get(commandWithout);
+    let { intent, command } = this.commands.get(result.targetString);
     let app = intent.app;
-    console.log("app", app.id, "command with placeholders:", command);
+    //console.log("app", app.id, "command", command);
 
-    // process variables
-    let args = getVariables(inputText, command, intent);
+    let args = {};
+    let argsLower = result.variables;
+    // Fix up arg names, which we made lower case during matching :(
+    let orgParams = Object.keys(intent.parameters);
+    let orgParamsLower = orgParams.map(a => a.toLowerCase());
+    for (let nameLower in argsLower) {
+      let nameOrg = orgParams[orgParamsLower.indexOf(nameLower)];
+      args[nameOrg] = argsLower[nameLower];
+    }
     for (let name in args) {
       let dataType = intent.parameters[name];
       if (dataType.finite) {
         // normalize to allowed values
-        args[name] = matchVariable(args[name], dataType.terms);
+        args[name] = matchVariable(args[name], dataType.terms).targetString;
       }
       args[name] = dataType.valueIDForTerm(args[name]);
-    }
+     }
 
     try {
       // Start the app
@@ -108,76 +113,35 @@ export default class IntentParser {
 }
 
 /**
-  * This is a simplistic attempt at matching the input string
-  * with its variables with the expected command string and its placeholders.
-  * HACK TODO Instead, need levenshtein with wildcards.
-  */
-function getVariables(inputText, command, intent) {
-  let args = {};
-  let inputWords = inputText.split(" ");
-  let commandWords = command.split(" ");
-  let lastArgName;
-  let iCommand = 0;
-  for (let inputWord of inputWords) {
-    let commandWord = commandWords[iCommand];
-    if (!commandWord) {
-      // end of the phrase, no more command words, but still input
-      if (lastArgName) {
-        args[lastArgName] += " " + inputWord;
-        console.log("end added to variable:", lastArgName, "=", args[lastArgName]);
-      } // else: superflous command words
-      continue;
-    }
-    if (commandWord[0] == "{") {
-      // This is a placeholder
-      let argName = commandWord.substr(1, commandWord.length - 2);
-      console.log("detected variable:", argName, "=", inputWord);
-      if (args[argName]) {
-        args[argName] += " " + inputWord;
-      } else {
-        args[argName] = inputWord;
-      }
-      iCommand++;
-      lastArgName = argName;
-    } else if (didYouMean2(inputWord, [ commandWord ])) {
-      // Word is part of the static command
-      console.log("detected command word:", inputWord, "=", commandWord);
-      iCommand++;
-      lastArgName = null;
-    } else if (didYouMean2(inputWord, [ commandWords[iCommand + 1] ])) {
-      // Already next command word. Maybe there are superflous words in the sample command.
-      console.log("detected command word:", inputWord, "=", commandWords[iCommand + 1], ", while skipping:", commandWord);
-      iCommand++; // skip the superflous command word
-      iCommand++;
-      lastArgName = null;
-    } else if (lastArgName) { // 2. word of the variable
-      args[lastArgName] += " " + inputWord;
-      console.log("added to variable:", lastArgName, "=", args[lastArgName]);
-    } else { // neither placeholder nor detected command word
-      console.log("skipping input word:", inputWord);
-      // Superflous word in input, e.g. "could you". Just skip it.
-    }
-  }
-  return args;
-}
-
-/**
 * @param inputText {string} user input, only the part for this variable
 * @param validValues {Array of string}
-* @returns {string} one line from validValues, the closest match
+* @returns {wildLeven() result} the closest match
 */
 function matchVariable(inputText, validValues) {
   if (!validValues) {
     return inputText;
   }
+  inputText = inputText.toLowerCase();
+  //console.log("input:", inputText);
   //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
   //console.log("stringSimilarity:", similarity);
   const startTime = new Date();
-  let match = didYouMean2(inputText, validValues);
+  let results = validValues
+    .map(targetString => {
+      if (!targetString) {
+        return { editDistance : inputText.length * 2 };
+      }
+      let result = wildLeven(inputText, targetString.toLowerCase());
+      result.targetString = targetString;
+      return result;
+    })
+    .sort((a, b) => a.editDistance - b.editDistance);
+  //console.log(results.slice(0, 5));
+  let match = results[0].targetString;
   console.log("did you mean:", match);
   console.log("string matching took", (new Date() - startTime) + "ms");
   if (!match) {
     return inputText; // or throw?
   }
-  return match;
+  return results[0];
 }
