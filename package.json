@@ -17,6 +17,8 @@
         "mpc-js": "^1.2.1",
         "naudiodon": "^2.1.2",
         "node-fetch": "^2.6.0",
+        "sox-audio": "^0.3.0",
+        "stream-buffers": "^3.0.2",
         "words-to-numbers": "^1.5.1",
         "written-number": "^0.9.1"
     },
