@@ -2,3 +2,5 @@
 *.sh
 node_modules/
 config.json
+project
+
