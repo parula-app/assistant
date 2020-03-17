@@ -77,7 +77,9 @@ export class JSONApp extends AppBase {
       for (let value of values) {
         let id = value.id;
         let terms = [ value.name.value ];
-        terms = terms.concat(value.name.synonyms);
+        if (value.name.synonyms && value.name.synonyms.length) {
+          terms = terms.concat(value.name.synonyms);
+        }
         type.addValue(id, terms);
       }
     } else {
