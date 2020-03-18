@@ -4,16 +4,13 @@ import Say from 'jaxcore-say';
 import BumbleBee, {SpectrumAnalyser} from 'bumblebee-hotword';
 const bumblebee = new BumbleBee();
 bumblebee.setWorkersPath('./porcupine');
-
 bumblebee.addHotword('grasshopper');
 bumblebee.addHotword('terminator');
-bumblebee.setHotword('grasshopper');
 
 Say.setWorkers({
 	'espeak': 'espeak/espeak-en-worker.js'
 });
-
-var voice = new Say({
+const voice = new Say({
 	language: 'en',
 	// Leon, Scotty, Cylon
 	profile: 'Cylon',
@@ -131,13 +128,16 @@ class PiaApp extends Component {
 			muted
 		}, () => {
 			bumblebee.setMuted(muted);
-			if (this.analyser) this.analyser.setMuted(muted);
+			if (this.analyser) {
+				this.analyser.setMuted(muted);
+			}
 		});
 	}
 
 	recognizeHotword(hotword) {
 		if (hotword === this.state.selectedHotword) {
 			console.log('recognized hotword', hotword);
+			this.listenToCommand();
 
 			voice.say('at your service...');
 			//this.sounds['grasshopper'].play();
@@ -153,6 +153,18 @@ class PiaApp extends Component {
 		}
 	}
 
+	listenToCommand() {
+		if (this.analyser) {
+			const green = "#22EE00";
+			this.analyser.setBackgroundColor(green);
+		}
+		setTimeout(() => {
+			if (this.analyser) {
+				this.analyser.setBackgroundColor("black");
+			}
+		}, 5000);
+	}
+
 	renderResults() {
 		let b = this.state.results.map((word,i) => {
 			return (<li key={i}>{word}</li>);
@@ -161,7 +173,6 @@ class PiaApp extends Component {
 			{b}
 		</ul>);
 	}
-
 }
 
 export default PiaApp;
