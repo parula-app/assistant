@@ -1,7 +1,29 @@
 body {
-    font-size: 20px;
-    line-height: 1.5em;
+  font-size: 20px;
+  line-height: 1.5em;
 }
 select, button {
-    font-size: 20px;
+  font-size: 20px;
+}
+div.sound-controls {
+  display: flex;
+  align-content: center;
+  justify-content: right;
+}
+div.sound-controls > * {
+  margin-right: 0.5em;
+}
+#sensitivity-box {
+  font-size: 60%;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+#sensitivity-label {
+}
+#sensitivity {
+  font-size: 100%;
+}
+#oscilloscope {
 }

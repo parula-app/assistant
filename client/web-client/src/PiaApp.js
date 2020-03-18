@@ -68,18 +68,25 @@ class PiaApp extends Component {
 		return (
 			<div className="App">
 
-				Sensitivity: <select value={this.state.sensitivity||''} onChange={e => this.changeSensitivity(e)}>
-					{ this.renderSensitivities() }
-				</select>
+				<div className="sound-controls">
+					{this.renderSay()}
 
-				<button onClick={e => this.toggleMuted()}>
-					{this.state.muted ? 'Unmute' : 'Mute'}
-				</button>
+					<canvas id="oscilloscope" width="100" height="60" />
 
-				<br/>
-				<canvas id="oscilloscope" width="800" height="100" />
+					<button onClick={e => this.toggleMuted()}>
+						{this.state.muted ? 'Unmute' : 'Mute'}
+					</button>
 
-				{this.renderSay()}
+				  <div id="sensitivity-box">
+					  <label id="sensitivity-label" for="sensitivity">Sensitivity</label>
+						<select
+							id="sensitivity"
+							value={this.state.sensitivity||''}
+							onChange={e => this.changeSensitivity(e)}>
+						{ this.renderSensitivities() }
+						</select>
+					</div>
+				</div>
 
 				{this.renderResults()}
 
@@ -91,7 +98,7 @@ class PiaApp extends Component {
 		if (!this.state.bumblebee_started) {
 			return;
 		} else if (this.state.selectedHotword) {
-			return (<p>To start, say "{this.state.selectedHotword}".</p>);
+			return (<p>To start, say "{this.state.selectedHotword}"</p>);
 		}
 	}
 
