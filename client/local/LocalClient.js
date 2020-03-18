@@ -3,7 +3,7 @@
 
 import { Client } from '../Client.js';
 import * as audioInOut from './audioInOut.js';
-import * as snowboy from './snowboy.js';
+import * as wakeword from './porcupine.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
 import * as streamBuffers from 'stream-buffers';
@@ -19,7 +19,7 @@ import * as audioFile from './audioFile.js';
 export class LocalClient extends Client {
   async load() {
     await audioInOut.load();
-    await snowboy.load();
+    await wakeword.load();
     await super.load();
   }
 
@@ -27,7 +27,7 @@ export class LocalClient extends Client {
     await super.start();
     let recognizer;
     let memoryStream;
-    snowboy.waitForWakeWord(audioInOut.audioInput(), 10, () => { // new command
+    wakeword.waitForWakeWord(audioInOut.audioInput(), 10, () => { // new command
       recognizer = new speechToText.SpeechRecognizer();
       memoryStream = new ReadableStreamBuffer();
     }, (buffer) => {
