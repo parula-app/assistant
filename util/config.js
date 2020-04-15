@@ -9,7 +9,7 @@ export function getConfig() {
     return configData;
   }
   configData = loadJSONFile('./config.json');
-  console.info("configuration file:\n" + JSON.stringify(configData, null, 4));
+  //console.info("configuration file:\n" + JSON.stringify(configData, null, 4));
   let defaults = loadJSONFile('./config-defaults.json');
   //console.info("defaults:\n" + JSON.stringify(defaults, null, 4));
   configData = jsonMerge(defaults, configData);
