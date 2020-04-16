@@ -29,8 +29,8 @@
     "devDependencies": {},
     "type": "module",
     "scripts": {
-        "start": "node --experimental-modules start.js",
-        "webserver": "node --experimental-modules client/websocket-server/websocket-server.js",
+        "start": "node --experimental-modules client/local/start.js",
+        "websocket": "node --experimental-modules client/websocket-server/websocket-server.js",
         "test": "node --experimental-modules test.js"
     }
 }

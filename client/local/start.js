@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import { LocalClient } from './client/local/LocalClient.js';
+import { LocalClient } from './LocalClient.js';
 
 (async () => {
   try {
