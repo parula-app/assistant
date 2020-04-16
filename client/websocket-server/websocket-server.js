@@ -4,6 +4,7 @@
 import fs from 'fs';
 import https from 'https';
 import WebSocket from 'ws';
+import WebSocketWrapper from 'ws-wrapper';
 import { Client } from '../Client.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
@@ -30,31 +31,23 @@ export class WebSocketServer extends Client {
   async start() {
     await super.start();
 
-    const server = https.createServer();
-    const wss = new WebSocket.Server({ server });
-
+    const wss = new WebSocket.Server({ port: port });
     wss.on("connection", socketConnection => {
+      let socket = new WebSocketWrapper(socketConnection);
       let conn = new Connection();
-      socketConnection.on("message", message => {
-        try {
-          if (!message.func) {
-            throw new Error("Unknown WebSocket message format\n" + JSON.stringify(message.func, null, 2));
-          } else if (message.func == "command-start") {
-            conn.commandStart();
-          } else if (message.func == "command-audio") {
-            conn.commandAudio(message.arg);
-          } else if (message.func == "command-end") {
-            conn.commandEnd();
-          } else {
-            throw new Error("Unknown WebSocket function " + message.func);
-          }
-        } catch (ex) {
-          console.error(ex);
-        }
+      socket.on("msg", (from, msg) => {
+        console.log(`Received message from ${from}: ${msg}`);
+      });
+      socket.of("command").on("start", (from, msg) => {
+        conn.commandStart();
+      });
+      socket.of("command").on("audio", (from, buffer) => {
+            conn.commandAudio(buffer);
+      });
+      socket.of("command").on("end", (from, msg) => {
+        conn.commandEnd();
       });
     });
-
-    server.listen(port);
     console.log("WebSocket server listening to port " + port);
   }
 }

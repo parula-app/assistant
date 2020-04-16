@@ -270,7 +270,7 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-eventemitter3@^3.1.0:
+"eventemitter3@>=2 <4", eventemitter3@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
   integrity sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==
@@ -1159,6 +1159,13 @@ written-number@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/written-number/-/written-number-0.9.1.tgz#a400a4d2d6ca2575ad2afc62dc28d2d9f94f5e7e"
   integrity sha512-tl2EquIdCYnEeGu3p71GRsEJSqnD15CXjVtR6Hl0AFO0PrQ+SATIe3Sf4phaaKwLIuGRzWmA4+sThjJCZqwK1A==
+
+ws-wrapper@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/ws-wrapper/-/ws-wrapper-2.0.2.tgz#edada31dfb5bc5602f538891e27afb5106611d55"
+  integrity sha512-jMoPZ0UGdRXH9YPhtCPFXxwytJtanAJLkK+WuLwDVTQtJnqy0dSFEmHifvmqaLw5qUWY8NmMrMoc7v1usbS+uA==
+  dependencies:
+    eventemitter3 ">=2 <4"
 
 ws@^7.2.3:
   version "7.2.3"

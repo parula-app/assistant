@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Say from 'jaxcore-say';
 import BumbleBee, { SpectrumAnalyser } from 'bumblebee-hotword';
+import WebSocketWrapper from 'ws-wrapper';
 
 export default class PiaApp extends Component {
   constructor() {
@@ -18,7 +19,8 @@ export default class PiaApp extends Component {
 
     this.bumblebee = new BumbleBee();
 
-    this.socket = new Socket();
+    const port = 4224;
+    this.socket = new WebSocketWrapper(new WebSocket((window.location.protocol === "https" ? "wss://" : "ws://") + window.location.hostname + ":" + port));
   }
 
   componentDidMount() {
@@ -62,7 +64,7 @@ export default class PiaApp extends Component {
     });
 
     this.bumblebee.on('data', (data) => {
-      if (this.state.serverConnected && this.state.commandStarted) {
+      if (this.state.commandStarted) {
         this.commandAudio(data.buffer)
       }
     });
@@ -154,11 +156,12 @@ export default class PiaApp extends Component {
 
   listenToCommand() {
     if (this.state.commandStarted) {
+      console.log("command end, due to new command");
       this.commandEnd();
     }
     // Command starts
     console.log('command start');
-    this.socket.emit('command-start');
+    this.socket.of("command").emit("start");
     if (this.analyser) {
       const green = "#22EE00";
       this.analyser.setBackgroundColor(green);
@@ -172,43 +175,33 @@ export default class PiaApp extends Component {
 
     setTimeout(() => {
       // Command ends
-      console.log('command end, due to timeout');
-      this.socket.emit('command-end');
-      this.setState({
-        commandStarted: null,
-      });
-      if (this.analyser) {
-        this.analyser.setBackgroundColor("black");
+      if (this.state.commandStarted) {
+        console.log("command end, due to timeout");
+        this.commandEnd();
       }
     }, maxCommandLength * 1000);
   }
 
   commandAudio(buffer) {
-    console.log('command audio');
-    this.socket.emit('command-audio', buffer);
+    console.log("command audio");
+    console.log("audio data: ", buffer);
+    console.log("audio data JSON: " + JSON.stringify(buffer));
+    //this.socket.of("command").emit("audio", buffer);
   }
 
   commandEnd(buffer) {
-    console.log('command end');
-    this.socket.emit('command-end', buffer);
+    console.log("command end");
+    this.socket.of("command").emit("end");
+
     const results = this.state.results;
     results.push(this.state.selectedHotword);
-
     this.setState({
-      results
+      results: results,
+      commandStarted: null,
     });
-  }
-}
 
-class Socket {
-  constructor() {
-    const port = 4224;
-    this.webSocket = new WebSocket((window.location.protocol === "https" ? "wss://" : "ws://") + window.location.hostname + ":" + port);
-  }
-  emit(func, arg) {
-    this.webSocket.send({
-      func: func,
-      arg: arg,
-    });
+    if (this.analyser) {
+      this.analyser.setBackgroundColor("black");
+    }
   }
 }
