@@ -27,3 +27,11 @@ div.sound-controls > * {
 }
 #oscilloscope {
 }
+
+li.input {
+  list-style-type: circle;
+}
+li.response {
+  list-style-type: square;
+  margin-left: 1.5em;
+}
