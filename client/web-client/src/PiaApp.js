@@ -40,8 +40,14 @@ export default class PiaApp extends Component {
       profile: 'Cylon',
     });
 
-    this.bumblebee.on('hotword', (word) => {
-      this.recognizeHotword(word);
+    this.bumblebee.on('hotword', hotword => {
+      if (hotword !== this.state.selectedHotword) {
+        console.log('did not recognize', hotword);
+        return;
+      }
+      console.log('recognized hotword', hotword);
+
+      this.listenToCommand();
     });
 
     this.bumblebee.on('analyser', (analyser) => {
@@ -76,7 +82,7 @@ export default class PiaApp extends Component {
           </button>
 
           <div id="sensitivity-box">
-            <label id="sensitivity-label" for="sensitivity">Sensitivity</label>
+            <label id="sensitivity-label" htmlFor="sensitivity">Sensitivity</label>
             <select
               id="sensitivity"
               value={this.state.sensitivity||''}
@@ -146,23 +152,13 @@ export default class PiaApp extends Component {
     });
   }
 
-  recognizeHotword(hotword) {
-    if (hotword !== this.state.selectedHotword) {
-      console.log('did not recognize', hotword);
-      return;
-    }
-    console.log('recognized hotword', hotword);
-
-    this.listenToCommand();
-
-    //this.sounds['grasshopper'].play();
-
-  }
-
   listenToCommand() {
+    if (this.state.commandStarted) {
+      this.commandEnd();
+    }
     // Command starts
     console.log('command start');
-    //this.socket.emit('command-start', null);
+    this.socket.emit('command-start');
     if (this.analyser) {
       const green = "#22EE00";
       this.analyser.setBackgroundColor(green);
@@ -177,9 +173,9 @@ export default class PiaApp extends Component {
     setTimeout(() => {
       // Command ends
       console.log('command end, due to timeout');
-      //this.socket.emit('command-end', null);
+      this.socket.emit('command-end');
       this.setState({
-        commandStarted: new Date(),
+        commandStarted: null,
       });
       if (this.analyser) {
         this.analyser.setBackgroundColor("black");
@@ -189,7 +185,7 @@ export default class PiaApp extends Component {
 
   commandAudio(buffer) {
     console.log('command audio');
-    //this.socket.emit('command-audio', buffer);
+    this.socket.emit('command-audio', buffer);
   }
 
   commandEnd(buffer) {
@@ -206,10 +202,11 @@ export default class PiaApp extends Component {
 
 class Socket {
   constructor() {
-    this.webSocket = new WebSocket((window.location.protocol === "https" ? "wss://" : "ws://") + window.location.host);
+    const port = 4224;
+    this.webSocket = new WebSocket((window.location.protocol === "https" ? "wss://" : "ws://") + window.location.hostname + ":" + port);
   }
   emit(func, arg) {
-    this.webSocket.message({
+    this.webSocket.send({
       func: func,
       arg: arg,
     });
