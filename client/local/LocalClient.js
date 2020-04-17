@@ -1,9 +1,8 @@
-#!/usr/bin/env node
 'use strict';
 
 import { Client } from '../Client.js';
 import * as audioInOut from './audioInOut.js';
-import * as wakeword from './porcupine.js';
+import * as wakeword from './bumblebee.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
 import * as streamBuffers from 'stream-buffers';
