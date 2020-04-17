@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Say from 'jaxcore-say';
 import BumbleBee, { SpectrumAnalyser } from 'bumblebee-hotword';
-import WebSocketWrapper from 'ws-wrapper';
+
+const port = 4224;
 
 export default class PiaApp extends Component {
   constructor() {
@@ -18,9 +19,6 @@ export default class PiaApp extends Component {
     };
 
     this.bumblebee = new BumbleBee();
-
-    const port = 4224;
-    this.socket = new WebSocketWrapper(new WebSocket((window.location.protocol === "https" ? "wss://" : "ws://") + window.location.hostname + ":" + port));
   }
 
   componentDidMount() {
@@ -101,8 +99,11 @@ export default class PiaApp extends Component {
   }
 
   renderResults() {
-    let b = this.state.results.map((word,i) => {
-      return (<li key={i}>{word}</li>);
+    let b = this.state.results.map((resp, i) => {
+      return [
+        <li key={ i * 2 } className="input">{ resp.input }</li>,
+        <li key={ i * 2 + 1 } className="response">{ resp.response }</li>
+      ];
     });
     return (<ul>
       {b}
@@ -161,7 +162,6 @@ export default class PiaApp extends Component {
     }
     // Command starts
     console.log('command start');
-    this.socket.of("command").emit("start");
     if (this.analyser) {
       const green = "#22EE00";
       this.analyser.setBackgroundColor(green);
@@ -169,10 +169,9 @@ export default class PiaApp extends Component {
     this.setState({
       commandStarted: new Date(),
     });
-    this.voice.say('at your service...');
+    //this.voice.say('at your service...');
 
-    const maxCommandLength = 10; // seconds
-
+    const maxCommandLength = 5; // seconds
     setTimeout(() => {
       // Command ends
       if (this.state.commandStarted) {
@@ -180,28 +179,65 @@ export default class PiaApp extends Component {
         this.commandEnd();
       }
     }, maxCommandLength * 1000);
+
+    let url = window.location.protocol + "//" + window.location.hostname + ":" + port + "/speechToText";
+    // <https://developer.mozilla.org/en-US/docs/Web/API/Request/Request>
+    // <https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream>
+    // <https://jakearchibald.com/2016/streams-ftw/#creating-your-own-readable-stream>
+    let me = this;
+    let sendStream = new ReadableStream({
+      start(controller) {
+        me.streamController = controller;
+      },
+      cancel() {
+        me.streamController = null;
+      },
+    });
+    this.fetch = fetch(url, {
+      method: "PUT",
+      body: sendStream,
+    });
+    console.log("Opened sending stream to " + url);
   }
 
   commandAudio(buffer) {
-    console.log("command audio");
-    console.log("audio data: ", buffer);
-    console.log("audio data JSON: " + JSON.stringify(buffer));
-    //this.socket.of("command").emit("audio", buffer);
+    console.log("command audio: ", buffer);
+    //console.log("audio data JSON: " + JSON.stringify(buffer));
+    if (this.streamController) {
+      this.streamController.enqueue(buffer);
+    }
   }
 
-  commandEnd(buffer) {
+  async commandEnd(buffer) {
     console.log("command end");
-    this.socket.of("command").emit("end");
 
-    const results = this.state.results;
-    results.push(this.state.selectedHotword);
     this.setState({
-      results: results,
       commandStarted: null,
     });
 
     if (this.analyser) {
       this.analyser.setBackgroundColor("black");
+    }
+
+    try {
+      if ( !this.streamController) {
+        return;
+      }
+      console.log("Closing sending streaming");
+      this.streamController.close();
+      console.log("Waiting for server");
+      let response = await this.fetch;
+      console.log("Server responded");
+      let json = await response.json();
+      console.log("Reponse: ", json);
+
+      const results = this.state.results;
+      results.push(json);
+      this.setState({
+        results: results,
+      });
+    } catch (ex) {
+      console.error(ex);
     }
   }
 }
