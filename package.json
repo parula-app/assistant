@@ -12,11 +12,10 @@
     },
     "dependencies": {
         "argparse": "^1.0.10",
-        "bumblebee-hotword-node": "^0.0.4",
+        "bumblebee-hotword-node": "^0.0.5",
         "deepspeech": "^0.6.1",
         "didyoumean2": "^4.0.0",
         "express": "^4.17.1",
-        "jaxcore": "^0.0.2",
         "mpc-js": "^1.2.1",
         "naudiodon": "^2.1.2",
         "node-fetch": "^2.6.0",
