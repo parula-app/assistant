@@ -1,16 +1,17 @@
-import * as pvporcupine from 'pv-porcupine';
-const porcupine = pvporcupine.default.default;
+import BumblebeeNode from 'bumblebee-hotword-node';
+import { sampleRate as inputSampleRate } from '../../speechToText.js';
 import { wait } from '../../util/util.js';
-console.log("porcupine version", porcupine.version());
+
 var detector;
 
 export async function load() {
-  const keywordPath = '../computer.ppn';
-  const detector = new porcupine.Porcupine('node_modules/pv-porcupine/Porcupine/lib/common/porcupine_params.pv', keywordPath);
+  detector = new BumblebeeNode();
+  detector.addHotword('grasshopper');
+  detector.setSensitivity(0.6);
 }
 
 export async function unload() {
-  detector.destroy();
+  detector.stop();
 }
 
 /**
@@ -38,8 +39,24 @@ export async function unload() {
 export async function waitForWakeWord(audioInputStream, maxCommandLength,
   newCommandCallback, audioCallback, endCommandCallback) {
 
+  detector.start(audioInputStream, inputSampleRate());
+
   // Whether this is an active command
   let commandStartTime = null;
+
+  detector.on('hotword', (wakeword) => {
+    // `buffer` contains the last chunk of the audio that triggers the "hotword"
+    // event. It could be written to a wav stream. You have to use it
+    // together with the `buffer` in the "data" event, if you want to get audio
+    // data after the hotword.
+    console.log('Wakeword', wakeword);
+    commandStartTime = new Date();
+    try {
+      newCommandCallback();
+    } catch (ex) {
+      console.error(ex);
+    }
+  });
 
   detector.on('data', (buffer) => {
     // <buffer> contains the last chunk of the audio that triggers the "sound"
@@ -66,23 +83,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     console.error(ex);
   });
 
-  detector.on('keyword', (buffer, wakeword) => {
-    // `buffer` contains the last chunk of the audio that triggers the "hotword"
-    // event. It could be written to a wav stream. You have to use it
-    // together with the `buffer` in the "data" event, if you want to get audio
-    // data after the hotword.
-    console.log('wakework', wakeword);
-    commandStartTime = new Date();
-    try {
-      newCommandCallback();
-      audioCallback(buffer);
-    } catch (ex) {
-      console.error(ex);
-    }
-  });
-
-  console.info('Listening to your command.');
   audioInputStream.start();
-  audioInputStream.pipe(detector);
+  console.info('Listening to your command.');
   await wait(64^5); // 34 years TODO
 }
