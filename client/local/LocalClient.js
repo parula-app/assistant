@@ -5,9 +5,6 @@ import * as audioInOut from './audioInOut.js';
 import * as wakeword from './bumblebee.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
-import * as streamBuffers from 'stream-buffers';
-const ReadableStreamBuffer = streamBuffers.default.ReadableStreamBuffer;
-import * as audioFile from './audioFile.js';
 
 /**
  * This and `Client` is the central code that calls all the other modules.
@@ -25,16 +22,11 @@ export class LocalClient extends Client {
   async start() {
     await super.start();
     let recognizer;
-    let memoryStream;
     wakeword.waitForWakeWord(audioInOut.audioInput(), 10, () => { // new command
       recognizer = new speechToText.SpeechRecognizer();
-      memoryStream = new ReadableStreamBuffer();
     }, (buffer) => {
-      memoryStream.put(buffer);
       recognizer.processAudio(buffer);
     }, () => { // command complete
-      audioFile.saveAudioFile(memoryStream);
-      memoryStream.stop();
       let inputText = recognizer.end(recognizer);
       console.log("Command: " + inputText);
       (async () => {
