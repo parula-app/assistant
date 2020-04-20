@@ -104,7 +104,8 @@ export default class IntentParser {
 
     try {
       // Start the app
-      return await intent.run(args, this.clientAPI);
+      let output = await intent.run(args, this.clientAPI);
+      return (output ? output : "") + this.clientAPI.outputSentences.join(". ");
     } catch (ex) { // Exceptions should be caught by intent. This is a fallback.
       console.error(ex);
       return ex.message || ex;

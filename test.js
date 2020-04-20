@@ -9,10 +9,23 @@ import { Client } from './client/Client.js';
 class TestClient extends Client {
   async start() {
     await this.load();
-    let inputText = "read genesis chapter one verse twenty two";
-    //let inputText = "open genesis chapter five verse three";
-    let response = await this.intentParser.startApp(inputText);
-    console.log("\n" + response + "\n");
+    let successCount = 0;
+    let failCount = 0;
+    for (let input in expected) {
+      let exp = expected[input];
+      let response = await this.intentParser.startApp(input);
+      if (exp == response) {
+        successCount++;
+      } else {
+        console.error('FAIL: input: "' + input + '", expected: "' + exp + '", but got: "' + response + '"');
+        failCount++;
+      }
+    }
+    if (failCount) {
+      console.log("FAIL: " + failCount + " of " + (failCount + successCount) + " tests failed");
+    } else {
+      console.log("SUCCESS: All " + successCount + " tests passed");
+    }
     await this.quit();
   }
 }
@@ -24,3 +37,8 @@ class TestClient extends Client {
     console.error(ex);
   }
 })();
+
+const expected = {
+  "read genesis chapter one verse twenty two": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”",
+  "open genesis five verse three": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”. Adam lived for 130 years and then became father to a son in his likeness, in his image, and he named him Seth.",
+};

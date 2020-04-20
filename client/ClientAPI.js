@@ -13,6 +13,7 @@ export class ClientAPI {
   constructor(client) {
     assert(client instanceof Client);
     this.client = client;
+    this._sentences = [];
   }
 
   /**
@@ -25,6 +26,13 @@ export class ClientAPI {
   }
 
   /**
+   * Output that the app returned using `say()`
+   */
+  get outputSentences() {
+    return this._sentences;
+  }
+
+  /**
    * Output a specific text to the user
    * @param outputText {string} text for the end user,
    *   translated into language `this.lang`.
@@ -32,11 +40,9 @@ export class ClientAPI {
   say(outputText) {
     // remove <ssml> tags
     outputText = outputText.replace(/<[^>]*>/g, " ").replace(/ +/g, " ").trim();
-    console.log(outputText);
-    let sentences = outputText.split(". ");
-    for (let sentence of sentences) {
-      // TODO
-      //await textToSpeech.textToSpeech(sentence);
+    //this._sentences.push(outputText);
+    for (let sentence of outputText.split(". ")) { // TODO "2."
+      this._sentences.push(sentence);
     }
   }
 
