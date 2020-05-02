@@ -1,12 +1,18 @@
 import { wait } from '../../util/util.js';
 
+/**
+ * If true, start a new command after finishing the previous one.
+ * If false, only one command is taken, and then we ignore all additional input.
+ */
+const multiple = true;
+
 export async function load() {
 }
 
 /**
  * This is an dummy implementation of the wakeword API
  * that does not listen for a wakeword, but simply feeds
- * the first seconds of audio back.
+ * the first `maxCommandLength` seconds of audio back.
  *
  * @param audioInputStream {Stream} audio data from microphone
  * @param maxCommandLength {int} in seconds. How long to listen
@@ -27,8 +33,8 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   let commandStartTime = new Date();
 
   audioInputStream.on('data', (buffer) => {
-    let seconds = Math.round((new Date() - commandStartTime) / 1000);
     if (commandStartTime) {
+      let seconds = Math.round((new Date() - commandStartTime) / 1000);
       process.stdout.write(seconds + ' ***\r');
       try {
         audioCallback(buffer);
@@ -39,6 +45,13 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
         commandStartTime = null;
         try {
           endCommandCallback();
+
+          if (multiple) {
+            setTimeout(() => {
+              commandStartTime = new Date();
+              newCommandCallback();
+            }, maxCommandLength / 3 * 1000); // allow to process, before starting the new command
+          }
         } catch (ex) {
           console.error(ex);
         }

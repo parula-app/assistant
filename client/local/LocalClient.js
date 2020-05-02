@@ -22,7 +22,7 @@ export class LocalClient extends Client {
   async start() {
     await super.start();
     let recognizer;
-    wakeword.waitForWakeWord(audioInOut.audioInput(), 10, () => { // new command
+    wakeword.waitForWakeWord(audioInOut.audioInput(), 7, () => { // new command
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);
