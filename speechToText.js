@@ -65,7 +65,7 @@ export class SpeechRecognizer {
    * Workaround: Wrap in `(async () => {...}();` ?
    */
   processAudio(audioBuffer) {
-    this.model.feedAudioContent(this.modelStream, audioBuffer); //audioBuffer.slice(0, audioBuffer.length / 2));
+    this.model.feedAudioContent(this.modelStream, audioBuffer.slice(0, audioBuffer.length / 2));
   }
 
   /**

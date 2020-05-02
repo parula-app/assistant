@@ -2,7 +2,7 @@
 
 import { Client } from '../Client.js';
 import * as audioInOut from './audioInOut.js';
-import * as wakeword from './awake.js';
+import * as wakeword from './bumblebee.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
 
