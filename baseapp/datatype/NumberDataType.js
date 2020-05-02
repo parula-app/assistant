@@ -20,8 +20,16 @@ export class NumberDataType extends OpenEndedDataType {
   }
 
   valueIDForTerm(term) {
+    term = term.trim();
     // TODO only English supported
-    return wordsToNumbers(term, { fuzzy: true });
+    return this.validate(wordsToNumbers(term, { fuzzy: true }));
+  }
+
+  validate(input) {
+    if (typeof(input) != "number") {
+      throw new Error(this.id + " " + input + " is not a number");
+    }
+    return input;
   }
 
   get terms() {
