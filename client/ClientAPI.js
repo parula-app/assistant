@@ -13,6 +13,10 @@ export class ClientAPI {
   constructor(client) {
     assert(client instanceof Client);
     this.client = client;
+    this.reset();
+  }
+
+  reset() {
     this._sentences = [];
   }
 
