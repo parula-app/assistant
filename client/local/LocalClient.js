@@ -5,6 +5,8 @@ import * as audioInOut from './audioInOut.js';
 import * as wakeword from './bumblebee.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
+import * as wtn from 'words-to-numbers';
+const wordsToNumbers = wtn.default.wordsToNumbers;
 
 /**
  * This and `Client` is the central code that calls all the other modules.
@@ -28,6 +30,7 @@ export class LocalClient extends Client {
       recognizer.processAudio(buffer);
     }, () => { // command complete
       let inputText = recognizer.end(recognizer);
+      inputText = wordsToNumbers(inputText); // leaves text as-is, only replaces numbers
       console.log("Command: " + inputText);
       (async () => {
         let response = await this.intentParser.startApp(inputText);

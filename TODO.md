@@ -9,6 +9,7 @@
 
 ## Speech
 * fix audio output
+* silence detection
 * LM
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary
