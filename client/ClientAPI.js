@@ -23,11 +23,6 @@ export class ClientAPI {
     this._context = [];
 
     /**
-     * {AppBase}
-     */
-    this._currentMediaPlayer = null;
-
-    /**
      * Output that the app returned using `say()`
      *
      * {Array of String} Human-readable output
@@ -47,10 +42,6 @@ export class ClientAPI {
   newCommand(intent, args) {
     this._sentences = [];
     this._context.push(new Context(intent, args));
-
-    if (typeof(intent.app.volume) == "function") {
-      this._setCurrentMediaPlayer(intent.app);
-    }
   }
 
   /**
@@ -75,41 +66,7 @@ export class ClientAPI {
    * @returns {Array of Context}
    */
   get context() {
-    return this._context().slice();
-  }
-
-  /**
-   * The current or last media playing app.
-   * Allows to control playback (stop, pause, skip etc.)
-   * and volume.
-   *
-   * The app needs to implement standard intents like
-   * - Pia.Stop
-   * - Pia.Volume
-   * - Pia.RelativeVolume
-   * and optionally
-   * - Pia.Pause
-   * - Pia.Resume
-   * - Pia.Next
-   * - Pia.Previous
-   * The client can then offer a standard user interface
-   * (by voice or GUI) that allows to control playback.
-   *
-   * @returns {AppBase}
-   */
-  get currentMediaPlayer() {
-    return this._currentMediaPlayer;
-  }
-
-  /**
-   * The app that is currently playing audio or video files.
-   */
-  _setCurrentMediaPlayer(app) {
-    assert(app instanceof AppBase);
-    assert(typeof(app.stop) == "function");
-    assert(typeof(app.volume) == "function");
-    assert(typeof(app.relativeVolume) == "function");
-    this._currentMediaPlayer = app;
+    return this._context.slice();
   }
 
   /**
@@ -181,6 +138,13 @@ class Context {
    */
   get intent() {
     return this._intent;
+  }
+
+  /**
+   * @returns {AppBase}
+   */
+  get app() {
+    return this._intent.app;
   }
 
   /**
