@@ -26,7 +26,13 @@ function listDevices() {
   }
 }
 
-export function playbackAudio(waveStream) {
+/**
+ * Play sound at the loudspeakers.
+ *
+ * @param waveStream {ReadableStream} audio
+ *    with inputSampleRate(), 1 channel, 16 unsigned
+ */
+export function audioOutput(waveStream) {
   let ao = new portAudio.AudioIO({
     outOptions: {
       channelCount: 1,
@@ -46,7 +52,7 @@ export function playbackAudio(waveStream) {
 /**
  * Listens to microphone, and returns the audio data.
  *
- * @returns {InputStream} audio data as stream
+ * @returns {ReadableStream} audio data as stream
  *   Flows after this function returned.
  */
 export function audioInput() {

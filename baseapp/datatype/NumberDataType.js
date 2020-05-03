@@ -27,7 +27,7 @@ export class NumberDataType extends OpenEndedDataType {
 
   validate(input) {
     if (typeof(input) != "number") {
-      throw new Error(this.id + " " + input + " is not a number");
+      throw new Error("'" + input + "' is not a number");
     }
     return input;
   }

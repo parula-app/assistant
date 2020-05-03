@@ -17,6 +17,11 @@ export function sampleRate() {
   return kTTS_Bitrate;
 }
 
+/**
+ * @param text {string}   what to say
+ * @returns {ReadableStream}   audio
+ *    with sampleRate(), 1 channel, 16 bit unsigned
+ */
 export async function textToSpeech(text) {
   console.info("Generating speech for: " + text);
   let startTime = new Date();

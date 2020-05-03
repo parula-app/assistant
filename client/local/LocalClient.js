@@ -35,6 +35,7 @@ export class LocalClient extends Client {
         console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
+        await audioInOut.audioOutput(await textToSpeech.textToSpeech(response));
       } catch (ex) {
         console.error(ex);
       }
