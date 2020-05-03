@@ -12,13 +12,6 @@
                     "samples": []
                 },
                 {
-                    "name": "Pia.Stop",
-                    "samples": [
-                      "Stop",
-                      "Stop the music"
-                    ]
-                },
-                {
                     "name": "PlaySong",
                     "slots": [
                         {
@@ -46,20 +39,13 @@
                     ]
                 },
                 {
-                    "name": "Pia.Next",
-                    "samples": [
-                        "Next song",
-                        "Next",
-                        "Skip"
-                    ]
+                    "name": "Pia.Stop"
                 },
                 {
-                    "name": "Pia.Previous",
-                    "samples": [
-                        "Previous song",
-                        "Previous",
-                        "Go back"
-                    ]
+                    "name": "Pia.Next"
+                },
+                {
+                    "name": "Pia.Previous"
                 },
                 {
                     "name": "Pia.Volume",
@@ -68,10 +54,15 @@
                             "name": "Volume",
                             "type": "Pia.Number"
                         }
-                    ],
-                    "samples": [
-                        "Volume {Volume}",
-                        "Volume {Volume} percent"
+                    ]
+                },
+                {
+                    "name": "Pia.RelativeVolume",
+                    "slots": [
+                        {
+                            "name": "RelativeVolume",
+                            "type": "Pia.Number"
+                        }
                     ]
                 },
                 {

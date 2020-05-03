@@ -144,17 +144,14 @@ export default class MPD extends JSONApp {
    */
   async volume(args, client) {
     let volume = args.Volume;
-    if (!volume) {
+    if (typeof(volume) != "number") {
       throw new Error("Need new volume as number");
     }
     // Range 0..100
     if (volume < 0 || volume > 100) {
       throw new Error("Volume number too high or too low");
     }
-    // We'll interpret 0..10 as if 10 is the max
-    if (volume > 0 && volume <= 10) {
-      volume *= 10;
-    }
+
     let mpc = await this.connect();
     await mpc.playbackOptions.setVolume(volume);
   }
@@ -162,20 +159,17 @@ export default class MPD extends JSONApp {
   /**
    * Command
    * @param args {object}
-   *    RelativeVolume {Number}  -10..10
+   *    RelativeVolume {Number}  -100..100
    * @param client {ClientAPI}
    */
   async relativeVolume(args, client) {
     let relativeVolume = args.RelativeVolume;
-    if (!relativeVolume) {
+    if (typeof(relativeVolume) != "number") {
       throw new Error("Need relative volume");
     }
-    // Range -10..10
-    if (relativeVolume < -10 || relativeVolume > 10) {
-      throw new Error("Relative volume too high or too low");
+    if (relativeVolume < -100 || relativeVolume > 100) {
+      throw new Error("Volume number too high or too low");
     }
-    // Convert to range -100..100
-    relativeVolume *= 10;
 
     let mpc = await this.connect();
     let status = await mpc.status.status();

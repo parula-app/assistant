@@ -1,0 +1,76 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "play",
+            "intents": [
+                {
+                    "name": "Pia.Stop",
+                    "samples": [
+                      "Stop the music",
+                      "Stop talking",
+                      "Stop playing",
+                      "Stop"
+                    ]
+                },
+                {
+                    "name": "Pia.Next",
+                    "samples": [
+                        "Next song",
+                        "Next",
+                        "Skip"
+                    ]
+                },
+                {
+                    "name": "Pia.Previous",
+                    "samples": [
+                        "Previous song",
+                        "Previous",
+                        "Go back"
+                    ]
+                },
+                {
+                    "name": "Pia.Volume",
+                    "slots": [
+                        {
+                            "name": "Volume",
+                            "type": "Pia.Number"
+                        }
+                    ],
+                    "samples": [
+                        "Volume {Volume}",
+                        "Volume {Volume} percent"
+                    ]
+                },
+                {
+                    "name": "Pia.VolumeUp",
+                    "samples": [
+                        "Louder",
+                        "Volume louder",
+                        "Volume higher",
+                        "Volume up"
+                    ]
+                },
+                {
+                    "name": "Pia.VolumeDown",
+                    "samples": [
+                        "Volume lower",
+                        "Volume down"
+                    ]
+                },
+                {
+                    "name": "Pia.Mute",
+                    "samples": [
+                        "Pssst",
+                        "Mute"
+                    ]
+                },
+                {
+                    "name": "Pia.Unmute",
+                    "samples": [
+                        "Unmute"
+                    ]
+                }
+            ]
+        }
+    }
+}

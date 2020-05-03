@@ -12,8 +12,7 @@
                     "samples": []
                 },
                 {
-                    "name": "Pia.Stop",
-                    "samples": []
+                    "name": "Pia.Stop"
                 },
                 {
                     "name": "ReadBibleVerse",
