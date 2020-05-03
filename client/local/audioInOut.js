@@ -7,6 +7,7 @@ import portAudio from 'naudiodon';
 import { sampleRate as inputSampleRate } from '../../speechToText.js';
 import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
 import { getConfig } from '../../util/config.js';
+import sox from 'sox-stream';
 
 var config;
 
@@ -30,20 +31,33 @@ function listDevices() {
  * Play sound at the loudspeakers.
  *
  * @param waveStream {ReadableStream} audio
- *    with inputSampleRate(), 1 channel, 16 unsigned
+ *    WAV format, outputSampleRate(), 1 channel, 16 bit
  */
 export function audioOutput(waveStream) {
   let ao = new portAudio.AudioIO({
     outOptions: {
       channelCount: 1,
       sampleFormat: portAudio.SampleFormat16Bit,
-      //sampleRate: outputSampleRate(),
-      sampleRate: inputSampleRate(),
+      sampleRate: outputSampleRate(),
       deviceId: config.outputDevice,
       closeOnError: true,
     }
   });
-  waveStream.pipe(ao);
+  let waveToRaw = sox({
+    input: {
+        bits: 16,
+        rate: outputSampleRate(),
+        channels: 1,
+        type: "wav",
+    },
+    output: {
+        bits: 16,
+        rate: outputSampleRate(),
+        channels: 1,
+        type: "raw",
+    },
+  });
+  waveStream.pipe(waveToRaw).pipe(ao);
   return new Promise((resolve, reject) => {
     waveStream.on('finish', resolve);
   });

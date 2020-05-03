@@ -2,12 +2,19 @@
 'use strict';
 
 import { Client } from './client/Client.js';
+import * as textToSpeech from './textToSpeech.js';
+import * as audioInOut from './client/local/audioInOut.js';
 
 /**
  * Tests the intent parser and apps with a hardcoded string.
  */
 class TestClient extends Client {
   async start() {
+    await audioInOut.load();
+    await textToSpeech.load();
+    await audioInOut.audioOutput(await textToSpeech.textToSpeech("Hi there"));
+    return;
+
     await this.load();
     let successCount = 0;
     let failCount = 0;

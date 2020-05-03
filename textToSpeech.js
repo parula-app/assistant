@@ -20,7 +20,7 @@ export function sampleRate() {
 /**
  * @param text {string}   what to say
  * @returns {ReadableStream}   audio
- *    with sampleRate(), 1 channel, 16 bit unsigned
+ *    WAV format, sampleRate(), 1 channel, 16 bit
  */
 export async function textToSpeech(text) {
   console.info("Generating speech for: " + text);
