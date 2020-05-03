@@ -28,14 +28,16 @@ export class LocalClient extends Client {
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);
-    }, () => { // command complete
-      let inputText = recognizer.end(recognizer);
-      inputText = wordsToNumbers(inputText); // leaves text as-is, only replaces numbers
-      console.log("Command: " + inputText);
-      (async () => {
+    }, async () => { // command complete
+      try {
+        let inputText = recognizer.end(recognizer);
+        inputText = wordsToNumbers(inputText); // leaves text as-is, only replaces numbers
+        console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
-      })();
+      } catch (ex) {
+        console.error(ex);
+      }
     });
   }
 }
