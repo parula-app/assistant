@@ -31,7 +31,7 @@ export class LocalClient extends Client {
     }, async () => { // command complete
       try {
         let inputText = recognizer.end(recognizer);
-        inputText = wordsToNumbers(inputText); // leaves text as-is, only replaces numbers
+        inputText = wordsToNumbers(inputText) + ""; // leaves text as-is, only replaces numbers
         console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
