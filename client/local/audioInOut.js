@@ -3,11 +3,12 @@
  * and plays result over local speaker.
  */
 
-import portAudio from 'naudiodon';
+import portAudio from 'naudiodon'; // for input -- output doesn't work for me
+import Speaker from 'speaker'; // for output
+import sox from 'sox-stream'; // for transform. Requires sox to be installed
 import { sampleRate as inputSampleRate } from '../../speechToText.js';
 import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
 import { getConfig } from '../../util/config.js';
-import sox from 'sox-stream';
 
 var config;
 
@@ -31,29 +32,26 @@ function listDevices() {
  * Play sound at the loudspeakers.
  *
  * @param waveStream {ReadableStream} audio
- *    WAV format, outputSampleRate(), 1 channel, 16 bit
+ *    WAV format, outputSampleRate(), 1 channel, 16 bit unsigned
  */
 export function audioOutput(waveStream) {
-  let ao = new portAudio.AudioIO({
-    outOptions: {
-      channelCount: 1,
-      sampleFormat: portAudio.SampleFormat16Bit,
-      sampleRate: outputSampleRate(),
-      deviceId: config.outputDevice,
-      closeOnError: true,
-    }
+  let ao = new Speaker({
+    channels: 1,
+    bitDepth: 16,
+    sampleRate: outputSampleRate(),
+    device: null, // default device. Override with e.g. "hw:0,0"
   });
   let waveToRaw = sox({
     input: {
         bits: 16,
-        rate: outputSampleRate(),
         channels: 1,
+        rate: outputSampleRate(),
         type: "wav",
     },
     output: {
         bits: 16,
-        rate: outputSampleRate(),
         channels: 1,
+        rate: outputSampleRate(),
         type: "raw",
     },
   });

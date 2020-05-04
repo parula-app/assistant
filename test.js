@@ -10,11 +10,6 @@ import * as audioInOut from './client/local/audioInOut.js';
  */
 class TestClient extends Client {
   async start() {
-    await audioInOut.load();
-    await textToSpeech.load();
-    await audioInOut.audioOutput(await textToSpeech.textToSpeech("Hi there"));
-    return;
-
     await this.load();
     let successCount = 0;
     let failCount = 0;
