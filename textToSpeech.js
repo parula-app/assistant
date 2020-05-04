@@ -23,6 +23,7 @@ export function sampleRate() {
  *    WAV format, sampleRate(), 1 channel, 16 bit
  */
 export async function textToSpeech(text) {
+  text = text.replace(/,/g, " ").replace(/'s/g, " is").replace(/\./g, " "); // fix Tacotron2
   console.info("Generating speech for: " + text);
   let startTime = new Date();
   let response = await fetch(kTTS_URL + '/api/tts?text=' + encodeURIComponent(text), { cache: 'no-cache' })
