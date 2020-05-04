@@ -70,6 +70,15 @@ export class ClientAPI {
   }
 
   /**
+   * Allows to temporarily save session data for this user interaction.
+   *
+   * @returns {Map}
+   */
+  get userSession() {
+    return this._userData;
+  }
+
+  /**
    * Output that the app returned using `say()`
    */
   get outputSentences() {

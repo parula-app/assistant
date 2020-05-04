@@ -69,7 +69,6 @@ export default class BibleApp extends JSONApp {
    */
   home(args, client) {
     client.say(getTranslation("welcome", client.lang));
-    client.shouldEndSession(false);
   }
 
   help(args, client) {
@@ -160,7 +159,7 @@ export default class BibleApp extends JSONApp {
 
   nextChapter(args, client) {
     var lang = client.lang;
-    var session = getSession(request);
+    var session = client.userSession;
     var bookCode = session.get("book");
     var chapter = parseInt(session.get("chapter"));
     if (!bookCode || !chapter) {
@@ -182,7 +181,7 @@ export default class BibleApp extends JSONApp {
 
   previousChapter(args, client) {
     var lang = client.lang;
-    var session = getSession(request);
+    var session = client.userSession;
     var bookCode = session.get("book");
     var chapter = parseInt(session.get("chapter"));
     if (!bookCode || !chapter) {
@@ -255,17 +254,6 @@ export default class BibleApp extends JSONApp {
 
 ////////////
 // Util
-
-// { Map }
-var gUserSession = new Map();
-
-/**
- * @returns {Map} data for this user
- * Will be stored in RAM and wiped on client restart
- */
-function getSession(request) {
-  return gUserSession;
-}
 
 // { Map {string} language name in any language -> {string} 2-letter lang code }
 var gLanguageNames = {};
@@ -346,7 +334,7 @@ function startChapter(bookCode, chapter, chapterVerses, lang, args, client) {
       bibleBook: getBibleBook(bookCode).long[lang] });
   }
 
-  var session = getSession(request);
+  let session = client.userSession;
   session.set("book", bookCode);
   session.set("chapter", chapter);
 
