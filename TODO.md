@@ -8,12 +8,10 @@
    * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
-* fix audio output
 * silence detection
 * LM
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary
-* silence detection
 * wake word detection
 * TTS faster (tacotron?)
 * integrate STT with valid input
