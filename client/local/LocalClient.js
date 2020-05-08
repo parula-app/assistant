@@ -1,7 +1,8 @@
 'use strict';
 
 import { Client } from '../Client.js';
-import * as audioInOut from './audioInOut.js';
+import audioInput, { load as audioInputLoad} from './audioInput.js';
+import audioOutput from './audioOutput.js';
 import * as wakeword from './bumblebee.js';
 import * as speechToText from '../../speechToText.js';
 import * as textToSpeech from '../../textToSpeech.js';
@@ -16,7 +17,7 @@ const wordsToNumbers = wtn.default.wordsToNumbers;
  */
 export class LocalClient extends Client {
   async load() {
-    await audioInOut.load();
+    await audioInputLoad();
     await wakeword.load();
     await super.load();
   }
@@ -24,7 +25,7 @@ export class LocalClient extends Client {
   async start() {
     await super.start();
     let recognizer;
-    wakeword.waitForWakeWord(audioInOut.audioInput(), 7, () => { // new command
+    wakeword.waitForWakeWord(audioInput(), 7, () => { // new command
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);
@@ -35,7 +36,7 @@ export class LocalClient extends Client {
         console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
-        await audioInOut.audioOutput(await textToSpeech.textToSpeech(response));
+        await audioOutput(await textToSpeech.textToSpeech(response));
       } catch (ex) {
         console.error(ex);
       }

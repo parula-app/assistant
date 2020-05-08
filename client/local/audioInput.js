@@ -1,13 +1,5 @@
-/**
- * Reads microphone input from the local soundcard,
- * and plays result over local speaker.
- */
-
 import portAudio from 'naudiodon'; // for input -- output doesn't work for me
-import Speaker from 'speaker'; // for output
-import sox from 'sox-stream'; // for transform. Requires sox to be installed
 import { sampleRate as inputSampleRate } from '../../speechToText.js';
-import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
 import { getConfig } from '../../util/config.js';
 
 var config;
@@ -29,45 +21,12 @@ function listDevices() {
 }
 
 /**
- * Play sound at the loudspeakers.
- *
- * @param waveStream {ReadableStream} audio
- *    WAV format, outputSampleRate(), 1 channel, 16 bit unsigned
- */
-export function audioOutput(waveStream) {
-  let ao = new Speaker({
-    channels: 1,
-    bitDepth: 16,
-    sampleRate: outputSampleRate(),
-    device: null, // default device. Override with e.g. "hw:0,0"
-  });
-  let waveToRaw = sox({
-    input: {
-        bits: 16,
-        channels: 1,
-        rate: outputSampleRate(),
-        type: "wav",
-    },
-    output: {
-        bits: 16,
-        channels: 1,
-        rate: outputSampleRate(),
-        type: "raw",
-    },
-  });
-  waveStream.pipe(waveToRaw).pipe(ao);
-  return new Promise((resolve, reject) => {
-    waveStream.on('finish', resolve);
-  });
-}
-
-/**
  * Listens to microphone, and returns the audio data.
  *
  * @returns {ReadableStream} audio data as stream
  *   Flows after this function returned.
  */
-export function audioInput() {
+export default function audioInput() {
   let audioInputStream = new portAudio.AudioIO({
     inOptions: {
       channelCount: 1,
