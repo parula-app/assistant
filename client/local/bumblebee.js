@@ -2,22 +2,9 @@ import BumblebeeNode from 'bumblebee-hotword-node';
 import { sampleRate as inputSampleRate } from '../../speechToText.js';
 import { wait } from '../../util/util.js';
 
-var detector;
-
-export async function load() {
-  detector = new BumblebeeNode();
-  detector.addHotword('grasshopper');
-  detector.setSensitivity(0.6);
-}
-
-export async function unload() {
-  detector.stop();
-}
-
 /**
- * Listens to microphone, and waits for the wake word.
- * Sends the voice data after the wake word to the
- * callback.
+ * Listens to audio, and waits for the wake word.
+ * Sends the voice data after the wake word to the callback.
  *
  * @param audioInputStream {Stream} audio data from microphone
  * @param maxCommandLength {int} in seconds. How long to listen
@@ -38,6 +25,10 @@ export async function unload() {
  */
 export async function waitForWakeWord(audioInputStream, maxCommandLength,
   newCommandCallback, audioCallback, endCommandCallback) {
+
+  let detector = new BumblebeeNode();
+  detector.addHotword('grasshopper');
+  detector.setSensitivity(0.6);
 
   detector.start(audioInputStream, inputSampleRate());
 
@@ -81,9 +72,21 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
 
   detector.on('error', ex => {
     console.error(ex);
+    this.destroy(ex);
+  });
+
+  detector.on('destroy', () => {
+    detector.stop();
   });
 
   audioInputStream.start();
   console.info('Listening to your command.');
   await wait(64^5); // 34 years TODO
+}
+
+
+export async function load() {
+}
+
+export async function unload() {
 }
