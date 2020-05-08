@@ -703,6 +703,15 @@ node-pre-gyp@0.13.x:
     semver "^5.3.0"
     tar "^4"
 
+node-vad@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/node-vad/-/node-vad-1.1.4.tgz#e294cee60e54f31ca64cdae6b38d2758f6878420"
+  integrity sha512-iz9riP5DMvN2rQSmeFfJL6jp4jbHE7opRQdQcMk/HqfphXiRRVKb0G+ZKtpnyrQqIXIH/UuXXK0OU1aRmwQrkg==
+  dependencies:
+    bindings "^1.5.0"
+    nan "^2.14.0"
+    util-promisifyall "^1.0.6"
+
 node-wav@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/node-wav/-/node-wav-0.0.2.tgz#89cb63cf8cd66ec8ab455f5ba4864e5fcb4605e8"
@@ -1121,6 +1130,11 @@ util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
+
+util-promisifyall@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/util-promisifyall/-/util-promisifyall-1.0.6.tgz#03439a5a76461e1f71f76954d945cffc8bd6aad8"
+  integrity sha512-l+o62sbaqStC1xt7oEhlafC4jWBgkOjBXvlPwxkvOYmNqpY8dNXuKdOa+VHjkYz2Fw98e0HvJtNKUg0+6hfP2w==
 
 utils-merge@1.0.1:
   version "1.0.1"
