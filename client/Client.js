@@ -6,6 +6,7 @@ import { ClientAPI } from './ClientAPI.js';
 import { getConfig } from '../util/config.js';
 import * as speechToText from '../speechToText.js';
 import * as textToSpeech from '../textToSpeech.js';
+import Clock from '../app/clock/clock.js';
 import PlayControl from '../app/playcontrol/playcontrol.js';
 import MPD from '../app/mpd/mpd.js';
 import Bible from '../app/bible/bible.js';
@@ -28,7 +29,7 @@ export class Client {
     await speechToText.load(lang);
     await textToSpeech.load(lang);
 
-    let Apps = [ MPD, Bible, PlayControl ]; // TODO dynamically
+    let Apps = [ Clock, MPD, Bible, PlayControl ]; // TODO dynamically
 
     let apps = Apps.map(App => new App());
     await Promise.all(apps.map(app =>
