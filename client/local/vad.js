@@ -55,42 +55,24 @@ export default class VADStream extends stream.Transform {
 
           if (new Date() - this.speechStartTime > this.maxCommandLength * 1000) {
             this.speechStartTime = null;
-            try {
-              this.emit('voice-end');
-            } catch (ex) {
-              console.error(ex);
-              callback(ex);
-              return;
-            }
+            this.emit('voice-end');
           }
         } else { // no speech until now
           // speech start
           console.log('Speech detected');
           this.speechStartTime = new Date();
-          try {
-            this.emit('voice-start');
-            for (let previousBuffer of this.startBuffer) {
-              this.push(previousBuffer);
-            }
-            this.startBuffer.length = 0;
-            this.push(buffer);
-          } catch (ex) {
-            console.error(ex);
-            callback(ex);
-            return;
+          this.emit('voice-start');
+          for (let previousBuffer of this.startBuffer) {
+            this.push(previousBuffer);
           }
+          this.startBuffer.length = 0;
+          this.push(buffer);
         }
       } else { // SILENCE or NOISE
         if (this.speechStartTime) {
           // speech end
           this.speechStartTime = null;
-          try {
-            this.emit('voice-end');
-          } catch (ex) {
-            console.error(ex);
-            callback(ex);
-            return;
-          }
+          this.emit('voice-end');
         } else { // no speech
           // VAD cuts the start of the command.
           // Workaround: Buffer last 3 frames.
