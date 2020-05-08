@@ -70,6 +70,22 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     }
   });
 
+  detector.on('voice-start', () => {
+    console.log("Voice start");
+  });
+
+  detector.on('voice-end', () => {
+    console.log("Command end due to silence");
+    if (commandStartTime) {
+      commandStartTime = null;
+      try {
+        endCommandCallback();
+      } catch (ex) {
+        console.error(ex);
+      }
+    }
+  });
+
   detector.on('error', ex => {
     console.error(ex);
     this.destroy(ex);
