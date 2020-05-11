@@ -1,25 +1,69 @@
 ## Core
-* intent parser
-   * string matching with variables
-* context
-* dynamically load apps
+* Intent parser
+   * Levensthein distance relative to pattern length
+   * Calculate match confidence, including variables, select best match
+* Context
+  * Pronouns
+  * Include recent commands in match confidence
+  * Resolve open variables with context
+* Dynamically load apps
 * Apps via commandline (stdin/out) and HTTPS
    * Load language model as JSON via special command parameter / URL suffix
    * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
-* silence detection
+* Silence detection
+* TTS faster (tacotron?)
 * LM
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary
-* wake word detection
-* TTS faster (tacotron?)
-* integrate STT with valid input
+* Integrate STT with valid input, see DeepSpeech WithMetadata API
 
 ## Apps
 * MPD
+* TuneIn
 * Bible
-* Shopping list
-* Reminders, Alarm
+* Clock
+* TODO list, Shopping list
+* Reminder, Alarm
+* Calendar
+* Contacts
+* Phone SIP
+* Phone Android dialer
 * Wikipedia
 * Google search
+
+## Integration
+* Android Intents
+* Philips hue
+* Node Red
+* Home Assistant <https://www.home-assistant.io>
+* ThingVerse, Almond, LUInet <https://almond.stanford.edu/thingpedia>
+
+## API
+* HTTP app
+* Commandline app
+* Apps provide functions
+  * E.g. App 1 has command: "Call {PhoneNumber}", App 2 has function: string {Name} -> {ContactPerson} -> {PhoneNumber}
+  * System builds path from string to required type to command to result render
+* Need common ontology
+  * Defines common high-level data types (e.g. Person, PhoneNumber) etc.
+  * with specialisation: MobileNumber is a PhoneNumber, Actor is a Person
+  * Apps must implement this ontology wherever applicable
+  * Makes system pluggable, coherent, like iPhone
+* Data types pluggable
+  * Time, date
+  * Contacts: person -> phone number, email address
+  * Location
+  * E.g. App 1 has variable of data type. App 2 can map input to this data type.
+  * Several apps can register as providers for the same data type. All are queried in parallel, and the highest confidence result is used. If app implements both the command and the data type used app, only this app is used for data type query.
+* Command results
+  * Audio stream, URL, mp3 or wave, with play control
+  * Video stream, URL, MPEG4, H.264, etc., with play control
+  * E.g. Command: "Call to {Person}" -> App: Phone SIP -> Command Result: 2 channel audio/video -> Built-in audio
+  * E.g. Command: "Message to {Person} -> Function: Contacts, with contact method preference for this person -> App: SMS, WhatsApp, Signal, depending on preference for this person
+  * Apps can implement command result types
+    * Built-in speaker
+    * Android video app
+    * TV
+    * Phone call
