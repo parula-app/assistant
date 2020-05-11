@@ -1,0 +1,108 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "mpd",
+            "intents": [
+                {
+                    "name": "Pia.Fallback",
+                    "samples": []
+                },
+                {
+                    "name": "Pia.Help",
+                    "samples": []
+                },
+                {
+                    "name": "PlayStation",
+                    "slots": [
+                        {
+                            "name": "Station",
+                            "type": "Station"
+                        }
+                    ],
+                    "samples": [
+                        "Play radio {Station}",
+                        "Play the radio station {Station}",
+                        "Play the station {Station}",
+                        "Play station {Station}",
+                        "Play radio station {Station}",
+                        "Play {Station}",
+                        "Play the station {Station} via TuneIn"
+                    ]
+                },
+                {
+                    "name": "PlayGenre",
+                    "slots": [
+                        {
+                            "name": "Genre",
+                            "type": "Genre"
+                        }
+                    ],
+                    "samples": [
+                        "Play {Genre}",
+                        "Play {Genre} music",
+                        "Play {Genre} for  me",
+                        "Play music {Genre}",
+                        "Play {Genre} via TuneIn"
+                    ]
+                },
+                {
+                    "name": "Pia.Stop"
+                },
+                {
+                    "name": "Pia.Next"
+                },
+                {
+                    "name": "Pia.Previous"
+                },
+                {
+                    "name": "Pia.Volume",
+                    "slots": [
+                        {
+                            "name": "Volume",
+                            "type": "Pia.Number"
+                        }
+                    ]
+                },
+                {
+                    "name": "Pia.RelativeVolume",
+                    "slots": [
+                        {
+                            "name": "RelativeVolume",
+                            "type": "Pia.Number"
+                        }
+                    ]
+                },
+                {
+                    "name": "Pia.More",
+                    "samples": [
+                        "More music like this",
+                        "More songs like this",
+                        "More like this"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Station",
+                    "values": []
+                },
+                {
+                    "name": "Genre",
+                    "values": []
+                },
+                {
+                    "name": "SongAndArtist",
+                    "values": []
+                },
+                {
+                    "name": "SongTitle",
+                    "values": []
+                },
+                {
+                    "name": "Artist",
+                    "values": []
+                }
+            ]
+        }
+    }
+}

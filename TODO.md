@@ -2,6 +2,10 @@
 * Intent parser
    * Levensthein distance relative to pattern length
    * Calculate match confidence, including variables, select best match
+* Storage
+  * Settings
+  * User data
+  * Data cache
 * Context
   * Pronouns
   * Include recent commands in match confidence

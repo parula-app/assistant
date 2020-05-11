@@ -21,6 +21,7 @@
         "node-fetch": "^2.6.0",
         "node-vad": "^1.1.4",
         "pv-porcupine": "../pv-porcupine/",
+        "r2": "^2.0.1",
         "sox-audio": "^0.3.0",
         "sox-stream": "^2.0.3",
         "speaker": "^0.5.1",
