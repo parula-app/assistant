@@ -3,24 +3,26 @@
   *
   * Returns the edit distance between an input string and a target string.
   * The target string may contain variables which are extracted from the input.
-  * The distance is costed such that variables count 0.875 while other inserted
-  * characters cost 1 and other edits and deletions cost 2.
   *
   * @param s {String} String to match
   * @param p {String} Pattern with named wildcards
   * @returns {
-  *   targetString {string}
   *   editDistance {int} levenshtein distance
+  *   score {float} distance / target string length (without placeholders)
   *   variables: {
   *     <placeholderName> {string}: <corresponding value from inputString> {str
 ing}
   *   }
   */
 export default function wildLeven(inputString, targetString) {
+  const kDeleteCost = 1;
+  const kReplaceCost = 1;
+  const kInsertCost = 0.5;
+  const kVariableInsertCost = kInsertCost / 10;
   /// These constants are used to retrace the path for the shortest edit.
   const INSERT = 1, EDIT = 0, DELETE = -1;
   /// The pattern, split into an array of characters and variables.
-  targetPattern = targetString.match(/{\w+}|./g);
+  let targetPattern = targetString.match(/{\w+}|./g);
   /// A 2D array of the path taken at each potential edit.
   let fullPath = [];
   /// The edit distance. Starts off as the length of the input,
@@ -34,28 +36,29 @@ export default function wildLeven(inputString, targetString) {
   // Initialise the array of character codes and last distances.
   for (let j = 0; j < distance; j++) {
     inputChars[j] = inputString.charCodeAt(j);
-    lastDistances[j] = j + 1;
+    lastDistances[j] = (j + 1) * kInsertCost;
   }
   // As we take each entry of the target pattern into account,
   // all the edit distances for the input string prefixes are recalculated.
   for (let i = 0; i < targetPattern.length; i++) {
     // NOTE: This assumes that the variable marker cannot appear in the input.
     let patternChar = targetPattern[i].charCodeAt(0);
+    let isPlaceholder = targetPattern[i].length > 1;
     // Optimal insert costs were determined by running on a test suite.
-    let insertCost = targetPattern[i].length > 1 ? 0.875 : 1;
+    let insertCost = isPlaceholder ? kVariableInsertCost : kInsertCost;
     // Start with the distance costs for an empty input string.
-    let lastDistance = i + i;
-    distance = lastDistance + 2;
+    let lastDistance = i * kDeleteCost;
+    distance = lastDistance + kDeleteCost;
     // Keep track of the path used to track the current distance.
     let path = [];
     // Now take each character of the input string into account.
     for (let j = 0; j < inputString.length; j++) {
       // Calculate the costs of the various potential operations.
-      let editDistance = lastDistance + (patternChar != inputChars[j]) * 2;
+      let editDistance = lastDistance + (patternChar != inputChars[j]) * kReplaceCost;
       let insertDistance = distance + insertCost;
       // Save the value for the next pass of the inner loop.
       lastDistance = lastDistances[j];
-      let deleteDistance = lastDistance + 2;
+      let deleteDistance = lastDistance + kDeleteCost;
       // Decide which operation is the cheapest and save it in the path.
       if (editDistance <= insertDistance && editDistance <= deleteDistance) {
         distance = editDistance;
@@ -74,7 +77,11 @@ export default function wildLeven(inputString, targetString) {
     fullPath.push(path);
   }
   // Start building up the result.
-  let result = { distance };
+  let result = {
+    editDistance: distance,
+    score: distance / targetPattern.length,
+    variables: {}, // filled below
+  };
   let end = inputString.length;
   // Trace the path back from the end to an empty string.
   for (let i = targetPattern.length, j = inputString.length; i-- && j--; ) {
@@ -88,7 +95,7 @@ export default function wildLeven(inputString, targetString) {
     default:
       // This is the beginning of a pattern variable, so save it in the result.
       if (targetPattern[i].length > 1) {
-        result[targetPattern[i].slice(1, -1)] = inputString.slice(j, end);
+        result.variables[targetPattern[i].slice(1, -1)] = inputString.slice(j, end);
       }
       // This is the end of a pattern variable, so save the position for later.
       if (i && targetPattern[i - 1].length > 1) {
@@ -109,11 +116,13 @@ export default function wildLeven(inputString, targetString) {
  */
 export function altlev(inputString, targetString) {
   // No alternatives left to process.
-  if (!/\w+\|\w+/.test(targetString)) return wildLeven(inputString, targetString);
+  if (!/\w+\|\w+/.test(targetString)) {
+    return wildLeven(inputString, targetString);
+  }
   // Calculate each alternative separately and return the lowest distance.
   let first = altlev(inputString, targetString.replace(/\|\w+/, ""));
   let second = altlev(inputString, targetString.replace(/\w+\|/, ""));
-  return second.distance < first.distance ? second : first;
+  return second.score < first.score ? second : first;
 }
 
 /**
@@ -121,12 +130,11 @@ export function altlev(inputString, targetString) {
  * plus the pattern which gave that result.
  */
 export function bestmatch(inputString, targetStrings) {
-  let best = { distance: Infinity };
+  let best = { score: Infinity };
   for (let targetString of targetStrings) {
     let result = altlev(inputString, targetString);
-    if (result && result.distance < best.distance) {
+    if (result && result.score < best.score) {
       best = result;
-      best.pattern = targetString;
     }
   }
   return best;

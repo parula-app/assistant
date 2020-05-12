@@ -82,7 +82,6 @@ export default class IntentParser {
     }
     let { intent, command } = this.commands.get(result.targetString);
     let app = intent.app;
-    //console.log("app", app.id, "command", command);
 
     let args = {};
     let argsLower = result.variables;
@@ -97,7 +96,11 @@ export default class IntentParser {
       let dataType = intent.parameters[name];
       if (dataType.finite) {
         // normalize to allowed values
-        args[name] = matchVariable(args[name], dataType.terms).targetString;
+        let result = matchVariable(args[name], dataType.terms);
+        if (!result) {
+          return "I did not understand the " + name;
+        }
+        args[name] = result.targetString;
       }
       args[name] = dataType.valueIDForTerm(args[name]);
      }
@@ -118,13 +121,14 @@ export default class IntentParser {
 * @param inputText {string} user input, only the part for this variable
 * @param validValues {Array of string}
 * @returns {wildLeven() result} the closest match
+*    or null, if the strings are too far
 */
 function matchVariable(inputText, validValues) {
   if (!validValues) {
     return inputText;
   }
   inputText = inputText.toLowerCase();
-  let lengthWithoutPlaceholders = inputText.replace(/{[a-zA-Z0-9]+}/g, "").length;
+  const kMaxScore = 0.5; // If we need to change more than half the chars, then don't take it
   //console.log("input:", inputText);
   //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
   //console.log("stringSimilarity:", similarity);
@@ -132,19 +136,23 @@ function matchVariable(inputText, validValues) {
   let results = validValues
     .map(targetString => {
       if (!targetString) {
-        return { editDistance : inputText.length * 2 };
+        return { score: 2000 };
       }
       let result = wildLeven(inputText, targetString.toLowerCase());
-      result.targetString = targetString;
+      result.targetString = targetString; // not lower case
       return result;
     })
-    .sort((a, b) => (a.editDistance - b.editDistance) / lengthWithoutPlaceholders);
+    .filter(result => result.score < kMaxScore)
+    .sort((a, b) => a.score - b.score);
+  //for (let result of results.slice(0, 20)) {
+  //  console.log(result.targetString, result.editDistance, result.score);
+  //}
+  if (!results.length) {
+    return null;
+  }
   //console.log(results.slice(0, 5));
   let match = results[0].targetString;
   console.log("did you mean:", match);
   console.log("string matching took", (new Date() - startTime) + "ms");
-  if (!match) {
-    return inputText; // or throw?
-  }
   return results[0];
 }

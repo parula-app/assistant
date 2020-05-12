@@ -2,14 +2,33 @@
 'use strict';
 
 import { Client } from './client/Client.js';
-import * as textToSpeech from './textToSpeech.js';
-import * as audioInOut from './client/local/audioInOut.js';
+import wildLeven from './intentparser/leven.js';
+
+function testDistance(input, target) {
+  let result = wildLeven(input, target);
+  let distance = result.editDistance;
+  console.log("input", input, input.length, "target", target, target.length,"distance:", distance, "distance/input", distance / input.length, "distance/target", distance / target.length);
+}
 
 /**
  * Tests the intent parser and apps with a hardcoded string.
  */
 class TestClient extends Client {
   async start() {
+    let tests = [
+      // target, input
+      [ "default", "suitable" ],
+      [ "default", "defaul" ],
+      [ "default", "fault" ],
+      [ "default", "foolt" ],
+      [ "default", "the fool" ],
+      [ "default", "the" ],
+      [ "default", "" ],
+    ];
+    for (let test of tests) {
+      testDistance(test[1], test[0]);
+    }
+    return;
     await this.load();
     let successCount = 0;
     let failCount = 0;
