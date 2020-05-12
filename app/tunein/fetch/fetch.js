@@ -27,8 +27,6 @@ async function fetchTopLevel() {
       continue;
     }
     let genre = await fetchGenre(genreJSON.guide_id);
-    genre.title = genreJSON.text;
-    genre.guide_id = genreJSON.guide_id;
     genres.push(genre);
   }
   return genres;
@@ -55,11 +53,13 @@ async function fetchTopLevel() {
  * }
  */
 async function fetchGenre(id) {
+  let genre = {};
+  genre.title = genreJSON.text.replace(/ Music$/, "");
+  genre.guide_id = genreJSON.guide_id;
   // e.g. <http://opml.radiotime.com/Browse.ashx?render=json&id=c57941>
   let genreJSON = await fetchServer({
-    id: id,
+    id: genre.guide_id,
   });
-  let genre = {};
   let stationsJSONParent = getKeyJSON(genreJSON, 'stations');
   if (stationsJSONParent) {
     genre.stations = filterStationJSON(stationsJSONParent.children);
@@ -73,15 +73,13 @@ async function fetchGenre(id) {
         genreJSON.key) {
         continue;
       }
-      let genre = await fetchGenre(genreJSON.guide_id);
-      genre.title = genreJSON.text;
-      genre.guide_id = genreJSON.guide_id;
+      let genre = await fetchGenre(genreJSON);
       subgenres.push(genre);
     }
 
     //let popularStationsURL = getKeyJSON(relatedJSON, 'popular').URL;
     let popularStationsJSON = await fetchServer({
-      id: id,
+      id: genre.guide_id,
       filter: 's:popular',
     });
     genre.popularStations = filterStationJSON(popularStationsJSON.body);
@@ -106,7 +104,7 @@ function filterStationJSON(stationsJSON) {
       continue;
     }
     let station = {};
-    station.name = stationJSON.text;
+    station.name = stationJSON.text.replace(/ \(.*\)$/, ""); // remove "... (Deutschland)"
     station.m3u = stationJSON.URL;
     station.bitrate = stationJSON.bitrate;
     station.formats = stationJSON.formats;
