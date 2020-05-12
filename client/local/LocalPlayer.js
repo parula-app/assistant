@@ -56,7 +56,11 @@ export class LocalPlayer extends Player {
     if (!this._isPlaying) {
       return;
     }
-    this._mpg.quit();
+    try {
+      this._mpg.quit();
+    } catch (ex) {
+      console.error(ex);
+    }
   }
 
   /**

@@ -34,11 +34,16 @@ export class LocalClient extends Client {
     }, async () => { // command complete
       try {
         let inputText = recognizer.end(recognizer);
+        if (!inputText) {
+          return;
+        }
         inputText = wordsToNumbers(inputText) + ""; // leaves text as-is, only replaces numbers
         console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
-        await audioOutput(await textToSpeech.textToSpeech(response));
+        if (response) {
+          await audioOutput(await textToSpeech.textToSpeech(response));
+        }
       } catch (ex) {
         console.error(ex);
       }
