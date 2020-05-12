@@ -22,6 +22,7 @@ import Bible from '../app/bible/bible.js';
 export class Client {
   constructor() {
     this.intentParser = null;
+    this.clientAPI = null;
     this.lang = null;
   }
 
@@ -37,8 +38,8 @@ export class Client {
     await Promise.all(apps.map(app =>
       app.load(lang)
     ));
-    let clientAPI = new ClientAPI(this);
-    this.intentParser = new IntentParser(clientAPI);
+    this.clientAPI = new ClientAPI(this);
+    this.intentParser = new IntentParser(this.clientAPI);
     await this.intentParser.load(apps);
   }
 
@@ -49,5 +50,9 @@ export class Client {
   async quit() {
     await speechToText.unload();
     process.exit(0);
+  }
+
+  get player() {
+    throw new Error("Abstract function");
   }
 }

@@ -58,11 +58,15 @@ export default class TuneIn extends JSONApp {
     if (!args.Station) {
       throw new Error("Need station");
     }
-    let station = this._station.get(args.Station);
+    let station = this._stations.get(args.Station);
     if (!station) {
       throw new Error("I don't know this station");
     }
-    return await this.playM3U(station.m3u);
+    if (station.stream) {
+      client.player.playAudio(station.stream, this, () => this.next({}, client));
+      return;
+    }
+    return await this.playM3U(station.m3u, client);
   }
 
   /**
@@ -85,14 +89,19 @@ export default class TuneIn extends JSONApp {
       throw new Error("I found no radio station for this genre");
     }
     let station = pickRandom(stations);
+    let session = client.userSession;
+    session.currentStation = station;
+    session.stations = stations;
     return await this.playM3U(station.m3u, client);
   }
 
   /**
    * Play songs
    *
+   * Starts the audio player
+   *
    * @param m3u {URL}
-   * @param mp3 {URL}
+   * @param client {ClientAPI}
    */
   async playM3U(m3u, client) {
     console.log("Fetching " + m3u);
@@ -108,9 +117,10 @@ export default class TuneIn extends JSONApp {
       console.error("Got an HTML page while trying to fetch m3u for the radio station at <" + m3u + ">", m3uContents.substr(0, 50));
       throw new Error("The radio station is not available");
     }
-    console.log("Playing " + url);
-    // TODO Actually play the mp3
-    return url;
+    client.player.playAudio(url, this, () => {
+      // called when the stream ends
+      this.next({}, client);
+    });
   }
 
   /**
@@ -119,7 +129,7 @@ export default class TuneIn extends JSONApp {
    * @param client {ClientAPI}
    */
   async stop(args, client) {
-    throw new Error("Not yet implemented");
+    client.player.stop();
   }
 
   /**
@@ -128,7 +138,16 @@ export default class TuneIn extends JSONApp {
    * @param client {ClientAPI}
    */
   async next(args, client) {
-    throw new Error("Not yet implemented");
+    let session = client.userSession;
+    let stations = session.stations;
+    let pos = stations.indexOf(session.currentStation);
+    if (!pos) {
+      station = pickRandom(stations);
+    } else {
+      pos++;
+      station = stations[pos >= stations.length ? 0 : pos];
+    }
+    await this.playM3U(station.m3u, client);
   }
 
   /**
@@ -137,7 +156,16 @@ export default class TuneIn extends JSONApp {
    * @param client {ClientAPI}
    */
   async previous(args, client) {
-    throw new Error("Not yet implemented");
+    let session = client.userSession;
+    let stations = session.stations;
+    let pos = stations.indexOf(session.currentStation);
+    if (!pos) {
+      station = pickRandom(stations);
+    } else {
+      pos--;
+      station = stations[pos < 0 ? stations.length - 1 : pos];
+    }
+    await this.playM3U(station.m3u, client);
   }
 
   /**

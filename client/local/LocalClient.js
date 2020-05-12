@@ -1,6 +1,7 @@
 'use strict';
 
 import { Client } from '../Client.js';
+import { LocalPlayer } from './LocalPlayer.js';
 import audioInput, { load as audioInputLoad} from './audioInput.js';
 import audioOutput from './audioOutput.js';
 import * as wakeword from './bumblebee.js';
@@ -20,6 +21,7 @@ export class LocalClient extends Client {
     await audioInputLoad();
     await wakeword.load();
     await super.load();
+    this._player = new LocalPlayer();
   }
 
   async start() {
@@ -41,5 +43,9 @@ export class LocalClient extends Client {
         console.error(ex);
       }
     });
+  }
+
+  get player() {
+    return this._player;
   }
 }

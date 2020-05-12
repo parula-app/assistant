@@ -2,14 +2,12 @@ import portAudio from 'naudiodon'; // for input -- output doesn't work for me
 import { sampleRate as inputSampleRate } from '../../speechToText.js';
 import { getConfig } from '../../util/config.js';
 
-var config;
-
 export async function load() {
-  config = getConfig().audio;
   listDevices();
 }
 
 function listDevices() {
+  let config = getConfig().audio;
   if (!config.inputDevice || config.inputDevice == -2) {
     let devices = portAudio.getDevices();
     console.log("\nAudio devices:");
@@ -33,7 +31,7 @@ export default function audioInput() {
       sampleFormat: portAudio.SampleFormat16Bit,
       sampleRate: inputSampleRate(),
       // Use -1 to select the default device
-      deviceId: config.inputDevice,
+      deviceId: getConfig().audio.inputDevice,
       closeOnError: true,
     }
   });

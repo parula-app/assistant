@@ -151,6 +151,13 @@ export class ClientAPI {
   }
 
   /**
+   * @returns {Player}
+   */
+  get player() {
+    return this.client.player;
+  }
+
+  /**
    * Remove all context that is more than N minutes old
    * and therefore no longer relevant to the current discussion.
    *
