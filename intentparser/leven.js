@@ -1,107 +1,133 @@
 /**
   * Levenshtein distance with named wildcards
   *
+  * Returns the edit distance between an input string and a target string.
+  * The target string may contain variables which are extracted from the input.
+  * The distance is costed such that variables count 0.875 while other inserted
+  * characters cost 1 and other edits and deletions cost 2.
+  *
   * @param s {String} String to match
   * @param p {String} Pattern with named wildcards
   * @returns {
   *   targetString {string}
   *   editDistance {int} levenshtein distance
   *   variables: {
-  *     <placeholderName> {string}: <corresponding value from inputString> {string}
+  *     <placeholderName> {string}: <corresponding value from inputString> {str
+ing}
   *   }
   */
 export default function wildLeven(inputString, targetString) {
-  if (!targetString) {
-    return {
-      targetString: "",
-      editDistance: inputString.length * 2,
-    };
+  /// These constants are used to retrace the path for the shortest edit.
+  const INSERT = 1, EDIT = 0, DELETE = -1;
+  /// The pattern, split into an array of characters and variables.
+  targetPattern = targetString.match(/{\w+}|./g);
+  /// A 2D array of the path taken at each potential edit.
+  let fullPath = [];
+  /// The edit distance. Starts off as the length of the input,
+  /// but is recalculated for each element of the pattern.
+  let distance = inputString.length;
+  /// An array of character codes of the input. Codes compare more quickly.
+  let inputChars = [];
+  /// An array of edit distances for the prefixes of the input string.
+  /// These distances are carried forward to the next pass of the pattern loop.
+  let lastDistances = [];
+  // Initialise the array of character codes and last distances.
+  for (let j = 0; j < distance; j++) {
+    inputChars[j] = inputString.charCodeAt(j);
+    lastDistances[j] = j + 1;
   }
-  // Split the target string into wildcards and characters.
-  let p = targetString.match(/{\w+}|./g);
-  /// Array of strings (i.e. 2D array of characters) indicating the edits chosen.
-  let operations = ["i".repeat(inputString.length + 1)];
-  /// Current Levenshtein distance.
-  let curDistance = inputString.length;
-  /// Array of Levenshtein distances for the string so far for the current pattern character.
-  let distances = [];
-  // For an empty pattern, the prefix edit distances are simply the number of characters to delete.
-  for (let j = 0; j < curDistance; j++) {
-    distances[j] = j + 1;
-  }
-  // Now loop over each pattern, recalculating the edit distances for each string prefix.
-  for (let i = 0; i < p.length; i++) {
-    // Is this a wildcard?
-    let wild = p[i].length > 1;
-    // Initial potential edit cost is the previous pattern length.
-    let last = i;
-    // Initial distance is the pattern length including the current character.
-    curDistance = i + 1;
-    // Initial operation is to delete patten characters to achieve an empty string.
-    operations[i + 1] = "d";
-    // Now consider each character of the string so far to see how it affects the edit distance.
+  // As we take each entry of the target pattern into account,
+  // all the edit distances for the input string prefixes are recalculated.
+  for (let i = 0; i < targetPattern.length; i++) {
+    // NOTE: This assumes that the variable marker cannot appear in the input.
+    let patternChar = targetPattern[i].charCodeAt(0);
+    // Optimal insert costs were determined by running on a test suite.
+    let insertCost = targetPattern[i].length > 1 ? 0.875 : 1;
+    // Start with the distance costs for an empty input string.
+    let lastDistance = i + i;
+    distance = lastDistance + 2;
+    // Keep track of the path used to track the current distance.
+    let path = [];
+    // Now take each character of the input string into account.
     for (let j = 0; j < inputString.length; j++) {
-      // Is this a match?
-      let same = p[i] == inputString[j];
-      // Calculate the cost of an edit.
-      // TODO adding a boolean to an int
-      let edit = last + !same;
-      // Calculate the cost of inserting this character.
-      let ins = curDistance + !wild;
-      // Save the potential edit cost for the next pass of the loop.
-      last = distances[j];
-      // Calculate the cost of deleting the pattern character.
-      let del = last + 1;
-      // Find the winning operation.
-      if (edit <= ins && edit <= del) {
-        curDistance = edit;
-        operations[i + 1] += same ? "s" : "e";
-      } else if (ins <= del) {
-        curDistance = ins;
-        operations[i + 1] += "i";
+      // Calculate the costs of the various potential operations.
+      let editDistance = lastDistance + (patternChar != inputChars[j]) * 2;
+      let insertDistance = distance + insertCost;
+      // Save the value for the next pass of the inner loop.
+      lastDistance = lastDistances[j];
+      let deleteDistance = lastDistance + 2;
+      // Decide which operation is the cheapest and save it in the path.
+      if (editDistance <= insertDistance && editDistance <= deleteDistance) {
+        distance = editDistance;
+        path.push(EDIT);
+      } else if (insertDistance <= deleteDistance) {
+        distance = insertDistance;
+        path.push(INSERT);
       } else {
-        curDistance = del;
-        operations[i + 1] += "d";
+        distance = deleteDistance;
+        path.push(DELETE);
       }
-      // Save the edit costs for the next pattern character loop.
-      distances[j] = curDistance;
+      // Save the value for the next pass of the outer loop.
+      lastDistances[j] = distance;
     }
+    // Save this pattern entry's paths.
+    fullPath.push(path);
   }
-  // We have a winner. Work back to see where our wildcards matched.
-  let result = {
-    targetString: targetString,
-    editDistance: curDistance,
-    variables: {},
-  };
-  // Captures start and end index of each variable in the input string.
-  // Property name is the variable name.
-  let variableStartPos = {};
-  let variableEndPos = {};
-  for (let i = p.length, j = inputString.length; i || j; ) {
-    switch (operations[i][j]) {
-    case "d":
-      i--;
+  // Start building up the result.
+  let result = { distance };
+  let end = inputString.length;
+  // Trace the path back from the end to an empty string.
+  for (let i = targetPattern.length, j = inputString.length; i-- && j--; ) {
+    switch (fullPath[i][j]) {
+    case DELETE:
+      j++;
       break;
-    case "i":
-      j--;
+    case INSERT:
+      i++;
       break;
     default:
-      i--;
-      j--;
-      if (p[i].length > 1) {
-        variableStartPos[p[i].slice(1, -1)] = j;
+      // This is the beginning of a pattern variable, so save it in the result.
+      if (targetPattern[i].length > 1) {
+        result[targetPattern[i].slice(1, -1)] = inputString.slice(j, end);
       }
-      if (i && p[i - 1].length > 1) {
-        variableEndPos[p[i - 1].slice(1, -1)] = j;
+      // This is the end of a pattern variable, so save the position for later.
+      if (i && targetPattern[i - 1].length > 1) {
+        end = j;
       }
       break;
     }
   }
-  for (let placeholderName in variableStartPos) {
-    result.variables[placeholderName] = inputString.slice(
-      variableStartPos[placeholderName],
-      variableEndPos[placeholderName] || inputString.length);
-  }
-  result.editDistance += Object.values(result.variables).reduce((acc, value) => acc + value.length, 0) / 2;
   return result;
+}
+
+/**
+ * Returns the edit distance between an input string and a target string.
+ * The target string's words may contain alternative markers `|`.
+ * In this case both alternatives will be checked and the lowest chosen.
+ * Multiple words can have alternatives if necessary, however each word
+ * should only have two alternatives for optimal performance.
+ */
+export function altlev(inputString, targetString) {
+  // No alternatives left to process.
+  if (!/\w+\|\w+/.test(targetString)) return wildLeven(inputString, targetString);
+  // Calculate each alternative separately and return the lowest distance.
+  let first = altlev(inputString, targetString.replace(/\|\w+/, ""));
+  let second = altlev(inputString, targetString.replace(/\w+\|/, ""));
+  return second.distance < first.distance ? second : first;
+}
+
+/**
+ * Test a string against a number of patterns and return the best result
+ * plus the pattern which gave that result.
+ */
+export function bestmatch(inputString, targetStrings) {
+  let best = { distance: Infinity };
+  for (let targetString of targetStrings) {
+    let result = altlev(inputString, targetString);
+    if (result && result.distance < best.distance) {
+      best = result;
+      best.pattern = targetString;
+    }
+  }
+  return best;
 }
