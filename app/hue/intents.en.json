@@ -1,0 +1,57 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "clock",
+            "intents": [
+                {
+                    "name": "LightOnOff",
+                    "slots": [
+                        {
+                            "name": "State",
+                            "type": "State"
+                        },
+                        {
+                            "name": "Light",
+                            "type": "Device"
+                        }
+                    ],
+                    "samples": [
+                      "Turn {State} the light {Light}",
+                      "Turn the light {Light} {State}",
+                      "Turn the {Light} {State}",
+                      "Turn {Light} {State}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "State",
+                    "values": [
+                        {
+                            "id": "on",
+                            "name": {
+                                "value": "on",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "off",
+                            "name": {
+                                "value": "off",
+                                "synonyms": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Device",
+                    "values": []
+                },
+                {
+                    "name": "Room",
+                    "values": []
+                }
+            ]
+        }
+    }
+}

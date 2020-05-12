@@ -10,6 +10,7 @@ import Clock from '../app/clock/clock.js';
 import PlayControl from '../app/playcontrol/playcontrol.js';
 import MPD from '../app/mpd/mpd.js';
 import TuneIn from '../app/tunein/tunein.js';
+import Hue from '../app/hue/hue.js';
 import Bible from '../app/bible/bible.js';
 
 /**
@@ -30,7 +31,7 @@ export class Client {
     await speechToText.load(lang);
     await textToSpeech.load(lang);
 
-    let Apps = [ Clock, MPD, TuneIn, PlayControl, Bible ]; // TODO dynamically
+    let Apps = [ Clock, MPD, TuneIn, PlayControl, Hue, Bible ]; // TODO dynamically
 
     let apps = Apps.map(App => new App());
     await Promise.all(apps.map(app =>

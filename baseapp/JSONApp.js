@@ -75,12 +75,14 @@ export class JSONApp extends AppBase {
     if (values.length) {
       type = new EnumDataType(id);
       for (let value of values) {
-        let id = value.id;
+        if (!value.name) {
+          throw new Error("Enum value of enum data type " + id + " of app " + this.id + " is not correctly defined in the intents JSON file")
+        }
         let terms = [ value.name.value ];
         if (value.name.synonyms && value.name.synonyms.length) {
           terms = terms.concat(value.name.synonyms);
         }
-        type.addValue(id, terms);
+        type.addValue(value.id, terms);
       }
     } else {
       type = new ListDataType(id);

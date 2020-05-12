@@ -19,6 +19,7 @@
         "mpc-js": "^1.2.1",
         "naudiodon": "^2.1.2",
         "node-fetch": "^2.6.0",
+        "node-hue-api": "^4.0.6",
         "node-vad": "^1.1.4",
         "pv-porcupine": "../pv-porcupine/",
         "r2": "^2.0.1",
