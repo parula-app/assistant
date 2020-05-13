@@ -64,4 +64,18 @@ export class DataType {
   valueIDForTerm(term) {
     throw new Error("Implement this");
   }
+
+  /**
+   * Rate how well the string matches the data type.
+   *
+   * @param term {string} What the user said
+   * @returns {Number} score 0..1, whereas
+   *   1 = no relation whatsoever
+   *   0.5 = half the string matches
+   *   0 = perfect match
+   */
+  score(term) {
+    // Override this in subclasses
+    return 0.25;
+  }
 }

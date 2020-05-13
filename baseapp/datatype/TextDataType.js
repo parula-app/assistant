@@ -11,4 +11,7 @@ export class TextDataType extends OpenEndedDataType {
   constructor() {
     super("Pia.Text");
   }
+  score(input) {
+    return 0.5;
+  }
 }

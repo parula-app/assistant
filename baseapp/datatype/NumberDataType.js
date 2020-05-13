@@ -44,6 +44,20 @@ export class NumberDataType extends OpenEndedDataType {
     return input;
   }
 
+  score(input) {
+    if (typeof(input) == "number") {
+      return 0;
+    } else if (parseInt(input) + "" == input) {
+      return 0;
+    } else if (typeof(wordsToNumbers(input)) == "number") {
+      return 0.1;
+    } else if (typeof(wordsToNumbers(input, { fuzzy: true })) == "number") {
+      return 0.4;
+    } else {
+      return 1;
+    }
+  }
+
   get terms() {
     if (this._terms) {
       return this._terms;

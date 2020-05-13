@@ -127,7 +127,7 @@ export default class IntentParser {
             args[name] = variableMatch.targetString;
             argsScores.push(variableMatch.score);
           } else {
-            argsScores.push(kMaxScore * 0.9);
+            argsScores.push(dataType.score(args[name]));
           }
           //console.log("argument value: '" + args[name] + "', for DataType", dataType);
           args[name] = dataType.valueIDForTerm(args[name]);
