@@ -19,8 +19,20 @@ export class NumberDataType extends OpenEndedDataType {
     this._terms = null;
   }
 
+  /**
+   * @param term {string} e.g. "9" or "nine" or "nine hundred fifty five"
+   * @returns {number}
+   * @throws Error if conversion failed
+   */
   valueIDForTerm(term) {
     term = term.trim();
+    let number = parseInt(term);
+    if (isNaN(number)) {
+      number = parseFloat(term);
+    }
+    if (!isNaN(number) && number + "" == term) {
+      return number;
+    }
     // TODO only English supported
     return this.validate(wordsToNumbers(term, { fuzzy: true }));
   }
