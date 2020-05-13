@@ -18,7 +18,7 @@ export default function wildLeven(inputString, targetString) {
   const kDeleteCost = 1;
   const kReplaceCost = 1;
   const kInsertCost = 0.5;
-  const kVariableInsertCost = kInsertCost / 10;
+  const kVariableInsertCost = 0;
   /// These constants are used to retrace the path for the shortest edit.
   const INSERT = 1, EDIT = 0, DELETE = -1;
   /// The pattern, split into an array of characters and variables.

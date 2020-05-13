@@ -75,35 +75,102 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startApp(inputText) {
-    console.log("input:", inputText);
-    let result = matchVariable(inputText, this.commandsFlat);
-    if (!result) {
+    const kMaxScore = 0.5;
+    let startTime = new Date();
+
+    // Find the command candidates
+    let commandMatches = matchVariableWithAlternatives(inputText, this.commandsFlat);
+    if (!commandMatches.length) {
       return "I did not understand you";
     }
-    let { intent, command } = this.commands.get(result.targetString);
-    let app = intent.app;
-
-    let args = {};
-    let argsLower = result.variables;
-    // Fix up arg names, which we made lower case during matching :(
-    let orgParams = Object.keys(intent.parameters);
-    let orgParamsLower = orgParams.map(a => a.toLowerCase());
-    for (let nameLower in argsLower) {
-      let nameOrg = orgParams[orgParamsLower.indexOf(nameLower)];
-      args[nameOrg] = argsLower[nameLower];
-    }
-    for (let name in args) {
-      let dataType = intent.parameters[name];
-      if (dataType.finite) {
-        // normalize to allowed values
-        let result = matchVariable(args[name], dataType.terms);
-        if (!result) {
-          return "I did not understand the " + name;
-        }
-        args[name] = result.targetString;
+    //console.log("command matches", commandMatches);
+    let intentMatches = [];
+    for (let result of commandMatches) {
+      // Find the Intent
+      let { intent } = this.commands.get(result.targetString);
+      result.intent = intent;
+      // Avoid duplicate results for the same Intent
+      // find() is not efficient, but better than using Map and then converting to Array
+      if (intentMatches.find(previous => previous.intent == result.intent)) {
+        continue;
       }
-      args[name] = dataType.valueIDForTerm(args[name]);
-     }
+      intentMatches.push(result);
+    }
+
+    for (let result of intentMatches) {
+      try {
+        // Match the variables
+        let args = result.args = {};
+        let argsScores = [];
+        //console.log("Checking variables for command: " + result.targetString);
+        // Fix up arg names, which we made lower case during matching :(
+        //console.log("Checking variables for command: " + result.targetString);
+        let argsLower = result.variables;
+        let orgParams = Object.keys(result.intent.parameters);
+        let orgParamsLower = orgParams.map(a => a.toLowerCase());
+        for (let nameLower in argsLower) {
+          let nameOrg = orgParams[orgParamsLower.indexOf(nameLower)];
+          args[nameOrg] = argsLower[nameLower];
+        }
+        let skipThis = false;
+        // Match each variable
+        for (let name in args) {
+          let dataType = result.intent.parameters[name];
+          if (dataType.finite) {
+            // normalize to allowed values
+            let variableMatch = matchVariable(args[name], dataType.terms);
+            if (!variableMatch) {
+              //argsScores.push(kMaxScore * 2);
+              skipThis = true;
+              break;
+            }
+            args[name] = variableMatch.targetString;
+            argsScores.push(variableMatch.score);
+          } else {
+            argsScores.push(kMaxScore * 0.9);
+          }
+          //console.log("argument value: '" + args[name] + "', for DataType", dataType);
+          args[name] = dataType.valueIDForTerm(args[name]);
+        }
+        if (skipThis) {
+          result.overallScore = kMaxScore * 2; // filter it out later
+          continue;
+        }
+        //result.argsScores = argsScores;
+
+        let sumArgs = argsScores.reduce((accumulator, current) => accumulator + current);
+        // Average over the scores of command and all variables
+        result.overallScore = (result.score + sumArgs) / (1 + argsScores.length);
+
+      } catch (ex) {
+        console.log(result.intent.id + " is not a match: " + (ex.message || ex));
+        result.overallScore = kMaxScore * 2;
+        continue;
+      }
+    }
+    //console.log("with variable matches", intentMatches);
+
+    /* Take the best match, considering score of command and variables.
+     * A strong variable match should be preferred over a good command
+     * match.
+     * That also allows multiple e.g. "Play" commands, e.g. "Play {Artist}"
+     * and "Play {Song}" and "Play {Playlist}", and find the best variable match.
+     * This works even across apps.
+     * The actual calculation of overallScore and selection happened above. */
+    intentMatches = intentMatches
+      .sort((a, b) => (a.overallScore - b.overallScore));
+    let bestMatch = intentMatches[0];
+    if (bestMatch.overallScore > kMaxScore) {
+      for (let paramName in bestMatch.intent.parameters) {
+        if (!bestMatch.args[paramName]) {
+          return "I did not understand the " + paramName;
+        }
+      }
+      throw new Error("I did not understand you"); // should have been caught above
+    }
+    console.log("Matching took " + (new Date() - startTime) + "ms");
+    let intent = bestMatch.intent;
+    let args = bestMatch.args;
 
     try {
       this.clientAPI.newCommand(intent, args);
@@ -118,41 +185,52 @@ export default class IntentParser {
 }
 
 /**
-* @param inputText {string} user input, only the part for this variable
-* @param validValues {Array of string}
-* @returns {wildLeven() result} the closest match
-*    or null, if the strings are too far
-*/
+ * Find the closest match of the inputText within validValues.
+ * Return one of validValues or nothing.
+ *
+ * @param inputText {string} user input, only the part for this variable
+ * @param validValues {Array of string}
+ * @returns {wildLeven() result} the closest match
+ *    or null, if the strings are too far.
+ */
 function matchVariable(inputText, validValues) {
-  if (!validValues) {
-    return inputText;
+  return matchVariableWithAlternatives(inputText, validValues)[0];
+}
+
+/**
+ * Find the best matches of the inputText within validValues.
+ *
+ * @param inputText {string} user input, only the part for this variable
+ * @param validValues {Array of string}
+ * @returns {Array of wildLeven() result} the closest matches,
+ *    sorted by decreasing order of match
+ *    May be an empty array, if the strings are too far.
+ */
+function matchVariableWithAlternatives(inputText, validValues) {
+  if (!validValues || !validValues.length) {
+    //throw new Error("Need valid values to match against");
+    return [];
   }
   inputText = inputText.toLowerCase();
   const kMaxScore = 0.5; // If we need to change more than half the chars, then don't take it
-  //console.log("input:", inputText);
-  //let similarity = stringSimilarity.findBestMatch(inputText, validValues).bestMatch.target;
-  //console.log("stringSimilarity:", similarity);
-  const startTime = new Date();
+  let startTime = new Date();
   let results = validValues
     .map(targetString => {
-      if (!targetString) {
-        return { score: 2000 };
+      if (!targetString) { // invalid entries in validValues
+        return { score: kMaxScore * 2 }; // filter it out below
       }
       let result = wildLeven(inputText, targetString.toLowerCase());
       result.targetString = targetString; // not lower case
       return result;
     })
-    .filter(result => result.score < kMaxScore)
+    .filter(result => result.score <= kMaxScore)
     .sort((a, b) => a.score - b.score);
   //for (let result of results.slice(0, 20)) {
   //  console.log(result.targetString, result.editDistance, result.score);
   //}
   if (!results.length) {
-    return null;
+    return [];
   }
-  //console.log(results.slice(0, 5));
-  let match = results[0].targetString;
-  console.log("did you mean:", match);
-  console.log("string matching took", (new Date() - startTime) + "ms");
-  return results[0];
+  console.log("did you mean (" + (new Date() - startTime) + "ms):", results[0].targetString);
+  return results;
 }
