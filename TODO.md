@@ -1,7 +1,4 @@
 ## Core
-* Intent parser
-   * Levensthein distance relative to pattern length
-   * Calculate match confidence, including variables, select best match
 * Storage
   * Settings
   * User data
@@ -33,7 +30,7 @@
 * Calendar
 * Contacts
 * Phone SIP
-* Phone Android dialer
+* Phone Bluetooth
 * Wikipedia
 * Google search
 

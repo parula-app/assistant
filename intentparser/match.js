@@ -147,6 +147,7 @@ export default class IntentParser {
 
       } catch (ex) {
         console.log(result.intent.id + " is not a match: " + (ex.message || ex));
+        //console.error(ex);
         result.overallScore = kMaxScore * 2;
         continue;
       }
@@ -163,6 +164,7 @@ export default class IntentParser {
     intentMatches = intentMatches
       .sort((a, b) => (a.overallScore - b.overallScore));
     let bestMatch = intentMatches[0];
+    console.log("Matching took " + (new Date() - startTime) + "ms");
     if (bestMatch.overallScore > kMaxScore) {
       for (let paramName in bestMatch.intent.parameters) {
         if (!bestMatch.args[paramName]) {
@@ -171,7 +173,6 @@ export default class IntentParser {
       }
       throw new Error("I did not understand you"); // should have been caught above
     }
-    console.log("Matching took " + (new Date() - startTime) + "ms");
     let intent = bestMatch.intent;
     let args = bestMatch.args;
 
