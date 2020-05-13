@@ -12,29 +12,45 @@
                     "samples": []
                 },
                 {
-                    "name": "PlaySong",
+                    "name": "PlaySongAndArtist",
                     "slots": [
                         {
                             "name": "SongAndArtist",
                             "type": "SongAndArtist"
-                        },
+                        }
+                    ],
+                    "samples": [
+                        "Play the song {SongAndArtist}",
+                        "Play {SongAndArtist}",
+                        "{SongAndArtist}"
+                    ]
+                },
+                {
+                    "name": "PlaySongTitle",
+                    "slots": [
                         {
                             "name": "Song",
                             "type": "SongTitle"
-                        },
+                        }
+                    ],
+                    "samples": [
+                        "Play {Song}",
+                        "Play the song {Song}",
+                        "{Song}"
+                    ]
+                },
+                {
+                    "name": "PlayArtist",
+                    "slots": [
                         {
                             "name": "Artist",
                             "type": "Artist"
                         }
                     ],
                     "samples": [
-                        "Play the song {SongAndArtist}",
-                        "Play {SongAndArtist}",
-                        "Play (songs|music) (from|by) {Artist}",
+                        "Play (songs|music) (from|by)(artist|) {Artist}",
+                        "Play artist {Artist}",
                         "Play {Artist}",
-                        "Play {Song}",
-                        "{SongAndArtist}",
-                        "{Song}",
                         "{Artist}"
                     ]
                 },

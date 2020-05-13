@@ -4,7 +4,6 @@ const MPC = mpcjs.default.MPC;
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
 
-const kArtistSeparator = " by ";
 
 /**
  * API doc:
@@ -18,6 +17,7 @@ export default class MPD extends JSONApp {
 
   async load(lang) {
     await super.load(lang);
+    this.kArtistSeparator = " by "; // TODO localize
     await this.loadSongs();
   }
 
@@ -40,7 +40,7 @@ export default class MPD extends JSONApp {
           songType.addValue(title);
         }
         if (title && artist) {
-          songAndArtistType.addValue(title + kArtistSeparator + artist);
+          songAndArtistType.addValue(title + this.kArtistSeparator + artist);
         }
       }
     }
@@ -66,36 +66,64 @@ export default class MPD extends JSONApp {
   /**
    * Command
    * @param args {object}
-   *    Song {string}
-   *    Artist {string}
+   *    SongAndArtist {string}
    * @param client {ClientAPI}
    */
-  async playSong(args, client) {
-    let song = args.Song;
-    let artist = args.Artist;
-    let songAndArtist = args.SongAndArtist;
-    if (!song && !artist && songAndArtist) {
-      let split = songAndArtist.split(kArtistSeparator);
-      if (split.length == 2) {
-        song = split[0];
-        artist = split[1];
-      }
+  async playSongAndArtist(args, client) {
+    let split = args.SongAndArtist.split(this.kArtistSeparator);
+    if (split.length != 2) {
+      throw new Error("I found no such song");
     }
-    if (!song && !artist) {
+    let song = split[0];
+    let artist = split[1];
+
+    let mpc = await this.connect();
+    await mpc.currentPlaylist.clear();
+    mpc.database.findAdd([['Title', song], ['Artist', artist]]);
+    mpc.playback.play();
+    await this.debugShowPlaying();
+  }
+
+  /**
+   * Command
+   * @param args {object}
+   *    Song {string}
+   * @param client {ClientAPI}
+   */
+  async playSongTitle(args, client) {
+    let song = args.Song;
+    if (!song) {
       throw new Error("I found no such song");
     }
 
     let mpc = await this.connect();
     await mpc.currentPlaylist.clear();
-    if (song && artist) {
-      mpc.database.findAdd([['Title', song], ['Artist', artist]]);
-    } else if (song) {
-      mpc.database.findAdd([['Title', song]]);
-    } else if (artist) {
-      mpc.database.findAdd([['Artist', artist]]);
-    }
+    mpc.database.findAdd([['Title', song]]);
     mpc.playback.play();
+    await this.debugShowPlaying();
+  }
 
+  /**
+   * Command
+   * @param args {object}
+   *    Artist {string}
+   * @param client {ClientAPI}
+   */
+  async playArtist(args, client) {
+    let artist = args.Artist;
+    if (!artist) {
+      throw new Error("I found no such artist");
+    }
+
+    let mpc = await this.connect();
+    await mpc.currentPlaylist.clear();
+    mpc.database.findAdd([['Artist', artist]]);
+    mpc.playback.play();
+    await this.debugShowPlaying();
+  }
+
+  async debugShowPlaying() {
+    let mpc = await this.connect();
     //let songs = await mpc.database.find([['Title', searchText]]);
     //console.log(songs.map(song => ({ title: song.title, artist: song.artist, file: song.path })));
     let songObj = (await mpc.currentPlaylist.playlistInfo(0))[0];
