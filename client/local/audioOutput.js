@@ -19,9 +19,6 @@ export default function audioOutput(waveStream) {
   });
   let waveToRaw = sox({
     input: {
-        bits: 16,
-        channels: 1,
-        rate: outputSampleRate(),
         type: "wav",
     },
     output: {
