@@ -152,7 +152,7 @@ export default class IntentParser {
         continue;
       }
     }
-    //console.log("Match results with variables:"); for (let match of intentMatches.sort((a, b) => (a.overallScore - b.overallScore))) { console.log(" ", match.intent.app.id, match.intent.id, ", command score", Math.round(match.score * 100) / 100, ", overall score", Math.round(match.overallScore * 100) / 100, ", args", match.args); }
+    console.log("Match results with variables:"); for (let match of intentMatches.sort((a, b) => (a.overallScore - b.overallScore))) { console.log(" ", match.intent.app.id, match.intent.id, ", command score", Math.round(match.score * 100) / 100, ", overall score", Math.round(match.overallScore * 100) / 100, ", args", match.args); }
 
     /* Take the best match, considering score of command and variables.
      * A strong variable match should be preferred over a good command
@@ -216,7 +216,7 @@ function matchVariableWithAlternatives(inputText, validValues) {
     return [];
   }
   inputText = inputText.toLowerCase();
-  const kMaxScore = 0.5; // If we need to change more than half the chars, then don't take it
+  const kMaxScore = 0.7; // If we need to change more than half the chars, then don't take it
   let startTime = new Date();
   let results = validValues
     .map(targetString => {
