@@ -3,17 +3,16 @@
  * This is for debugging.
  */
 
-import { sampleRate as inputSampleRate } from '../../speechToText.js';
-import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
 import * as fs from 'fs';
 import SoxCommand from 'sox-audio';
+import { speechToText, textToSpeech } from '../../speech/speech.js'; // sample rate
 
 let counter = 0;
 
 export function saveAudioFile(audioStream) {
   let sox = SoxCommand();
   sox.input(audioStream)
-    .inputSampleRate(inputSampleRate())
+    .inputSampleRate(speechToText.sampleRate())
     .inputEncoding('signed')
     .inputBits(16)
     .inputChannels(1)

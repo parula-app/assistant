@@ -40,6 +40,7 @@
 * Node Red
 * Home Assistant <https://www.home-assistant.io>
 * ThingVerse, Almond, LUInet <https://almond.stanford.edu/thingpedia>
+* MyCroft <https://github.com/MycroftAI/mycroft-skills>
 
 ## API
 * HTTP app

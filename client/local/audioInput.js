@@ -1,5 +1,5 @@
 import portAudio from 'naudiodon'; // for input -- output doesn't work for me
-import { sampleRate as inputSampleRate } from '../../speechToText.js';
+import { speechToText } from '../../speech/speech.js'; // sample rate
 import { getConfig } from '../../util/config.js';
 
 export async function load() {
@@ -29,7 +29,7 @@ export default function audioInput() {
     inOptions: {
       channelCount: 1,
       sampleFormat: portAudio.SampleFormat16Bit,
-      sampleRate: inputSampleRate(),
+      sampleRate: speechToText.sampleRate(),
       // Use -1 to select the default device
       deviceId: getConfig().audio.inputDevice,
       closeOnError: true,

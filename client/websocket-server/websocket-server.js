@@ -6,8 +6,7 @@ import https from 'https';
 import WebSocket from 'ws';
 import WebSocketWrapper from 'ws-wrapper';
 import { Client } from '../Client.js';
-import * as speechToText from '../../speechToText.js';
-import * as textToSpeech from '../../textToSpeech.js';
+import { speechToText, textToSpeech } from '../../speech/speech.js';
 import * as streamBuffers from 'stream-buffers';
 const ReadableStreamBuffer = streamBuffers.default.ReadableStreamBuffer;
 

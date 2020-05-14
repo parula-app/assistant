@@ -6,8 +6,7 @@ import http from 'http';
 import https from 'https';
 import express from 'express';
 import { Client } from '../Client.js';
-import * as speechToText from '../../speechToText.js';
-import * as textToSpeech from '../../textToSpeech.js';
+import { speechToText, textToSpeech } from '../../speech/speech.js';
 
 const port = 4224;
 

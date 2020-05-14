@@ -41,8 +41,11 @@ export class Client {
     await this.load(this.lang);
   }
 
+  async unload() {
+  }
+
   async quit() {
-    await speechToText.unload();
+    await this.unload();
     process.exit(0);
   }
 

@@ -1,5 +1,5 @@
 import BumblebeeNode from 'bumblebee-hotword-node';
-import { sampleRate as inputSampleRate } from '../../speechToText.js';
+import { speechToText } from '../../speech/speech.js'; // sample rate
 import { wait } from '../../util/util.js';
 
 /**
@@ -30,7 +30,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   detector.addHotword('grasshopper');
   detector.setSensitivity(0.6);
 
-  detector.start(audioInputStream, inputSampleRate());
+  detector.start(audioInputStream, speechToText.sampleRate());
 
   // Whether this is an active command
   let commandStartTime = null;

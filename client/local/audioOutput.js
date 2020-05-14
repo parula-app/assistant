@@ -1,6 +1,6 @@
 import Speaker from 'speaker'; // for output -- naudiodon output doesn't work for me
 import sox from 'sox-stream'; // for transform. Requires sox to be installed
-import { sampleRate as outputSampleRate } from '../../textToSpeech.js';
+import { textToSpeech } from '../../speech/speech.js'; // sample rate
 import { getConfig } from '../../util/config.js';
 
 /**
@@ -13,7 +13,7 @@ export default function audioOutput(waveStream) {
   let ao = new Speaker({
     channels: 1,
     bitDepth: 16,
-    sampleRate: outputSampleRate(),
+    sampleRate: textToSpeech.sampleRate(),
     // null = default device
     //device: getConfig().audio.outputDevice, e.g. "hw0,0"
   });
@@ -24,7 +24,7 @@ export default function audioOutput(waveStream) {
     output: {
         bits: 16,
         channels: 1,
-        rate: outputSampleRate(),
+        rate: textToSpeech.sampleRate(),
         type: "raw",
     },
   });

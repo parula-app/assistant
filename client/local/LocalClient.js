@@ -5,8 +5,7 @@ import { LocalPlayer } from './LocalPlayer.js';
 import audioInput, { load as audioInputLoad} from './audioInput.js';
 import audioOutput from './audioOutput.js';
 import * as wakeword from './bumblebee.js';
-import * as speechToText from '../../speechToText.js';
-import * as textToSpeech from '../../textToSpeech.js';
+import { speechToText, textToSpeech } from '../../speech/speech.js';
 import * as wtn from 'words-to-numbers';
 const wordsToNumbers = wtn.default.wordsToNumbers;
 
@@ -50,6 +49,11 @@ export class LocalClient extends Client {
         console.error(ex);
       }
     });
+  }
+
+  async unload() {
+    await speechToText.unload();
+    await super.unload();
   }
 
   get player() {

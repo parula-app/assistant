@@ -4,7 +4,7 @@
  */
 
 import Ds from 'deepspeech';
-import { getConfig } from './util/config.js';
+import { getConfig } from '../../util/config.js';
 
 var model;
 
