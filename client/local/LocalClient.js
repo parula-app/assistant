@@ -17,11 +17,13 @@ const wordsToNumbers = wtn.default.wordsToNumbers;
  * local audio devices to listen to and output speech.
  */
 export class LocalClient extends Client {
-  async load() {
+  async load(lang) {
     await audioInputLoad();
     await wakeword.load();
-    await super.load();
+    await speechToText.load(lang);
+    await textToSpeech.load(lang);
     this._player = new LocalPlayer();
+    await super.load(lang);
   }
 
   async start() {

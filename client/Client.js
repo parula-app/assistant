@@ -4,8 +4,6 @@
 import IntentParser from '../intentparser/match.js';
 import { ClientAPI } from './ClientAPI.js';
 import { getConfig } from '../util/config.js';
-import * as speechToText from '../speechToText.js';
-import * as textToSpeech from '../textToSpeech.js';
 import Clock from '../app/clock/clock.js';
 import PlayControl from '../app/playcontrol/playcontrol.js';
 import MPD from '../app/mpd/mpd.js';
@@ -26,12 +24,7 @@ export class Client {
     this.lang = null;
   }
 
-  async load() {
-    let lang = this.lang = getConfig().language;
-
-    await speechToText.load(lang);
-    await textToSpeech.load(lang);
-
+  async load(lang) {
     let Apps = [ Clock, MPD, TuneIn, PlayControl, Hue, Bible ]; // TODO dynamically
 
     let apps = Apps.map(App => new App());
@@ -44,7 +37,8 @@ export class Client {
   }
 
   async start() {
-    await this.load();
+    this.lang = getConfig().language;
+    await this.load(this.lang);
   }
 
   async quit() {
