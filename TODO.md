@@ -13,12 +13,11 @@
    * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
-* Silence detection
-* TTS faster (tacotron?)
 * LM
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary
 * Integrate STT with valid input, see DeepSpeech WithMetadata API
+* Better TTS
 
 ## Apps
 * MPD

@@ -1,4 +1,5 @@
 import BumblebeeNode from 'bumblebee-hotword-node';
+import VAD from 'node-vad';
 import { speechToText } from '../../speech/speech.js'; // sample rate
 import { wait } from '../../util/util.js';
 
@@ -25,22 +26,36 @@ import { wait } from '../../util/util.js';
  */
 export async function waitForWakeWord(audioInputStream, maxCommandLength,
   newCommandCallback, audioCallback, endCommandCallback) {
+  const kMaxSilence = 1.5; // seconds
+  const kSampleRate = speechToText.sampleRate();
 
   let detector = new BumblebeeNode();
   detector.addHotword('grasshopper');
   detector.setSensitivity(0.6);
 
-  detector.start(audioInputStream, speechToText.sampleRate());
+  detector.start(audioInputStream, kSampleRate);
+
+  let vad = new VAD(VAD.Mode.VERY_AGGRESSIVE);
 
   // Whether this is an active command
   let commandStartTime = null;
+  let lastVoiceTime = null;
+
+  function endCommand() {
+    commandStartTime = null;
+    lastVoiceTime = null;
+    try {
+      endCommandCallback();
+    } catch (ex) {
+      console.error(ex);
+    }
+  }
 
   detector.on('hotword', (wakeword) => {
-    // `buffer` contains the last chunk of the audio that triggers the "hotword"
-    // event. It could be written to a wav stream. You have to use it
-    // together with the `buffer` in the "data" event, if you want to get audio
-    // data after the hotword.
-    console.log('Wakeword', wakeword);
+    console.info('Wakeword', wakeword);
+    if (commandStartTime) {
+      endCommand();
+    }
     commandStartTime = new Date();
     try {
       newCommandCallback();
@@ -49,40 +64,36 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     }
   });
 
-  detector.on('data', (buffer) => {
+  detector.on('data', async (buffer) => {
     // <buffer> contains the last chunk of the audio that triggers the "sound"
     // event. It could be written to a wav stream.
-    process.stdout.write('***\r');
     if (commandStartTime) {
       try {
         audioCallback(buffer);
-      } catch (ex) {
-        console.error(ex);
-      }
-      if (new Date() - commandStartTime > maxCommandLength * 1000) {
-        commandStartTime = null;
-        try {
-          endCommandCallback();
-        } catch (ex) {
-          console.error(ex);
+
+        // Use silence detection to know when the command finished
+        let voice = await vad.processAudio(buffer, kSampleRate);
+        if (voice == VAD.Event.VOICE) {
+          lastVoiceTime = Date.now();
+          process.stdout.write('##########\r');
+        } else { // ERROR, NOISE or SILENCE
+          process.stdout.write('***       \r');
+          if (lastVoiceTime && Date.now() - lastVoiceTime > kMaxSilence * 1000) {
+            console.info("Command finished due to silence");
+            endCommand();
+            return;
+          }
         }
-      }
-    }
-  });
-
-  detector.on('voice-start', () => {
-    console.log("Voice start");
-  });
-
-  detector.on('voice-end', () => {
-    console.log("Command end due to silence");
-    if (commandStartTime) {
-      commandStartTime = null;
-      try {
-        endCommandCallback();
       } catch (ex) {
         console.error(ex);
       }
+      // maximum command time, in case there's background noise
+      if (new Date() - commandStartTime > maxCommandLength * 1000) {
+        console.info("Command finished due to timeout");
+        endCommand();
+      }
+    } else {
+      process.stdout.write('...       \r');
     }
   });
 
@@ -96,7 +107,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   });
 
   audioInputStream.start();
-  console.info('Listening to your command.');
+  console.info('Listening to your command...');
   await wait(64^5); // 34 years TODO
 }
 
