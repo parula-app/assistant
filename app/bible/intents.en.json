@@ -126,6 +126,7 @@
                         "What about {Person}",
                         "Who was {Person}",
                         "Who is {Person}",
+                        "What do you know about {Person}",
                         "Tell me about {Person}"
                     ]
                 },
@@ -140,6 +141,7 @@
                     "samples": [
                         "Where was {Place}",
                         "Tell me about {Place}",
+                        "What do you know about {Place}",
                         "Where is {Place}"
                     ]
                 },

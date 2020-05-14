@@ -493,13 +493,13 @@ function outputPerson(person, args, client, lang) {
 
 
 /**
- * @returns {Array of Place} personIDs
+ * @returns {Array of Place} place IDs
  */
 function getPlace(args, client, lang) {
   try {
-    var ids = request.slots["Place"].resolution(0).first().id;
+    var ids = args.Place;
     ids = ids.split("/");
-    return gStorage[lang].getIDs(ids);
+    return gStorage[client.lang].getIDs(ids);
   } catch (e) {
     throw new UserError("unknown_place", { person: args.Place });
   }
