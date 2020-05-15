@@ -22,6 +22,16 @@ export class Client {
     this.intentParser = null;
     this.clientAPI = null;
     this.lang = null;
+
+    process.once("SIGINT", async (exitCode) => {
+      console.log("\nUser pressed Ctrl-C");
+      await this.quit(exitCode);
+    });
+
+    process.once("SIGTERM", async (exitCode) => {
+      console.log("kill received");
+      await this.quit(exitCode);
+    });
   }
 
   async load(lang) {
@@ -44,9 +54,10 @@ export class Client {
   async unload() {
   }
 
-  async quit() {
+  async quit(exitCode) {
     await this.unload();
-    process.exit(0);
+    console.log("Exit");
+    process.exit(exitCode);
   }
 
   get player() {
