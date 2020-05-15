@@ -5,9 +5,9 @@
     "port": "Port number of the MPD server on your local network"
   },
   "audio": {
-    "captureSeconds": "Record N seconds of audio",
-    "inputDevice": "ID of the microphone audio device. You see a list of devices when you pass --audio.inputDevice -2",
-    "outputDevice": "ID of the speaker audio device."
+    "maxCommandLength": "Finish the voice command after N seconds, e.g. when there is too much noise.",
+    "inputDevice": "ALSA ID of the microphone audio device, e.g. hw(2,1), for 1. card 2. device. See aplay -l for a list. Empty = default device.",
+    "outputDevice": "ALSA ID of the speaker audio device, e.g. hw(1,0). Empty = default device."
   },
   "deepSpeech": {
     "modelDir": "DeepSpeech Model directory. Convenience parameter to specify model, lm and trie at the same time.",

@@ -8,6 +8,7 @@ import * as wakeword from './bumblebee.js';
 import { speechToText, textToSpeech } from '../../speech/speech.js';
 import * as wtn from 'words-to-numbers';
 const wordsToNumbers = wtn.default.wordsToNumbers;
+import { getConfig } from '../../util/config.js';
 
 /**
  * This and `Client` is the central code that calls all the other modules.
@@ -27,8 +28,9 @@ export class LocalClient extends Client {
 
   async start() {
     await super.start();
+    const kMax = getConfig().audio.maxCommandLength;
     let recognizer;
-    wakeword.waitForWakeWord(audioInput(), 7, () => { // new command
+    wakeword.waitForWakeWord(audioInput(), kMax, () => { // new command
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);

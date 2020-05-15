@@ -27,7 +27,8 @@ export class LocalPlayer extends Player {
     assert(typeof(nextCallback) == "function", "nextCallback must be a function");
     this.stop(); // quits any currently running instance
     console.log("Playing audio stream " + url);
-    let device = undefined; // = getConfig().audio.outputDevice || undefined; // e.g. "hw0,0"
+    console.log("for mp3, using output device " + getConfig().audio.outputDevice);
+    let device = getConfig().audio.outputDevice || undefined; // e.g. "hw0,0", and undefined (*not* null!) = default
     this._mpg = new mpg123.MpgPlayer(device, true); // no frame updates
     this._mpg.play(url);
     this._isPlaying = true;

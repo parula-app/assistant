@@ -4,9 +4,7 @@
     "server": "localhost"
   },
   "audio": {
-    "captureSeconds": 4,
-    "inputDevice": -1,
-    "outputDevice": -1
+    "maxCommandLength": 10
   },
   "deepSpeech": {
     "modelDir": "./model/",

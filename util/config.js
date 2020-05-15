@@ -55,16 +55,16 @@ export function commandlineArgs(currentConfig) {
  * @param json {JSON}
  *    E.g. {
  *     "audio": {
- *       "inputDevice": 7,
+ *       "outputDevice": "pulse"
  *     },
- *     "language": en,
+ *     "language": en
  *   }
  * @param separator {string} (optional) default "."
  * @param prefix {string} (optional) internal, for recursion
  * @param result {obj} (optional) internal, for recursion
  * @returns {JS obj: path {string} -> value {any} }
  *    E.g. {
- *     "audio.inputDevice": 7,
+ *     "audio.outputDevice": "pulse",
  *     "language": en,
  *   }
  */
@@ -87,15 +87,15 @@ function jsonFlat(json, separator, prefix, result) {
  * Opposite of jsonFlat()
  * @param flat {JS obj: path {string} -> value {any} }
  *    E.g. {
- *     "audio.inputDevice": 7,
+ *     "audio.outputDevice": "pulse",
  *     "language": en,
  *   }
  * @returns {JSON}
  *    E.g. {
  *     "audio": {
- *       "inputDevice": 7,
+ *       "outputDevice": "pulse"
  *     },
- *     "language": en,
+ *     "language": en
  *   }
  *
  * @test JSON.stringify(data) == JSON.stringify(jsonUnflat(jsonFlat(data)))

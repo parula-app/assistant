@@ -2,14 +2,33 @@ import portAudio from 'naudiodon'; // for input -- output doesn't work for me
 import { speechToText } from '../../speech/speech.js'; // sample rate
 import { getConfig } from '../../util/config.js';
 
+/**
+ * {Int} PortAudio device ID
+ *    -1 = default device
+ */
+var gDeviceID = -1;
+
 export async function load() {
-  listDevices();
+  getDevice();
+}
+
+function getDevice() {
+  let inputDevice = getConfig().audio.inputDevice;
+  for (let cur of portAudio.getDevices()) {
+    //if (cur.name.includes(device)) {
+    if (cur.name == inputDevice || cur.name.endsWith(" (" + inputDevice + ")")) {
+      console.log("using input device " + cur.name);
+      gDeviceID = cur.id;
+      return;
+    }
+  }
 }
 
 function listDevices() {
-  let config = getConfig().audio;
-  if (!config.inputDevice || config.inputDevice == -2) {
+  let inputDevice = getConfig().audio.inputDevice;
+  if (!inputDevice || inputDevice == -2) {
     let devices = portAudio.getDevices();
+    //console.log(devices);
     console.log("\nAudio devices:");
     for (let device of devices) {
       console.log(device.id + " = " + device.name);
@@ -31,7 +50,7 @@ export default function audioInput() {
       sampleFormat: portAudio.SampleFormat16Bit,
       sampleRate: speechToText.sampleRate(),
       // Use -1 to select the default device
-      deviceId: getConfig().audio.inputDevice,
+      deviceId: gDeviceID,
       closeOnError: true,
     }
   });

@@ -2,5 +2,10 @@
   "language": "en",
   "mpc": {
     "server": "mpd"
-  }
+  },
+  "audio": {
+    "maxCommandLength": 15,
+    "inputDevice": "hw(1,0)",
+    "outputDevice": "hw(2,2)"
+  },
 }
