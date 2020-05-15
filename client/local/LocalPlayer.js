@@ -1,4 +1,4 @@
-import mpg321 from 'mpg321';
+import mpg123 from 'mpg123';
 //import MP3 from 'js-mp3';  -- pure JS, but not streaming :-(
 import { Player } from '../Player.js';
 import { getConfig } from '../../util/config.js';
@@ -27,8 +27,8 @@ export class LocalPlayer extends Player {
     assert(typeof(nextCallback) == "function", "nextCallback must be a function");
     this.stop(); // quits any currently running instance
     console.log("Playing audio stream " + url);
-    //.audioDevice(getConfig().audio.outputDevice); e.g. "hw0,0"
-    this._mpg = mpg321().quiet().remote();
+    let device = undefined; // = getConfig().audio.outputDevice || undefined; // e.g. "hw0,0"
+    this._mpg = new mpg123.MpgPlayer(device, true); // no frame updates
     this._mpg.play(url);
     this._isPlaying = true;
     this._mpg.on('end', () => {
@@ -39,6 +39,17 @@ export class LocalPlayer extends Player {
       } catch (ex) {
         console.error(ex);
       }
+    });
+    this._mpg.on('pause', () => {
+      this._isPlaying = false;
+    });
+    this._mpg.on('resume', () => {
+      this._isPlaying = false;
+    });
+    this._mpg.on('error', ex => {
+      console.error("While attempting to play <" + url + ">:");
+      console.error(ex);
+      this._isPlaying = false;
     });
   }
 
@@ -57,7 +68,7 @@ export class LocalPlayer extends Player {
       return;
     }
     try {
-      this._mpg.quit();
+      this._mpg.close();
     } catch (ex) {
       console.error(ex);
     }
@@ -72,5 +83,9 @@ export class LocalPlayer extends Player {
     assert(volume >= 0 && volume <= 100);
 
     this._mpg.volume(volume);
+  }
+
+  async unload() {
+    this.stop();
   }
 }
