@@ -13,6 +13,8 @@
    * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
+* Better wake word
+* Acoustic echo cancellation
 * LM
   * Train language model based on commands and values from apps
   * Create Text data type with english vocabulary

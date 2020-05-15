@@ -14,9 +14,7 @@
                 {
                     "name": "Date",
                     "samples": [
-                        "What day is it",
-                        "Which day is it",
-                        "Which day is it today",
+                        "(What|which) day is (it|) (today|)",
                         "What is the current day",
                         "Today is which day",
                         "Current date"
