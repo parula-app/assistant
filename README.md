@@ -18,7 +18,7 @@ It also means that Pia can work in places where Internet connection
 is intermittent, for example in your car.
 
 To ensure that, Pia encourages apps that keep all their data local.
-200 GB microSD cards for 25 EUR means that this is possible.
+Cheap 200 GB microSD cards make this possible.
 
 Obviously, Google searches, news, weather updates etc. will still
 call out to the Internet.

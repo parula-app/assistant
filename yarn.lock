@@ -693,10 +693,9 @@ mpc-js@^1.2.1:
     "@types/node" "^8.0.19"
     mpc-js-core "^1.2.0"
 
-mpg123@^0.2.3:
+"mpg123@https://github.com/benbucksch/mpg123":
   version "0.2.3"
-  resolved "https://registry.yarnpkg.com/mpg123/-/mpg123-0.2.3.tgz#984389a5da73d4e1cb311b5082d83f9389dc5ccc"
-  integrity sha1-mEOJpdpz1OHLMRtQgtg/k4ncXMw=
+  resolved "https://github.com/benbucksch/mpg123#9e9041acc29e522dc4f7614184d1e9f3bff0378d"
   dependencies:
     event-stream "~3.0.4"
     through "~1.1.0"
