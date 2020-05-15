@@ -5,6 +5,7 @@
 
 import Ds from 'deepspeech';
 import { getConfig } from '../../util/config.js';
+import os from 'os';
 
 var model;
 
@@ -14,7 +15,8 @@ export async function load() {
     if (!config.modelDir.endsWith("/")) {
       config.modelDir += "/";
     }
-    config.model = config.model || config.modelDir + "output_graph.pbmm";
+    let filename = "output_graph." + (os.arch() == "arm" || os.arch() == "arm64" ? "tflite" : "pbmm");
+    config.model = config.model || config.modelDir + filename;
     config.lm = config.lm || config.modelDir + "lm.binary";
     config.trie = config.trie || config.modelDir + "trie";
   }
