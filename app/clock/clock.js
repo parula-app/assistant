@@ -25,7 +25,7 @@ export default class Clock extends JSONApp {
    * @param client {ClientAPI}
    */
   async date(args, client) {
-    const format = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const format = { weekday: 'long', month: 'long', day: 'numeric' };
     return new Date().toLocaleDateString(client.lang, format);
   }
 }
