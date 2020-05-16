@@ -20,6 +20,7 @@ class TestClient extends Client {
     let failCount = 0;
     for (let input in expected) {
       let exp = expected[input];
+      console.log("Testing command: " + input);
       try {
         let response = await this.intentParser.startApp(input);
         if (exp == response) {
@@ -54,4 +55,5 @@ class TestClient extends Client {
 const expected = {
   "read genesis chapter one verse twenty two": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”",
   "open genesis five verse three": "Adam lived for 130 years and then became father to a son in his likeness, in his image, and he named him Seth.",
+  "read revelation 21 vers fine": "And the One seated on the throne said: “Look! I am making all things new.” Also he says: “Write, for these words are faithful and true.”",
 };
