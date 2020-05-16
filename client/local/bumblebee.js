@@ -31,6 +31,8 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
 
   let detector = new BumblebeeNode();
   detector.addHotword('grasshopper');
+  detector.addHotword('hey_edison');
+  detector.addHotword('bumblebee');
   detector.setSensitivity(0.6);
 
   detector.start(audioInputStream, kSampleRate);
