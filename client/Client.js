@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import IntentParser from '../intentparser/match.js';
+import IntentParser from '../intentParser/IntentParser.js';
 import { ClientAPI } from './ClientAPI.js';
 import { getConfig } from '../util/config.js';
 import Clock from '../app/clock/clock.js';

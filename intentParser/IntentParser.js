@@ -6,14 +6,11 @@
  * based on the valid input possibilities of each app.
  */
 
-//import stringSimilarity from 'string-similarity';
-import didYouMean from 'didyoumean2';
-const didYouMean2 = didYouMean.default;
-import wildLeven from './leven.js';
 import { AppBase } from '../baseapp/AppBase.js';
 import { Intent } from '../baseapp/Intent.js';
 import { DataType } from '../baseapp/datatype/DataType.js';
 import { ClientAPI } from '../client/ClientAPI.js';
+import { matchString, matchStringWithAlternatives } from './matchString.js';
 import { assert } from '../util/util.js';
 
 export default class IntentParser {
@@ -79,7 +76,7 @@ export default class IntentParser {
     let startTime = new Date();
 
     // Find the command candidates
-    let commandMatches = matchVariableWithAlternatives(inputText, this.commandsFlat);
+    let commandMatches = matchStringWithAlternatives(inputText, this.commandsFlat);
     if (!commandMatches.length) {
       return "I did not understand you";
     }
@@ -121,7 +118,7 @@ export default class IntentParser {
           let dataType = result.intent.parameters[name];
           if (dataType.finite) {
             // normalize to allowed values
-            let variableMatch = matchVariable(args[name], dataType.terms);
+            let variableMatch = matchString(args[name], dataType.terms);
             if (!variableMatch) {
               //argsScores.push(kMaxScore * 2);
               skipThis = true;
@@ -186,55 +183,4 @@ export default class IntentParser {
       return ex.message || ex;
     }
   }
-}
-
-/**
- * Find the closest match of the inputText within validValues.
- * Return one of validValues or nothing.
- *
- * @param inputText {string} user input, only the part for this variable
- * @param validValues {Array of string}
- * @returns {wildLeven() result} the closest match
- *    or null, if the strings are too far.
- */
-function matchVariable(inputText, validValues) {
-  return matchVariableWithAlternatives(inputText, validValues)[0];
-}
-
-/**
- * Find the best matches of the inputText within validValues.
- *
- * @param inputText {string} user input, only the part for this variable
- * @param validValues {Array of string}
- * @returns {Array of wildLeven() result} the closest matches,
- *    sorted by decreasing order of match
- *    May be an empty array, if the strings are too far.
- */
-function matchVariableWithAlternatives(inputText, validValues) {
-  if (!validValues || !validValues.length) {
-    //throw new Error("Need valid values to match against");
-    return [];
-  }
-  inputText = inputText.toLowerCase();
-  const kMaxScore = 0.7; // If we need to change more than half the chars, then don't take it
-  let startTime = new Date();
-  let results = validValues
-    .map(targetString => {
-      if (!targetString) { // invalid entries in validValues
-        return { score: kMaxScore * 2 }; // filter it out below
-      }
-      let result = wildLeven(inputText, targetString.toLowerCase());
-      result.targetString = targetString; // not lower case
-      return result;
-    })
-    .filter(result => result.score <= kMaxScore)
-    .sort((a, b) => a.score - b.score);
-  //for (let result of results.slice(0, 20)) {
-  //  console.log(result.targetString, result.editDistance, result.score);
-  //}
-  if (!results.length) {
-    return [];
-  }
-  console.log("did you mean (" + (new Date() - startTime) + "ms):", results[0].targetString);
-  return results;
 }
