@@ -20,42 +20,49 @@ export class NumberDataType extends OpenEndedDataType {
   }
 
   /**
-   * @param term {string} e.g. "9" or "nine" or "nine hundred fifty five"
-   * @returns {number}
-   * @throws Error if conversion failed
+   * @param inputText {string} What the user said
+   * @returns {
+   *    value {number} the corresponding value ID, or null/undefined
+   *    score {float} Rate how well the inputText matches the data type value.
+   *      0..1, whereas
+   *      1 = no relation whatsoever
+   *      0.5 = half the string matches
+   *      0 = perfect match
+   * }
    */
-  valueIDForTerm(term) {
-    term = term.trim();
-    let number = parseInt(term);
-    if (isNaN(number)) {
-      number = parseFloat(term);
-    }
-    if (!isNaN(number) && number + "" == term) {
-      return number;
-    }
-    // TODO only English supported
-    return this.validate(wordsToNumbers(term, { fuzzy: true }));
-  }
-
-  validate(input) {
-    if (typeof(input) != "number") {
-      throw new Error("'" + input + "' is not a number");
-    }
-    return input;
-  }
-
-  score(input) {
+  valueForInput(input) {
     if (typeof(input) == "number") {
-      return 0;
-    } else if (parseInt(input) + "" == input) {
-      return 0;
-    } else if (typeof(wordsToNumbers(input)) == "number") {
-      return 0.1;
-    } else if (typeof(wordsToNumbers(input, { fuzzy: true })) == "number") {
-      return 0.4;
-    } else {
-      return 1;
+      return {
+        value: input,
+        score: 0,
+      };
     }
+    let number = parseInt(input);
+    if (!isNaN(number) && number + "" == input) {
+      return {
+        value: number,
+        score: 0,
+      };
+    }
+    number = wordsToNumbers(input);
+    // Attention: typeof(NaN) == "number" is true!
+    if (!isNaN(number)  && typeof(number) == "number") {
+      return {
+        value: number,
+        score: 0.1,
+      };
+    }
+    number = wordsToNumbers(input, { fuzzy: true });
+    if (!isNaN(number)  && typeof(number) == "number") {
+      return {
+        value: number,
+        score: 0.4,
+      };
+    }
+    return {
+      value: input,
+      score: 1,
+    };
   }
 
   get terms() {

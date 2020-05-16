@@ -16,12 +16,6 @@ export class DataType {
     this.id = id;
 
     /**
-     * If true, then only values in `this.values` are allowed.
-     * {boolean}
-     */
-    this.finite = true;
-
-    /**
      * Keeps the language model for speech recognition
      * to be used when recognizing values of this data type.
      * Allows to train the speech recognition on the specific
@@ -43,14 +37,10 @@ export class DataType {
   }
 
   /**
-   * TODO make it a Set?
-   * @returns {Array of string} IDs of the different enum values
-   */
-  get valueIDs() {
-    throw new Error("Implement this");
-  }
-
-  /**
+   * @see FiniteDataType.terms
+   * This is also useful for some non-finite types, returning common
+   * sample terms, which may be used to train the speech recognizer.
+   *
    * @returns {Array of string}
    */
   get terms() {
@@ -58,24 +48,18 @@ export class DataType {
   }
 
   /**
-   * @param term {string} What the user said
-   * @returns {string} the corresponding value ID, or null/undefined
+   * @param inputText {string} What the user said
+   * @returns {
+   *    value {any} the corresponding value, or null/undefined
+   *    score {float} Rate how well the inputText matches the data type value.
+   *      0..1, whereas
+   *      1 = no relation whatsoever
+   *      0.5 = half the string matches
+   *      0 = perfect match
+   * }
    */
-  valueIDForTerm(term) {
+  valueForInput(inputText) {
+    // see FiniteDataType and NumberDataType for sample implementations
     throw new Error("Implement this");
-  }
-
-  /**
-   * Rate how well the string matches the data type.
-   *
-   * @param term {string} What the user said
-   * @returns {Number} score 0..1, whereas
-   *   1 = no relation whatsoever
-   *   0.5 = half the string matches
-   *   0 = perfect match
-   */
-  score(term) {
-    // Override this in subclasses
-    return 0.25;
   }
 }

@@ -41,14 +41,16 @@ export class Client {
     await Promise.all(apps.map(app =>
       app.load(lang)
     ));
+
+    this.lang = lang;
     this.clientAPI = new ClientAPI(this);
     this.intentParser = new IntentParser(this.clientAPI);
     await this.intentParser.load(apps);
   }
 
   async start() {
-    this.lang = getConfig().language;
-    await this.load(this.lang);
+    let lang = getConfig().language;
+    await this.load(lang);
   }
 
   async unload() {

@@ -72,13 +72,27 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startApp(inputText) {
+    let { intent, args } = await this.match(inputText);
+    return await this.startIntent(intent, args);
+  }
+
+  /**
+   * Find the Intent and variables matching the user input
+   *
+   * @param inputText {string}  What the user said. Coming from speech recognition.
+   * @returns {
+   *   intent {Intent}
+   *   args {Obj map parameterName {string} -> value {any}}
+   * }
+   */
+  async match(inputText) {
     const kMaxScore = 0.5;
     let startTime = new Date();
 
     // Find the command candidates
     let commandMatches = matchStringWithAlternatives(inputText, this.commandsFlat);
     if (!commandMatches.length) {
-      return "I did not understand you";
+      throw new Error("I did not understand you");
     }
     //console.log("command matches", commandMatches);
     let intentMatches = [];
@@ -94,17 +108,21 @@ export default class IntentParser {
       intentMatches.push(result);
     }
 
+    /* Match the variables
+     * Check how well the variable input matches the known values for the
+     * command, and consider that in the overall score and command selection. */
+    variableMatches:
     for (let result of intentMatches) {
       try {
-        // Match the variables
-        if (!Object.keys(result.intent.parameters).length) {
+        if (!Object.keys(result.intent.parameters).length) { // no params
           result.overallScore = result.score;
           continue;
         }
         let args = result.args = {};
         let argsScores = [];
-        // Fix up arg names, which we made lower case during matching :(
+        result.overallScore = kMaxScore * 2; // for error cases
         //console.log("Checking variables for command: " + result.targetString);
+        // Fix up arg names, which we made lower case during matching :(
         let argsLower = result.variables;
         let orgParams = Object.keys(result.intent.parameters);
         let orgParamsLower = orgParams.map(a => a.toLowerCase());
@@ -112,31 +130,17 @@ export default class IntentParser {
           let nameOrg = orgParams[orgParamsLower.indexOf(nameLower)];
           args[nameOrg] = argsLower[nameLower];
         }
-        let skipThis = false;
         // Match each variable
         for (let name in args) {
           let dataType = result.intent.parameters[name];
-          if (dataType.finite) {
-            // normalize to allowed values
-            let variableMatch = matchString(args[name], dataType.terms);
-            if (!variableMatch) {
-              //argsScores.push(kMaxScore * 2);
-              skipThis = true;
-              break;
-            }
-            args[name] = variableMatch.targetString;
-            argsScores.push(variableMatch.score);
-          } else {
-            argsScores.push(dataType.score(args[name]));
+          // the actual matching
+          let { value, score } = dataType.valueForInput(args[name]);
+          argsScores.push(score);
+          if (score == 1) {
+            break variableMatches;
           }
-          //console.log("argument value: '" + args[name] + "', for DataType", dataType);
-          args[name] = dataType.valueIDForTerm(args[name]);
+          args[name] = value;
         }
-        if (skipThis) {
-          result.overallScore = kMaxScore * 2; // filter it out later
-          continue;
-        }
-        //result.argsScores = argsScores;
 
         let sumArgs = argsScores.reduce((accumulator, current) => accumulator + current);
         // Average over the scores of command and all variables
@@ -145,7 +149,6 @@ export default class IntentParser {
       } catch (ex) {
         console.log(result.intent.id + " is not a match: " + (ex.message || ex));
         //console.error(ex);
-        result.overallScore = kMaxScore * 2;
         continue;
       }
     }
@@ -163,16 +166,28 @@ export default class IntentParser {
     let bestMatch = intentMatches[0];
     console.log("Matching took " + (new Date() - startTime) + "ms");
     if (bestMatch.overallScore > kMaxScore) {
+       // No match. Give useful error message to end user.
       for (let paramName in bestMatch.intent.parameters) {
         if (!bestMatch.args[paramName]) {
-          return "I did not understand the " + paramName;
+          throw new Error("I did not understand the " + paramName);
         }
       }
       throw new Error("I did not understand you"); // should have been caught above
     }
-    let intent = bestMatch.intent;
-    let args = bestMatch.args;
+    return {
+      intent: bestMatch.intent,
+      args: bestMatch.args,
+    }
+  }
 
+  /**
+   * Start the Intent, i.e. call the app.
+   *
+   * @param intent {Intent}
+   * @param args {Obj map parameterName {string} -> value {any}}
+   * @returns {string} What we will respond to the user. Going to speech synthensis.
+   */
+  async startIntent(intent, args) {
     try {
       this.clientAPI.newCommand(intent, args);
       // Start the app

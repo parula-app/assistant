@@ -1,5 +1,6 @@
 import { AppBase } from './AppBase.js';
 import { DataType } from './datatype/DataType.js';
+import { FiniteDataType } from './datatype/FiniteDataType.js';
 import { assert } from '../util/util.js';
 
 export class Intent {
@@ -161,12 +162,13 @@ export class Intent {
       if (!type) {
         throw new Error("Parameter ID " + argID + " is unknown for intent " + intent.id);
       }
-      if (type.finite) {
+      if (type instanceof FiniteDataType) {
         let valueID = args[argID];
         if (!type.valueIDs.includes(valueID)) {
           throw new Error("Argument " + valueID + " is unknown for datatype " + type.id + ". This happened while calling intent " + intent.id);
         }
       }
+      // TODO check that all required parameters are there
     }
 
     // Call app implementation function

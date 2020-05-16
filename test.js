@@ -2,7 +2,7 @@
 'use strict';
 
 import { Client } from './client/Client.js';
-import wildLeven from './intentparser/leven.js';
+import wildLeven from './intentParser/leven.js';
 
 function testDistance(input, target) {
   let result = wildLeven(input, target);
@@ -15,30 +15,22 @@ function testDistance(input, target) {
  */
 class TestClient extends Client {
   async start() {
-    let tests = [
-      // target, input
-      [ "default", "suitable" ],
-      [ "default", "defaul" ],
-      [ "default", "fault" ],
-      [ "default", "foolt" ],
-      [ "default", "the fool" ],
-      [ "default", "the" ],
-      [ "default", "" ],
-    ];
-    for (let test of tests) {
-      testDistance(test[1], test[0]);
-    }
-    return;
-    await this.load();
+    await this.load("en");
     let successCount = 0;
     let failCount = 0;
     for (let input in expected) {
       let exp = expected[input];
-      let response = await this.intentParser.startApp(input);
-      if (exp == response) {
-        successCount++;
-      } else {
-        console.error('FAIL: input: "' + input + '", expected: "' + exp + '", but got: "' + response + '"');
+      try {
+        let response = await this.intentParser.startApp(input);
+        if (exp == response) {
+          successCount++;
+        } else {
+          console.error('FAIL: input: "' + input + '", expected: "' + exp + '", but got: "' + response + '"');
+          failCount++;
+        }
+      } catch (ex) {
+        console.error('FAIL: input: "' + input + '", expected: "' + exp + '", but got: "' + (ex.message || ex) + '"');
+        console.error(ex);
         failCount++;
       }
     }
@@ -61,5 +53,5 @@ class TestClient extends Client {
 
 const expected = {
   "read genesis chapter one verse twenty two": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”",
-  "open genesis five verse three": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”. Adam lived for 130 years and then became father to a son in his likeness, in his image, and he named him Seth.",
+  "open genesis five verse three": "Adam lived for 130 years and then became father to a son in his likeness, in his image, and he named him Seth.",
 };

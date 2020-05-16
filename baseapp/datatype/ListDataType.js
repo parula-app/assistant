@@ -1,21 +1,19 @@
-import { DataType } from './DataType.js';
+import { FiniteDataType } from './FiniteDataType.js';
 import { assert } from '../../util/util.js';
 
 /**
- * A simple list of values.
+ * A simple list of values. They have no ID.
  *
- * The values have no ID and are the same in all languages.
- * They will typically from data.
+ * It's a known list of values, typically from the application data.
  *
  * E.g. song titles, artist names
  */
-export class ListDataType extends DataType {
+export class ListDataType extends FiniteDataType {
   /**
    * @param
    */
   constructor(id) {
     super(id);
-    this.finite = true;
 
     /**
      * { Array of id {string} }

@@ -1,46 +1,45 @@
-import { DataType } from './DataType.js';
+import { FiniteDataType } from './FiniteDataType.js';
 import { assert } from '../../util/util.js';
 
 /**
- * A finite list of values.
- *
- * The values can have different names and translations into different languages,
- * but they all have the same ID.
- *
+ * A list of values, pre-defined by the application.
+ * The values are specific to the application and not the user.
+ * For example, a status.
  * They will typically come from the app model and app translation.
  *
- * E.g.
+ * The terms are translated into different languages,
+ * but their corresponding IDs are language-independent.
+ *
+ * E.g. one value might be:
  *   ID = "ge"
  *   English = "Genesis", "First book of Moses"
  *   German = "Erste Mose"
  *   etc.
  */
-export class EnumDataType extends DataType {
+export class EnumDataType extends FiniteDataType {
   /**
    * @param
    */
   constructor(id) {
     super(id);
-    this.finite = true;
 
     /**
-     * The different IDs that this type can have.
-     * e.g. [ "ge", "nu", ... ]
+     * @see FiniteDataType.valueIDs
+     * E.g. [ "ge", "nu", ... ]
      * { Set of id {string} }
      */
     this._valueIDs = new Set();
 
     /**
-     * The list of words that the user can say for the this placeholder,
-     * and mapping them to the ID for this value.
-     * e.g. {
+     * @see FiniteDataType.terms
+     * E.g. {
      *   "Genesis": "ge",
      *   "First book of Moses": "ge",
      *   "First Moses": "ge",
      *   "Numbers": "nu",
      *   ...
      * }
-     * {Map of term {string} -> id {string}}
+     * {Map of term {string} -> value ID {string}}
      */
     this._terms = new Map();
 
