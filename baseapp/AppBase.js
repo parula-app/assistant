@@ -40,6 +40,6 @@ export class AppBase {
   async load(lang) {
     assert(lang && typeof(lang) == "string" && lang.length == 2);
 
-    loadBuiltinTypes(this);
+    loadBuiltinTypes(this, lang);
   }
 }

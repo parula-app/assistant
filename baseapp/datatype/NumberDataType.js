@@ -3,8 +3,8 @@ import * as wtn from 'words-to-numbers';
 const wordsToNumbers = wtn.default.wordsToNumbers;
 import writtenNumber from 'written-number';
 import { OpenEndedDataType } from './OpenEndedDataType.js';
-import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
+import leven from '../../intentParser/leven.js';
 
 /**
  * An integer
@@ -16,6 +16,7 @@ import { assert } from '../../util/util.js';
 export class NumberDataType extends OpenEndedDataType {
   constructor() {
     super("Pia.Number");
+    this.lang = null; // set by builtin.js
     this._terms = null;
   }
 
@@ -54,9 +55,10 @@ export class NumberDataType extends OpenEndedDataType {
     }
     number = wordsToNumbers(input, { fuzzy: true });
     if (!isNaN(number)  && typeof(number) == "number") {
+      let score = leven(input, writtenNumber(number, { lang: this.lang })).score;
       return {
         value: number,
-        score: 0.4,
+        score: score,
       };
     }
     return {
@@ -69,7 +71,7 @@ export class NumberDataType extends OpenEndedDataType {
     if (this._terms) {
       return this._terms;
     }
-    let lang = getConfig().language;
+    let lang = this.lang;
     // TODO German and Italian not supported :-(
     let samples = [];
     for (let i = -1; i < 300; i++) {

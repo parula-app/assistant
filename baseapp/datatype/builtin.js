@@ -15,9 +15,11 @@ const kBuiltinTypes = [
  * but by the system.
  *
  * @param app {AppBase}
+ * @param lang {string} language, ISO 2 letter code
  */
-export function loadBuiltinTypes(app) {
+export function loadBuiltinTypes(app, lang) {
   for (let type of kBuiltinTypes) {
     app.dataTypes[type.id] = type;
+    type.lang = lang; // for NumberDataType
   }
 }
