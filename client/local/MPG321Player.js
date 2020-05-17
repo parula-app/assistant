@@ -1,5 +1,5 @@
 import mpg321 from 'mpg321';
-import { Player } from '../Player.js';
+import MPG123Player from './MPG123Player.js';
 import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
 
@@ -14,6 +14,20 @@ export default class MPG321Player extends MPG123Player {
   _createInstance() {
     //.audioDevice(getConfig().audio.outputDevice); e.g. "hw0,0"
     this._mpg = mpg321().quiet().remote();
+  }
+
+  /**
+   * Stop the current audio or video stream
+   */
+  stop() {
+    if (!this._isPlaying) {
+      return;
+    }
+    try {
+      this._mpg.quit();
+    } catch (ex) {
+      console.error(ex);
+    }
   }
 
   /**
