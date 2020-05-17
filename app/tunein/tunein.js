@@ -202,7 +202,7 @@ export default class TuneIn extends JSONApp {
       throw new Error("Volume number too high or too low");
     }
 
-    await client.player.setRelativeVolume(volume);
+    await client.player.setRelativeVolume(relativeVolume);
   }
 }
 

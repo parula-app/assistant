@@ -114,11 +114,11 @@ export default class IntentParser {
     variableMatches:
     for (let result of intentMatches) {
       try {
+        let args = result.args = {};
         if (!Object.keys(result.intent.parameters).length) { // no params
           result.overallScore = result.score;
           continue;
         }
-        let args = result.args = {};
         let argsScores = result.argsScores = [];
         result.overallScore = kMaxScore * 2; // for error cases
         //console.log("Checking variables for command: " + result.targetString);

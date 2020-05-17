@@ -1,7 +1,7 @@
 'use strict';
 
 import { Client } from '../Client.js';
-import AudioVideoPlayer from './MPG123Player.js';
+import AudioVideoPlayer from './MPDPlayer.js';
 import audioInput, { load as audioInputLoad} from './audioInput.js';
 import audioOutput from './audioOutput.js';
 import * as wakeword from './bumblebee.js';
