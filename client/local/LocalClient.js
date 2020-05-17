@@ -1,7 +1,7 @@
 'use strict';
 
 import { Client } from '../Client.js';
-import { LocalPlayer } from './LocalPlayer.js';
+import AudioVideoPlayer from './MPG123Player.js';
 import audioInput, { load as audioInputLoad} from './audioInput.js';
 import audioOutput from './audioOutput.js';
 import * as wakeword from './bumblebee.js';
@@ -22,7 +22,7 @@ export class LocalClient extends Client {
     await wakeword.load();
     await speechToText.load(lang);
     await textToSpeech.load(lang);
-    this._player = new LocalPlayer();
+    this._player = new AudioVideoPlayer();
     await super.load(lang);
   }
 

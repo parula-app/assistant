@@ -1,5 +1,4 @@
 import mpg123 from 'mpg123';
-//import MP3 from 'js-mp3';  -- pure JS, but not streaming :-(
 import { Player } from '../Player.js';
 import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
@@ -7,7 +6,7 @@ import { assert } from '../../util/util.js';
 /**
  * Plays audio or video streams
  */
-export class LocalPlayer extends Player {
+export default class MPG123Player extends Player {
   constructor() {
     super();
     this._isPlaying = false;
@@ -27,9 +26,7 @@ export class LocalPlayer extends Player {
     assert(typeof(nextCallback) == "function", "nextCallback must be a function");
     this.stop(); // quits any currently running instance
     console.log("Playing audio stream " + url);
-    console.log("for mp3, using output device " + getConfig().audio.outputDevice);
-    let device = getConfig().audio.outputDevice || undefined; // e.g. "hw0,0", and undefined (*not* null!) = default
-    this._mpg = new mpg123.MpgPlayer(device, true); // no frame updates
+    this._createInstance();
     this._mpg.play(url);
     this._isPlaying = true;
     this._mpg.on('end', () => {
@@ -40,6 +37,9 @@ export class LocalPlayer extends Player {
       } catch (ex) {
         console.error(ex);
       }
+    });
+    this._mpg.on('stop', () => {
+      this._isPlaying = false;
     });
     this._mpg.on('pause', () => {
       this._isPlaying = false;
@@ -52,6 +52,12 @@ export class LocalPlayer extends Player {
       console.error(ex);
       this._isPlaying = false;
     });
+  }
+
+  _createInstance() {
+    console.log("for mp3, using output device " + getConfig().audio.outputDevice);
+    let device = getConfig().audio.outputDevice || undefined; // e.g. "hw0,0", and undefined (*not* null!) = default
+    this._mpg = new mpg123.MpgPlayer(device, true); // no frame updates
   }
 
   /**
