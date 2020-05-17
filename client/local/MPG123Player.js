@@ -20,7 +20,7 @@ export default class MPG123Player extends Player {
    * @param app {AppBase}  App that started this playback.
    * @param nextCallback {Function}  Called once the playback finished.
    */
-  playAudio(url, app, nextCallback) {
+  async playAudio(url, app, nextCallback) {
     assert(url && typeof(url) == "string" && url.includes(":"), "mp3 URL required");
     //assert(app instanceof AppBase, "app required");
     assert(typeof(nextCallback) == "function", "nextCallback must be a function");
@@ -70,7 +70,7 @@ export default class MPG123Player extends Player {
   /**
    * Stop the current audio or video stream
    */
-  stop() {
+  async stop() {
     if (!this._isPlaying) {
       return;
     }
@@ -84,7 +84,7 @@ export default class MPG123Player extends Player {
   /**
    * @param volume {integer} 0..100
    */
-  setVolume(volume) {
+  async setVolume(volume) {
     assert(typeof(volume) == "number", "volume required");
     volume = Math.round(volume);
     assert(volume >= 0 && volume <= 100);

@@ -12,7 +12,7 @@ export class Player {
    *
    * @param mp3URL {URL as string} URL of an MP3 file
    */
-  playAudio(mp3URL) {
+  async playAudio(mp3URL) {
     throw new Error("Abstract class");
   }
 
@@ -26,7 +26,21 @@ export class Player {
   /**
    * Stop the current audio or video stream
    */
-  stop() {
+  async stop() {
+    throw new Error("Abstract class");
+  }
+
+  /**
+   * @param volume {integer} 0..100
+   */
+  async setVolume(volume) {
+    throw new Error("Abstract class");
+  }
+
+  /**
+   * @param volume {integer} -100..100  By how much to increase or decrease
+   */
+  async setRelativeVolume(volume) {
     throw new Error("Abstract class");
   }
 }

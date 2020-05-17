@@ -19,7 +19,7 @@ export default class MPG321Player extends MPG123Player {
   /**
    * Stop the current audio or video stream
    */
-  stop() {
+  async stop() {
     if (!this._isPlaying) {
       return;
     }
@@ -33,7 +33,7 @@ export default class MPG321Player extends MPG123Player {
   /**
    * @param volume {integer} 0..100
    */
-  setVolume(volume) {
+  async setVolume(volume) {
     assert(typeof(volume) == "number", "volume required");
     volume = Math.round(volume);
     assert(volume >= 0 && volume <= 100);

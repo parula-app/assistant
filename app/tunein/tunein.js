@@ -63,7 +63,7 @@ export default class TuneIn extends JSONApp {
       throw new Error("I don't know this station");
     }
     if (station.stream) {
-      client.player.playAudio(station.stream, this, () => this.next({}, client));
+      await client.player.playAudio(station.stream, this, () => this.next({}, client));
       return;
     }
     return await this.playM3U(station.m3u, client);
@@ -117,7 +117,7 @@ export default class TuneIn extends JSONApp {
       console.error("Got an HTML page while trying to fetch m3u for the radio station at <" + m3u + ">", m3uContents.substr(0, 50));
       throw new Error("The radio station is not available");
     }
-    client.player.playAudio(url, this, () => {
+    await client.player.playAudio(url, this, () => {
       // called when the stream ends
       this.next({}, client);
     });
@@ -129,7 +129,7 @@ export default class TuneIn extends JSONApp {
    * @param client {ClientAPI}
    */
   async stop(args, client) {
-    client.player.stop();
+    await client.player.stop();
   }
 
   /**
@@ -183,7 +183,8 @@ export default class TuneIn extends JSONApp {
     if (volume < 0 || volume > 100) {
       throw new Error("Volume number too high or too low");
     }
-    throw new Error("Not yet implemented");
+
+    await client.player.setVolume(volume);
   }
 
   /**
@@ -200,7 +201,8 @@ export default class TuneIn extends JSONApp {
     if (relativeVolume < -100 || relativeVolume > 100) {
       throw new Error("Volume number too high or too low");
     }
-    throw new Error("Not yet implemented");
+
+    await client.player.setRelativeVolume(volume);
   }
 }
 
