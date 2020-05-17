@@ -56,9 +56,9 @@ export default class MPD extends JSONApp {
       return this._mpc;
     }
     let mpc = new MPC();
-    let config = getConfig();
-    console.info("Loading from MPD at " + config.mpc.server);
-    await mpc.connectTCP(config.mpc.server, config.mpc.port || 6600);
+    let config = getConfig().mpd;
+    console.info("Loading from MPD at " + config.server);
+    await mpc.connectTCP(config.server, config.port || 6600);
     this._mpc = mpc;
     return mpc;
   }

@@ -1,6 +1,6 @@
 {
   "language": "en",
-  "mpc": {
+  "mpd": {
     "server": "localhost"
   },
   "audio": {

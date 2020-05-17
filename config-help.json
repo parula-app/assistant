@@ -1,6 +1,6 @@
 {
   "language": "Language for speech input and output. 2-letter ISO language code.",
-  "mpc": {
+  "mpd": {
     "server": "Hostname of the MPD server on your local network",
     "port": "Port number of the MPD server on your local network"
   },
