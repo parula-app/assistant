@@ -91,7 +91,12 @@ export class FiniteDataType extends DataType {
    *      0 = perfect match
    * }
    */
-  valueForInput(inputText) {
+  valueForInput(inputText, context) {
+    let pronounMatch = this.valueForPronoun(inputText, context);
+    if (pronounMatch) {
+      return pronounMatch;
+    }
+
     // normalize to allowed values
     let match = matchString(inputText, this.terms);
     if (!match) {
@@ -104,6 +109,63 @@ export class FiniteDataType extends DataType {
     return {
       value: value,
       score: match.score,
+    };
+  }
+
+  /**
+   * Checks whether the input text is a valid pronoun for this type,
+   * and matches something the user said recently.
+   *
+   * If no match, returns null. Data types are free not to implement
+   * this and to to just always return null.
+   *
+   * @see pronouns
+   *
+   * @param inputText {string} What the user said, in the user's language
+   * @param context {Array of Context} allows access to data from recent commands
+   *   Ordered by increasing time, i.e. most recent command is last entry in array.
+   * @returns same as valueForInput(), or null
+   */
+  valueForPronoun(inputText, context) {
+    // Require exact, non-fuzzy match, because speech recognition engines
+    // should properly recognize such common words. And they are short.
+    if (!this.pronouns.includes(inputText)) {
+      return null;
+    }
+    let candidate; // {Obj} Most recent object of fitting type
+    let time = null; // {Date} When the candidate was mentioned
+    let objectDistance = null; // {int} How many other objects came after the candidate
+
+    // Check whether there's an object of fitting type in the context
+    for (let c of context) {
+      for (let [ paramName, paramProp ] of Object.entries(c.intent.parameters)) {
+        if (paramProp.dataType instanceof this.constructor) {
+          candidate = c.args[paramName];
+          time = c.startTime;
+          objectDistance = 0;
+        } else {
+          objectDistance++;
+        }
+      }
+    }
+    if (!candidate) {
+      return null;
+    }
+
+    // Calculate score
+    // We matched the pronoun string perfectly, and the data type perfectly.
+    // Now check the distance, in terms of time and other objects.
+    let kFurthestTime = new Date();
+    kFurthestTime.setUTCMinutes(kFurthestTime.getUTCMinutes() - 3); // 5 minutes ago
+    let kFurthestObjects = 5; // max 5 other objects between candidate and now
+    let kMaxScore = 0.5;
+    let score = (
+        (objectDistance / kFurthestObjects) * kMaxScore +
+        ((Date.now() - time) / (Date.now() - kFurthestTime)) * kMaxScore
+      ) / 2;
+    return {
+      value: candidate,
+      score: score,
     };
   }
 }

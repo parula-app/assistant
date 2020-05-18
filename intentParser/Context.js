@@ -31,7 +31,7 @@ export class Context {
   }
 
   /**
-   * @returns {Map of Object}
+   * @returns {Obj map parameterName {string} -> value {any}}
    */
   get args() {
     return this._args;

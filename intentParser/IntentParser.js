@@ -88,6 +88,7 @@ export default class IntentParser {
   async match(inputText) {
     const kMaxScore = 0.5;
     let startTime = new Date();
+    let context = this.clientAPI.context;
 
     // Find the command candidates
     let commandMatches = matchStringWithAlternatives(inputText, this.commandsFlat);
@@ -134,7 +135,7 @@ export default class IntentParser {
         for (let name in args) {
           let dataType = result.intent.parameters[name].dataType;
           // the actual matching
-          let { value, score } = dataType.valueForInput(args[name]);
+          let { value, score } = dataType.valueForInput(args[name], context);
           argsScores.push(score);
           if (score == 1) {
             break variableMatches;

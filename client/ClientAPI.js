@@ -56,7 +56,7 @@ export class ClientAPI {
 
   /**
    * @param intent {Intent}
-   * @param args {Map of Object}
+   * @param args {Obj map parameterName {string} -> value {any}}
    */
   newCommand(intent, args) {
     this._sentences = [];
@@ -83,10 +83,10 @@ export class ClientAPI {
    * It also allows playlist control to call the right app.
    *
    * @returns {Array of Context}
+   *   Ordered by increasing time, i.e. most recent command is last entry in array.
    */
   get context() {
-    //return this._context.slice(); -- protects from modifications, but slow
-    return this._context;
+    return this._context.slice(); // protects from modifications, but slow
   }
 
   /**
