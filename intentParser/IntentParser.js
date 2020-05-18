@@ -124,15 +124,15 @@ export default class IntentParser {
         //console.log("Checking variables for command: " + result.targetString);
         // Fix up arg names, which we made lower case during matching :(
         let argsLower = result.variables;
-        let orgParams = Object.keys(result.intent.parameters);
-        let orgParamsLower = orgParams.map(a => a.toLowerCase());
+        let orgParamsNames = Object.keys(result.intent.parameters);
+        let orgParamsLower = orgParamsNames.map(a => a.toLowerCase());
         for (let nameLower in argsLower) {
-          let nameOrg = orgParams[orgParamsLower.indexOf(nameLower)];
+          let nameOrg = orgParamsNames[orgParamsLower.indexOf(nameLower)];
           args[nameOrg] = argsLower[nameLower];
         }
         // Match each variable
         for (let name in args) {
-          let dataType = result.intent.parameters[name];
+          let dataType = result.intent.parameters[name].dataType;
           // the actual matching
           let { value, score } = dataType.valueForInput(args[name]);
           argsScores.push(score);

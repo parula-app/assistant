@@ -50,7 +50,9 @@ export class Intent {
      * However, not all commands have to necessarily use all placeholders.
      * If not used, the argument will be null.
      *
-     * {JS obj: type ID {string} -> type {DataType}}
+     * {JS obj: type ID {string} -> {
+     *   dataType {DataType}
+     * }}
      */
     this.parameters = {};
   }
@@ -64,7 +66,9 @@ export class Intent {
     assert(type instanceof DataType);
     assert(this.app.dataTypes[type.id] == type);
 
-    this.parameters[id] = type;
+    this.parameters[id] = {
+      dataType: type,
+    };
   }
 
   /**
@@ -158,7 +162,7 @@ export class Intent {
     let intent = this;
     // validate
     for (let argID in args) {
-      let type = intent.parameters[argID];
+      let type = intent.parameters[argID].dataType;
       if (!type) {
         throw new Error("Parameter ID " + argID + " is unknown for intent " + intent.id);
       }
