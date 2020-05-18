@@ -138,9 +138,10 @@ export class FiniteDataType extends DataType {
 
     // Check whether there's an object of fitting type in the context
     for (let c of context) {
-      for (let [ paramName, paramProp ] of Object.entries(c.intent.parameters)) {
-        if (paramProp.dataType instanceof this.constructor) {
-          candidate = c.args[paramName];
+      for (let argName in c.args) {
+        let dataType = c.intent.parameters[argName].dataType;
+        if (this.canAdopt(dataType)) {
+          candidate = this.convert(c.args[argName], dataType);
           time = c.startTime;
           objectDistance = 0;
         } else {

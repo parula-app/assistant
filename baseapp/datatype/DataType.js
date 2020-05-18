@@ -104,4 +104,23 @@ export class DataType {
   valueForPronoun(inputText, context) {
     return null;
   }
+
+  /**
+   * The 2 types are compatible.
+  * @return {boolean} You can assign a value from `otherDataType` to this type
+  */
+  canAdopt(otherDataType) {
+    return otherDataType instanceof this.constructor &&
+      otherDataType.id == this.id; // TODO consider Ontology
+  }
+
+  /**
+   * Convert a value from another type to this.
+   */
+  convert(value, otherDataType) {
+    if (!this.canAdopt(otherDataType)) {
+      throw new Error("Data type " + otherDataType.id + " cannot be assigned to " + this.id);
+    }
+    return value;
+  }
 }
