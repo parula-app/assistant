@@ -109,10 +109,13 @@ export default class MPDPlayer extends Player {
   /**
    * @param volume {integer} 0..100
    */
-  async setRelativeVolume(volume) {
-    assert(typeof(volume) == "number", "volume required");
-    volume = Math.round(volume);
-    assert(volume >= 0 && volume <= 100);
+  async setRelativeVolume(relativeVolume) {
+    if (typeof(relativeVolume) != "number") {
+      throw new Error("Need relative volume");
+    }
+    if (relativeVolume < -100 || relativeVolume > 100) {
+      throw new Error("Volume number too high or too low");
+    }
 
     let mpc = await this.connect();
     let status = await mpc.status.status();
