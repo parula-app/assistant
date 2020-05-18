@@ -62,11 +62,7 @@ export default class TuneIn extends JSONApp {
     if (!station) {
       throw new Error("I don't know this station");
     }
-    if (station.stream) {
-      await client.player.playAudio(station.stream, this, () => this.next({}, client));
-      return;
-    }
-    return await this.playM3U(station.m3u, client);
+    return await this._playStation(station, client);
   }
 
   /**
@@ -92,7 +88,21 @@ export default class TuneIn extends JSONApp {
     let session = client.userSession;
     session.currentStation = station;
     session.stations = stations;
-    return await this.playM3U(station.m3u, client);
+    return await this._playStation(station, client);
+  }
+
+  /**
+   * Internal helper function
+   * Starts playing the station
+   * @param station {station from JSON}
+   * @param client {ClientAPI}
+   */
+  async _playStation(station, client) {
+    if (station.stream) {
+      await client.player.playAudio(station.stream, this, () => this.next({}, client));
+      return;
+    }
+    return await this._playM3U(station.m3u, client);
   }
 
   /**
@@ -103,7 +113,7 @@ export default class TuneIn extends JSONApp {
    * @param m3u {URL}
    * @param client {ClientAPI}
    */
-  async playM3U(m3u, client) {
+  async _playM3U(m3u, client) {
     console.log("Fetching " + m3u);
     let headers = {
       "Accept-Encoding": "gzip, deflate",
@@ -147,7 +157,7 @@ export default class TuneIn extends JSONApp {
       pos++;
       station = stations[pos >= stations.length ? 0 : pos];
     }
-    await this.playM3U(station.m3u, client);
+    return await this._playStation(station, client);
   }
 
   /**
@@ -165,7 +175,7 @@ export default class TuneIn extends JSONApp {
       pos--;
       station = stations[pos < 0 ? stations.length - 1 : pos];
     }
-    await this.playM3U(station.m3u, client);
+    return await this._playStation(station, client);
   }
 
   /**
