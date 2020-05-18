@@ -148,6 +148,15 @@ export class FiniteDataType extends DataType {
           objectDistance++;
         }
       }
+      for (let result of c.results) {
+        if (this.canAdopt(result.dataType)) {
+          candidate = this.convert(result.value, result.dataType);
+          time = c.startTime;
+          objectDistance = 0;
+        } else {
+          objectDistance++;
+        }
+      }
     }
     if (!candidate) {
       return null;

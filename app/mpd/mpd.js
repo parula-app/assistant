@@ -27,7 +27,6 @@ export default class MPD extends JSONApp {
     let songAndArtistType = this.dataTypes.SongAndArtist;
     let startTime = new Date();
     let mpc = await this.connect();
-    //
     let artistSongs = await mpc.database.list('Title', [], [ 'Artist' ]);
     for (let artistEntry of artistSongs.entries()) {
       let artist = artistEntry[0][0];
@@ -82,6 +81,15 @@ export default class MPD extends JSONApp {
     mpc.database.findAdd([['Title', song], ['Artist', artist]]);
     mpc.playback.play();
     await this.debugShowPlaying();
+
+    let songType = this.dataTypes.SongTitle;
+    let artistType = this.dataTypes.Artist;
+    if (songType.terms.includes(song)) { // should be true, just in case
+      client.addResult(song, songType);
+    }
+    if (artistType.terms.includes(artist)) { // ditto
+      client.addResult(artist, artistType);
+    }
   }
 
   /**
@@ -101,6 +109,21 @@ export default class MPD extends JSONApp {
     mpc.database.findAdd([['Title', song]]);
     mpc.playback.play();
     await this.debugShowPlaying();
+
+    // Add Artist as Intent result for subsequent commands
+    // (Song is already in the context, as input argument.)
+    try {
+      let songObj = (await mpc.currentPlaylist.playlistInfo(0))[0];
+      if (songObj) {
+        let artist = songObj.artist;
+        let artistType = this.dataTypes.Artist;
+        if (artistType.terms.includes(artist)) {
+          client.addResult(artist, artistType);
+        }
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
   }
 
   /**

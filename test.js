@@ -53,7 +53,14 @@ class TestClient extends Client {
 })();
 
 const expected = {
+  "play the song return to sender": "",
+  "stop": "",
+  "play songs by this artist": "",
+  "stop": "",
+  "open genesis five verse three": "Adam lived for 130 years and then became father to a son in his likeness, in his image, and he named him Seth.",
+  "read revelation 21 vers fine": "And the One seated on the throne said: “Look! I am making all things new.” Also he says: “Write, for these words are faithful and true.”",
   "read genesis chapter one verse twenty two": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”",
   "open genesis five verse three": "Adam lived for 130 years and then became father to a son in his likeness, in his image, and he named him Seth.",
   "read revelation 21 vers fine": "And the One seated on the throne said: “Look! I am making all things new.” Also he says: “Write, for these words are faithful and true.”",
+  "stop": "",
 };

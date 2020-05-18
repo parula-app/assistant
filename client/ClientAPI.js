@@ -151,6 +151,31 @@ export class ClientAPI {
   }
 
   /**
+   * @returns {Context}
+   */
+  get _currentContext() {
+    return this._context[this._context.length - 1];
+  }
+
+  /**
+   * The result of the Intent.
+   * This allows subsequent commands to use the
+   * result of the Intent as input.
+   * Call this when you have additional data
+   * that is produced by processing the input.
+   *
+   * Must not repeat the input,
+   * i.e. the objects in the Intent `args` are not repeated here.
+   * Returning the data in a different data type is legit, though,
+   *
+   * @param result {any}
+   * @param dataType {DataType}
+   */
+  addResult(result, dataType) {
+    this._currentContext.addResult(result, dataType);
+  }
+
+  /**
    * @returns {Player}
    */
   get player() {

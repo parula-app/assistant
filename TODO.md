@@ -4,7 +4,6 @@
   * User data
   * Data cache
 * Context
-  * Consider command results as objects for following comments
   * Include recent commands in match confidence
   * Resolve open variables with context
   * Translate pronouns
