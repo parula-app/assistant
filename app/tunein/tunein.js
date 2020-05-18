@@ -88,6 +88,13 @@ export default class TuneIn extends JSONApp {
     let session = client.userSession;
     session.currentStation = station;
     session.stations = stations;
+
+    // Add the chosen station as result
+    let stationType = this.dataTypes.Station;
+    if (stationType.terms.includes(station.name)) {
+      client.addResult(station.name, stationType);
+    }
+
     return await this._playStation(station, client);
   }
 

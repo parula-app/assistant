@@ -167,7 +167,7 @@ export class FiniteDataType extends DataType {
     // Now check the distance, in terms of time and other objects.
     let kFurthestTime = new Date();
     kFurthestTime.setUTCMinutes(kFurthestTime.getUTCMinutes() - 3); // 5 minutes ago
-    let kFurthestObjects = 5; // max 5 other objects between candidate and now
+    let kFurthestObjects = 10; // max 5 other objects between candidate and now
     let kMaxScore = 0.5;
     let score = (
         (objectDistance / kFurthestObjects) * kMaxScore +

@@ -64,6 +64,7 @@ export class Context {
    */
   addResult(result, dataType) {
     assert(dataType instanceof DataType);
+    console.log("Result", dataType.id, result);
     assert(!Object.values(this.args).includes(result), "Input must not be repeated in result");
     this._results.push({
       value: result,
