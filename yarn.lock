@@ -246,6 +246,11 @@ clj-fuzzy@^0.3.2:
   resolved "https://registry.yarnpkg.com/clj-fuzzy/-/clj-fuzzy-0.3.3.tgz#b1e5343091c5202dbc52532863e1c4a78457f03d"
   integrity sha1-seU0MJHFIC28UlMoY+HEp4RX8D0=
 
+co@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
+  integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
+
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
@@ -321,6 +326,15 @@ create-temp-file@^1.0.0:
   integrity sha1-fFAr4RR6XPEmxaOZwH5QlbZzxds=
   dependencies:
     tempfile "^1.1.1"
+
+dav@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/dav/-/dav-1.8.0.tgz#2a2269d09a17df6ea73d8b63b17ce3d7e59b899c"
+  integrity sha512-bXxosIeImCcaHgn9gtdVKeAazUJhGeZ2lIy4wtHamBmMvAfG5aSAkSada3u6ZcOcBpLl1f8Zs5kj7m5uUAM4vg==
+  dependencies:
+    co "^4.6.0"
+    xmldom "^0.1.19"
+    xmlhttprequest "^1.7.0"
 
 debug@2.6.9:
   version "2.6.9"
@@ -642,6 +656,13 @@ http-errors@~1.7.2:
     statuses ">= 1.5.0 < 2"
     toidentifier "1.0.0"
 
+ical@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/ical/-/ical-0.8.0.tgz#aa93f021dfead58e54aaa22076a11ca07d65886b"
+  integrity sha512-/viUSb/RGLLnlgm0lWRlPBtVeQguQRErSPYl3ugnUaKUnzQswKqOG3M8/P1v1AB5NJwlHTuvTq1cs4mpeG2rCg==
+  dependencies:
+    rrule "2.4.1"
+
 iconv-lite@0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -787,6 +808,11 @@ lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
+
+luxon@^1.3.3:
+  version "1.24.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.24.1.tgz#a8383266131ed4eaed4b5f430f96f3695403a52a"
+  integrity sha512-CgnIMKAWT0ghcuWFfCWBnWGOddM0zu6c4wZAWmD0NN7MZTnro0+833DF6tJep+xlxRPg4KtsYEHYLfTMBQKwYg==
 
 map-stream@0.0.7, map-stream@~0.0.3:
   version "0.0.7"
@@ -1230,6 +1256,13 @@ rimraf@^2.6.1:
   dependencies:
     glob "^7.1.3"
 
+rrule@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.4.1.tgz#1d0db4e45f2b0e92e2cca62d2f7093729ac7ec94"
+  integrity sha512-+NcvhETefswZq13T8nkuEnnQ6YgUeZaqMqVbp+ZiFDPCbp3AVgQIwUvNVDdMNrP05bKZG9ddDULFp0qZZYDrxg==
+  optionalDependencies:
+    luxon "^1.3.3"
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
@@ -1595,6 +1628,16 @@ ws@^7.2.3:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.3.tgz#a5411e1fb04d5ed0efee76d26d5c46d830c39b46"
   integrity sha512-HTDl9G9hbkNDk98naoR/cHDws7+EyYMOdL1BmjsZXRUjf7d+MficC4B7HLUPlSiho0vg+CWKrGIt/VJBd1xunQ==
+
+xmldom@^0.1.19:
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.31.tgz#b76c9a1bd9f0a9737e5a72dc37231cf38375e2ff"
+  integrity sha512-yS2uJflVQs6n+CyjHoaBmVSqIDevTAWrzMmjG1Gc7h1qQ7uVozNhEPJAwZXWyGQ/Gafo3fCwrcaokezLPupVyQ==
+
+xmlhttprequest@^1.7.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
+  integrity sha1-Z/4HXFwk/vOfnWX197f+dRcZaPw=
 
 yallist@^3.0.0, yallist@^3.0.3:
   version "3.1.1"

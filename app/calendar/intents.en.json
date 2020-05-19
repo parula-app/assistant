@@ -1,0 +1,50 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "calendar",
+            "intents": [
+                {
+                    "name": "Read",
+                    "samples": [
+                      "(Tell me|) what is on (my|the) calendar",
+                      "(Tell me|) my appointments",
+                      "(Tell me|) my upcoming (appointments|events)",
+                      "My calendar"
+                    ]
+                },
+                {
+                    "name": "Add",
+                    "samples": [
+                        "Schedule {Summary} in {Time}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Summey",
+                            "type": "Pia.Text"
+                        },
+                        {
+                            "name": "Time",
+                            "type": "Pia.DateTime"
+                        }
+                    ]
+                },
+                {
+                    "name": "Remove",
+                    "samples": [
+                        "Delete {Summary} on {Time} from (my|the) calendar"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Summary",
+                            "type": "Pia.Text"
+                        },
+                        {
+                            "name": "Time",
+                            "type": "Pia.DateTime"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

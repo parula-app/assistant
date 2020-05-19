@@ -4,6 +4,11 @@
     "server": "Hostname of the MPD server on your local network",
     "port": "Port number of the MPD server on your local network"
   },
+  "calendar": {
+    "serverURL": "The CalDAV URL. For NextCloud/ownCloud, log in with a browser, go to the [Calendar] app, [Settings] at the bottom left, and copy the [Copy the primary CalDAV URL]",
+    "username": "Your username on the CalDAV/NextCloud/ownCloud server",
+    "password": "Your password"
+  },
   "audio": {
     "maxCommandLength": "Finish the voice command after N seconds, e.g. when there is too much noise.",
     "inputDevice": "ALSA ID of the microphone audio device, e.g. hw(2,1), for 1. card 2. device. See aplay -l for a list. Empty = default device.",
@@ -17,5 +22,8 @@
     "lmAlpha": "DeepSpeech: Language model weight (lm alpha)",
     "lmBeta": "DeepSpeech: Word insertion bonus (lm beta)",
     "beamWidth": "DeepSpeech: Beam width for the CTC decoder"
+  },
+  "maryTTS": {
+    "voice": "The MaryTTS voice name, e.g. cmu-rms, dfki-spike, dfki-prudence or cmu-slt-hsmm. Download them by running  ./gradlew runInstallerGui  in the marytts directory."
   }
 }

@@ -3,6 +3,11 @@
   "mpd": {
     "server": "mpd"
   },
+  "calendar": {
+    "serverURL": "https://nextcloud.example.com/remote.php/dav",
+    "username": "fred",
+    "password": "wilma"
+  },
   "audio": {
     "maxCommandLength": 15,
     "inputDevice": "hw(1,0)",

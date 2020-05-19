@@ -3,6 +3,11 @@
   "mpd": {
     "server": "localhost"
   },
+  "calendar": {
+    "serverURL": "http://localhost/remote.php/dav",
+    "username": null,
+    "password": null
+  },
   "audio": {
     "maxCommandLength": 10
   },
@@ -14,5 +19,8 @@
     "lmAlpha": 0.75,
     "lmBeta": 1.85,
     "beamWidth": 500
+  },
+  "maryTTS": {
+    "voice": "cmu-rms"
   }
 }
