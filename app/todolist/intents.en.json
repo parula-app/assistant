@@ -1,0 +1,84 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "clock",
+            "intents": [
+                {
+                    "name": "Read",
+                    "samples": [
+                      "Tell me what is on (my|the|) {List} list",
+                      "Tell me what is on (my|the|) {List} list",
+                      "What is on my {List} list"
+                    ],
+                    "slots": [
+                        {
+                            "name": "List",
+                            "type": "List"
+                        }
+                    ]
+                },
+                {
+                    "name": "Add",
+                    "samples": [
+                        "Put {Task} on (my|the|) {List} list",
+                        "Add {Task} to (my|the|) {List} list"
+                    ],
+                    "slots": [
+                        {
+                            "name": "List",
+                            "type": "List"
+                        },
+                        {
+                            "name": "Task",
+                            "type": "Pia.Text"
+                        }
+                    ]
+                },
+                {
+                    "name": "Remove",
+                    "samples": [
+                        "Delete {Task} from (my|the|) {List} list",
+                        "Stripe {Task} from (my|the|) {List} list",
+                        "Remove {Task} from (my|the|) {List} list"
+                    ],
+                    "slots": [
+                        {
+                            "name": "List",
+                            "type": "List"
+                        },
+                        {
+                            "name": "Task",
+                            "type": "Pia.Text"
+                        }
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "List",
+                    "values": [
+                        {
+                            "id": "todo",
+                            "name": {
+                                "value": "TODO",
+                                "synonyms": [
+                                    "tasks"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "shopping",
+                            "name": {
+                                "value": "shopping",
+                                "synonyms": [
+                                    "grocery",
+                                    "buy"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

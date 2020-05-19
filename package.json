@@ -11,6 +11,8 @@
         "url": "git://github.com/benbucksch/pia.git"
     },
     "dependencies": {
+        "@nano-sql/core": "^2.3.7",
+        "@nano-sql/plugin-fuzzy-search": "^2.0.2",
         "argparse": "^1.0.10",
         "bumblebee-hotword-node": "^0.0.5",
         "deepspeech": "^0.6.1",

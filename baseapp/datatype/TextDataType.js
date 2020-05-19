@@ -15,7 +15,7 @@ export class TextDataType extends OpenEndedDataType {
   valueForInput(inputText) {
     return {
       value: inputText,
-      score: 0.5, // Prefer known values in FiniteDataType.
+      score: 0.3, // Prefer known values in FiniteDataType.
     };
   }
 }

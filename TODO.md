@@ -29,13 +29,16 @@
   * Granularity and score depending on user location. Function of inhabitants in relation to distance. World biggest cities (all), cities in continent, towns in certain distance, and small villages around the user.
   * Include locations in contacts and calendar, and also locations around them with higher granularity and score , depending on frequency of contact
 
-## Apps
+# Apps
+## Done
 * MPD
 * TuneIn
 * Bible
-* Lights
 * Clock
 * TODO list, Shopping list
+
+## TODO
+* Lights
 * Reminder, Alarm
 * Calendar
 * Contacts

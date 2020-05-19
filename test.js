@@ -61,6 +61,8 @@ const expected = {
   "read revelation 21 vers fine": "And the One seated on the throne said: “Look! I am making all things new.” Also he says: “Write, for these words are faithful and true.”",
   "read genesis chapter one verse twenty two": "With that God blessed them, saying: “Be fruitful and become many and fill the waters of the sea, and let the flying creatures become many in the earth.”",
   "read revelation 21 vers fine": "And the One seated on the throne said: “Look! I am making all things new.” Also he says: “Write, for these words are faithful and true.”",
+  "add butter to my shopping list": "I added butter to your shopping list",
+  "remove butter from my shopping list": "I removed butter from your shopping list",
   //"test tell me that time to morrow at 2 p m": "Wednesday, May 20, 2 00 PM",
   //"test tell me that time to morrow at 2": "Wednesday, May 20, 2 00 PM", // Sugar returns 2001-02-01 00:00
 };
