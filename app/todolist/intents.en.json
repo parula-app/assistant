@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "clock",
+            "invocationName": "list",
             "intents": [
                 {
                     "name": "Read",

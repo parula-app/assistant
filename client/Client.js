@@ -6,6 +6,7 @@ import { ClientAPI } from './ClientAPI.js';
 import { getConfig } from '../util/config.js';
 import Clock from '../app/clock/clock.js';
 import TODOList from '../app/todolist/TODOList.js';
+import Calendar from '../app/calendar/calendar.js';
 import PlayControl from '../app/playcontrol/playcontrol.js';
 import MPD from '../app/mpd/mpd.js';
 import TuneIn from '../app/tunein/tunein.js';
@@ -36,7 +37,7 @@ export class Client {
   }
 
   async load(lang) {
-    let Apps = [ Clock, TODOList, MPD, TuneIn, PlayControl, Hue, Bible ]; // TODO dynamically
+    let Apps = [ Clock, TODOList, Calendar, MPD, TuneIn, PlayControl, Hue, Bible ]; // TODO dynamically
 
     let apps = Apps.map(App => new App());
     await Promise.all(apps.map(app =>

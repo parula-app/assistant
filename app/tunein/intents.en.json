@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "mpd",
+            "invocationName": "radio",
             "intents": [
                 {
                     "name": "Pia.Fallback",
