@@ -149,7 +149,7 @@ export default class IntentParser {
 
       } catch (ex) {
         console.log(result.intent.id + " is not a match: " + (ex.message || ex));
-        //console.error(ex);
+        //console.error(ex); // debug DataType implementations
         continue;
       }
     }

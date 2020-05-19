@@ -19,6 +19,18 @@
                         "Today is which day",
                         "Current date"
                     ]
+                },
+                {
+                    "name": "TestTimeParse",
+                    "samples": [
+                      "Test Tell me the time {Time}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Time",
+                            "type": "Pia.DateTime"
+                        }
+                    ]
                 }
             ]
         }

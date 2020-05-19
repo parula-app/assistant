@@ -16,16 +16,18 @@
 * Better wake word
 * Acoustic echo cancellation
 * LM
-  * Train language model based on commands and values from apps
-  * Create Text data type with english vocabulary
-* Integrate STT with valid input, see DeepSpeech WithMetadata API
+  * Commands from apps
+  * Data types, like datetime, locations, and values from apps
+  * Text data type with english vocabulary
+* Integrate speech recognition with valid input
+  * Let speech recognition re-run on values, with limited vocabulary. See e.g. DateTime.
+  * DeepSpeech WithMetadata API
 * Better TTS
 
 # Data types
 * Location
   * Granularity and score depending on user location. Function of inhabitants in relation to distance. World biggest cities (all), cities in continent, towns in certain distance, and small villages around the user.
   * Include locations in contacts and calendar, and also locations around them with higher granularity and score , depending on frequency of contact
-* Date and time
 
 ## Apps
 * MPD
