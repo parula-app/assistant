@@ -7,7 +7,6 @@
   * Include recent commands in match confidence
   * Resolve open variables with context
   * Translate pronouns
-* Dynamically load apps
 * Apps via commandline (stdin/out) and HTTPS
    * Load language model as JSON via special command parameter / URL suffix
    * Command text input, output, errors etc. via JSON REST protocol.
