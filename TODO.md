@@ -1,6 +1,6 @@
 ## Core
 * Storage
-  * Settings
+  * Settings writable
   * User data
   * Data cache
 * Context
@@ -15,13 +15,14 @@
 * Cache the last second
 * Better wake word
 * Acoustic echo cancellation
-* LM
+* Language Model, 3 cases:
   * Commands from apps
   * Data types, like datetime, locations, and values from apps
   * Text data type with english vocabulary
-* Integrate speech recognition with valid input
+* Go back to speech recognition with valid input
   * Let speech recognition re-run on values, with limited vocabulary. See e.g. DateTime.
   * DeepSpeech WithMetadata API
+  * DeepSpeech scorer?
 * Better TTS
 
 # Data types
@@ -87,3 +88,13 @@
     * Android video app
     * TV
     * Phone call
+
+## Release
+* Raspberry Pi 4
+  * Input device
+  * DeepSpeech TFLite
+* Setup
+  * GUI as webapp with React
+  * Auto config
+     * Hue
+     * Email
