@@ -1,5 +1,5 @@
 import dav from 'dav';
-import ical from 'ical';
+import { parseICS } from './ics.js';
 import Sugar from 'sugar-date';
 import nanoSQL from "@nano-sql/core";
 const nSQL = nanoSQL.nSQL;
@@ -27,7 +27,7 @@ export default class Calendar extends JSONApp {
         {
           name: "events",
           model: {
-            "id:uuid": { pk: true },
+            "uid:uuid": { pk: true },
             "summary:string": {},
             "allday:boolean": {},
             "start:datetime": {},
@@ -38,10 +38,20 @@ export default class Calendar extends JSONApp {
             "participants:string": {},
             "notes:string": {},
           }
+        },
+        {
+          name: "calendars",
+          model: {
+            "id:uuid": { pk: true },
+            "name:string": {},
+            "url:string": {},
+            "syncToken:string": {},
+          }
         }
       ],
       version: 1, // schema version
     });
+    nSQL().useDatabase(kDBName);
 
     let config = getConfig().calendar;
     let xhr = new dav.transport.Basic(
@@ -50,64 +60,48 @@ export default class Calendar extends JSONApp {
         password: config.password,
       })
     );
-
     let account = await dav.createAccount({
       server: config.serverURL,
-      loadCollections: true,
+      //loadCollections: true,
       loadObjects: true,
       xhr: xhr,
     });
     console.log("Calendar fetch took " + (new Date() - startTime) + "ms");
-    const now = new Date();
+    const parseStartTime = new Date();
     let events = [];
+    /*let calendarsDB = await nSQL("events").query("select", [
+      "url",
+      "syncToken",
+    ]).exec();*/
     for (let calendar of account.calendars) {
       console.log('Found calendar ' + calendar.displayName);
+      /*
+      let calendarDB = calendarsDB.find(cal => cal.url == calendar.url);
+      console.info("sync token", calendarDB ? calendarDB.syncToken : null);
+      calendar = await dav.syncCalendar(calendar, {
+        syncToken: calendarDB ? calendarDB.syncToken : null,
+        xhr: xhr,
+      });
+      */
+      await nSQL("calendars").query("upsert", {
+        name: calendar.displayName,
+        url: calendar.url,
+        syncToken: calendar.syncToken,
+      }).exec();
+
       for (let event of calendar.objects) {
-        let data = ical.parseICS(event.calendarData);
-        for (let k in data) {
-          if (!data.hasOwnProperty(k) || data[k].type != 'VEVENT') {
-            continue;
-          }
-          let ev = data[k];
-          if (ev.start < now) {
-            continue;
-          }
-          for (let l in ev) {
-            if (!ev.hasOwnProperty(l) || ev[l].type != 'VALARM') {
-              continue;
-            }
-            let alarm = ev[l];
-            let pt = alarm.trigger;
-            if (pt && pt.startsWith("-PT")) {
-              let reminder = new Date(ev.start.valueOf());
-              let value = parseInt(pt.substr(3, pt.length - 4));
-              if (isNaN(value)) {
-                // skip
-                console.error(pt);
-              } else if (pt.endsWith("M")) {
-                reminder.setUTCMinutes(reminder.getUTCMinutes() - value);
-              } else if (pt.endsWith("H")) {
-                reminder.setUTCHours(reminder.getUTCHours() - value);
-              } else if (pt.endsWith("D")) {
-                reminder.setUTCDate(reminder.getUTCDate() - value);
-              } else {
-                console.error(pt);
-              }
-              ev.reminder = reminder; // e.g. '-PT1440M', M = minutes, H = hours
-            } else {
-              console.error(pt);
-            }
-          }
+        for (let ev of parseICS(event.calendarData)) {
           events.push(ev);
         }
       }
     }
-    console.log("Calendar parse took " + (new Date() - now) + "ms");
+    console.log("Calendar parse took " + (new Date() - parseStartTime) + "ms");
     nSQL().useDatabase(kDBName);
     for (let ev of events) {
-      console.log(`  ${ev.summary} is in ${Sugar.Date(ev.start).relative()}` + (ev.location ? ` in ${ev.location}` : ''));
+      console.log(`  ${ev.summary} is in ${Sugar.Date(ev.start).relative().replace(" from now", "")}` + (ev.location ? ` in ${ev.location}` : ''));
       //console.log(ev);
       await nSQL("events").query("upsert", {
+        uid: ev.uid,
         summary: ev.summary,
         allday: ev.start.dateOnly,
         start: ev.start,
