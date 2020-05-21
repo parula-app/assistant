@@ -27,3 +27,7 @@ call out to the Internet.
 
 Pia will keep context of what you said and allow you to make
 follow up questions, e.g. using pronous like "it".
+
+## Further reading
+* [Installation instructions](install.md) in INSTALL.md
+* [High-level outstanding tasks](TODO.md) in TODO.md
