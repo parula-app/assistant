@@ -1,4 +1,5 @@
 import AppLoader from './AppLoader.js';
+import { AppBase } from '../AppBase.js';
 import path from 'path';
 import fs from 'fs';
 import util from 'util';
@@ -23,14 +24,18 @@ export default class BuiltinAppsLoader extends AppLoader {
     //console.log("Loading built-in apps in directory ", appsDir);
 
     let Apps = [];
-    let dirs = await readdir(appsDir);
-    for (let appName of dirs) {
-      let module = await import(appsDirRelative + appName + "/" + appName + ".js");
+    let dirs = await readdir(appsDir, { withFileTypes: true });
+    for (let dir of dirs) {
+      if (!dir.isDirectory()) {
+        continue;
+      }
+      let module = await import(appsDirRelative + dir.name + "/" + dir.name + ".js");
       let App = module.default;
       Apps.push(App);
     }
 
-    let apps = Apps.map(App => new App());
+    let apps = Apps.map(App => new App())
+        .filter(app => app instanceof AppBase);
     return apps;
   }
 }

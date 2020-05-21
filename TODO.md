@@ -12,6 +12,7 @@
    * Command text input, output, errors etc. via JSON REST protocol.
 
 ## Speech
+* Cache the last second
 * Better wake word
 * Acoustic echo cancellation
 * LM
@@ -40,6 +41,7 @@
 * Lights
 * Reminder, Alarm
 * Calendar
+  * Sync only when necessary
 * Contacts
 * Phone SIP
 * Phone Bluetooth
