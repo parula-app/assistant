@@ -3,15 +3,8 @@
 
 import IntentParser from '../intentParser/IntentParser.js';
 import { ClientAPI } from './ClientAPI.js';
+import MetaLoader from '../baseapp/loader/MetaLoader.js';
 import { getConfig } from '../util/config.js';
-import Clock from '../app/clock/clock.js';
-import TODOList from '../app/todolist/TODOList.js';
-import Calendar from '../app/calendar/calendar.js';
-import PlayControl from '../app/playcontrol/playcontrol.js';
-import MPD from '../app/mpd/mpd.js';
-import TuneIn from '../app/tunein/tunein.js';
-import Hue from '../app/hue/hue.js';
-import Bible from '../app/bible/bible.js';
 
 /**
  * This is the central code that calls all the other modules.
@@ -37,9 +30,7 @@ export class Client {
   }
 
   async load(lang) {
-    let Apps = [ Clock, TODOList, Calendar, MPD, TuneIn, PlayControl, Hue, Bible ]; // TODO dynamically
-
-    let apps = Apps.map(App => new App());
+    let apps = await (new MetaLoader()).findApps();
     await Promise.all(apps.map(app =>
       app.load(lang)
     ));
