@@ -12,7 +12,7 @@ export default class Hue extends JSONApp {
 
   async load(lang) {
     await super.load(lang);
-    await this.connect();
+    await this.listDevices();
   }
 
   /**
@@ -74,6 +74,17 @@ export default class Hue extends JSONApp {
       throw new Error("No Philips Hue bridge found");
     }
     return bridges[0].ipAddress;
+  }
+
+  async listDevices() {
+    let deviceType = this.dataTypes.Device;
+    let conn = await this.connect();
+    let lights = await conn.lights.getAll();
+    console.log("Hue lights:");
+    for (let light of lights) {
+      console.log(" ", light.name, light.id);
+      deviceType.addValue(light.name, light.id);
+    }
   }
 
   /**
@@ -143,14 +154,23 @@ export default class Hue extends JSONApp {
   /**
    * Command
    * @param args {null}
-   *    Device {string}
+   *    Light {id}  light ID
    *    State {string enum} "on" or "off"
    * @param client {ClientAPI}
    */
-  async lightOnoff(args, client) {
+  async lightOnOff(args, client) {
     const kValidStates = [ "on", "off" ];
-    assert(kValidStates.includes(args.State), "State must be either on or off");
-
+    let state = args.State;
+    let light = args.Light;
+    assert(kValidStates.includes(state), "State must be either on or off");
+    let conn = await this.connect();
+    let lightState = new hue.lightStates.LightState();
+    if (state == "on") {
+      lightState = lightState.on();
+    } else if (state == "off") {
+      lightState = lightState.off();
+    }
+    await conn.lights.setLightState(light, lightState);
   }
 }
 
