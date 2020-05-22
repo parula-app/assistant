@@ -35,6 +35,13 @@ export class NamedValuesDataType extends FiniteDataType {
   }
 
   /**
+   * { Map of term {string} -> valueID {any} }
+   */
+  get entireMap() {
+    return this._values;
+  }
+
+  /**
    * Called often, must be fast.
    * Do not calculate this, but cache it.
    */

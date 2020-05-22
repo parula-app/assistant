@@ -36,13 +36,17 @@ export default class BibleApp extends JSONApp {
     super("bible", "app/bible/");
   }
 
-  async load(lang) {
-    await super.load(lang);
+  async load(userLang) {
+    await super.load(userLang);
 
     // TODO Promise.all()
     for (let lang of kLanguages) {
       loadMainDB(lang, db => {
         gStorage[lang] = db;
+
+        if (lang == userLang) {
+          this.addValues(db);
+        }
       }, e => console.error(e));
 
       BibleText.loadTranslation(lang);
@@ -62,6 +66,39 @@ export default class BibleApp extends JSONApp {
         gBible[lang] = JSON.parse(content);
       });
     }
+  }
+
+  addValues(storage) {
+    let personType = this.dataTypes.Person;
+    let placeType = this.dataTypes.Place;
+
+    // Value is {Array of Detail}, because there can be
+    // several persons with the same name.
+    function add(type, name, detail) {
+      let entry = type.entireMap.get(name);
+      if (!entry) {
+        type.addValue(detail.name, [ detail ]);
+      } else {
+        entry.push(detail);
+      }
+    }
+
+    storage.iterate(detail => {
+      let type;
+      if (detail instanceof Person) {
+        type = personType;
+      } else if (detail instanceof Place) {
+        type = placeType;
+      }
+      if (type) {
+        add(type, detail.name, detail);
+        if (detail.otherNames && detail.otherNames.length) {
+          for (let name of detail.otherNames) {
+            add(type, name, detail);
+          }
+        }
+      }
+    }, () => {}, ex => console.error(ex));
   }
 
   /**
@@ -207,7 +244,7 @@ export default class BibleApp extends JSONApp {
 
   openPerson(args, client) {
     var lang = client.lang;
-    var persons = getPerson(args, client);
+    var persons = args.Person;
     if (persons.length > 1) {
       client.say(getTranslation("person_multiple", lang,
         { person: "", count: persons.length }));
@@ -220,7 +257,7 @@ export default class BibleApp extends JSONApp {
 
   openPlace(args, client) {
     var lang = client.lang;
-    var places = getPlace(args, client);
+    var places = args.Place;
     if (places.length > 1) {
       client.say(getTranslation("place_multiple", lang,
         { place: "", count: places.length }));
@@ -419,19 +456,6 @@ function makeList(objects, lang) {
 }
 
 /**
- * @returns {Array of Person} personIDs
- */
-function getPerson(args, client) {
-  try {
-    var ids = args.Person;
-    ids = ids.split("/");
-    return gStorage[client.lang].getIDs(ids);
-  } catch (e) {
-    throw new UserError("unknown_person", { person: args.Person });
-  }
-}
-
-/**
  * Tells all about a person.
  * @param {Person} person
  */
@@ -489,20 +513,6 @@ function outputPerson(person, args, client, lang) {
   let bibleTexts = person.sources;
   outputBibleVersesList(bibleTexts, getTranslation(prefix + "bible", lang),
     args, client, lang);
-}
-
-
-/**
- * @returns {Array of Place} place IDs
- */
-function getPlace(args, client, lang) {
-  try {
-    var ids = args.Place;
-    ids = ids.split("/");
-    return gStorage[client.lang].getIDs(ids);
-  } catch (e) {
-    throw new UserError("unknown_place", { person: args.Place });
-  }
 }
 
 /**
