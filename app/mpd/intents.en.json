@@ -93,7 +93,7 @@
             "types": [
                 {
                     "name": "SongAndArtist",
-                    "basetype": "Pia.List"
+                    "basetype": "Pia.NamedValues"
                 },
                 {
                     "name": "SongTitle",

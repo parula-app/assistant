@@ -71,9 +71,9 @@ export class JSONApp extends AppBase {
 
   async _loadDataType(typeJSON) {
     let id = this._typeID(typeJSON.name);
-    let dataType = this._typeID(typeJSON.basetype);
+    let dataTypeName = this._typeID(typeJSON.basetype);
     let type;
-    if (dataType == "Enum" || !dataType && values.length) {
+    if (dataTypeName == "Pia.Enum" || !dataTypeName && values.length) {
       type = new EnumDataType(id);
       let values = array(typeJSON.values);
       assert(values.length, "Enum needs the values defined in the intents.*.json file");
@@ -87,9 +87,9 @@ export class JSONApp extends AppBase {
         }
         type.addValue(value.id, terms);
       }
-    } else if (dataType = "List") {
+    } else if (dataTypeName == "Pia.List") {
       type = new ListDataType(id);
-    } else if (dataType = "NamedValues") {
+    } else if (dataTypeName == "Pia.NamedValues") {
       type = new NamedValuesDataType(id);
     }
     this.dataTypes[id] = type;

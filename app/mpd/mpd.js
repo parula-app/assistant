@@ -39,7 +39,12 @@ export default class MPD extends JSONApp {
           songType.addValue(title);
         }
         if (title && artist) {
-          songAndArtistType.addValue(title + this.kArtistSeparator + artist);
+          let term = title + this.kArtistSeparator + artist;
+          let value = {
+            artist: artist,
+            songTitle: title,
+          };
+          songAndArtistType.addValue(term, value);
         }
       }
     }
@@ -65,16 +70,15 @@ export default class MPD extends JSONApp {
   /**
    * Command
    * @param args {object}
-   *    SongAndArtist {string}
+   *    SongAndArtist {
+   *      artist {string}
+   *      songTitle {string}
+   *   }
    * @param client {ClientAPI}
    */
   async playSongAndArtist(args, client) {
-    let split = args.SongAndArtist.split(this.kArtistSeparator);
-    if (split.length != 2) {
-      throw new Error("I found no such song");
-    }
-    let song = split[0];
-    let artist = split[1];
+    let artist = args.SongAndArtist.artist;
+    let song = args.SongAndArtist.songTitle;
 
     let mpc = await this.connect();
     await mpc.currentPlaylist.clear();

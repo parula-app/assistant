@@ -43,16 +43,16 @@ export class NamedValuesDataType extends FiniteDataType {
   }
 
   valueIDForTerm(term) {
-    return this.values.get(term);
+    return this._values.get(term);
   }
 
   /**
+   * @param term {string}   What the user will say.
    * @param valueID {any}   The internal ID. Not shown to user.
    *   Can be string, integer or even an object.
    *   Will be passed to your app in `args`.
-   * @param term {string}   What the user will say.
    */
-  addValue(valueID, term) {
+  addValue(term, valueID) {
     assert(valueID, "Need a value");
     assert(term && typeof(term) == "string");
 
