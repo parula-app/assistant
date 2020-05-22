@@ -8,6 +8,10 @@
     "username": null,
     "password": null
   },
+  "hue": {
+    "hostname": null,
+    "auth": null
+  },
   "audio": {
     "maxCommandLength": 10
   },

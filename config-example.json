@@ -8,6 +8,10 @@
     "username": "fred",
     "password": "wilma"
   },
+  "hue": {
+    "hostname": "192.168.1.300",
+    "auth": "secret"
+  },
   "audio": {
     "maxCommandLength": 15,
     "inputDevice": "hw(1,0)",

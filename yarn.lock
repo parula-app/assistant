@@ -108,7 +108,7 @@ audio-format@^2.3.2:
     pick-by-alias "^1.2.0"
     sample-rate "^2.0.0"
 
-axios@^0.19.0:
+axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
@@ -990,12 +990,11 @@ node-fetch@^2.0.0-alpha.8, node-fetch@^2.6.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
-node-hue-api@^4.0.6:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/node-hue-api/-/node-hue-api-4.0.6.tgz#ddd79b776c647f3a1ded7268048958bdf3e89e82"
-  integrity sha512-HoBy97r+btnZdGYpBVkag/IuQBbTq+vwW0K3Ni8tG/5/nW3Gvz9z1zE0Rg3DoEkVnmXOWPcvKSYI/b/UTJcdEg==
+"node-hue-api@https://github.com/benbucksch/node-hue-api":
+  version "5.0.0-alpha.2"
+  resolved "https://github.com/benbucksch/node-hue-api#cc6ef112656a73af25317a68948c33bb4c54f43e"
   dependencies:
-    axios "^0.19.0"
+    axios "^0.19.2"
     bottleneck "^2.19.5"
     get-ssl-certificate "^2.3.3"
 
