@@ -3,6 +3,7 @@ import { Intent } from './Intent.js';
 import { DataType } from './datatype/DataType.js';
 import { EnumDataType } from './datatype/EnumDataType.js';
 import { ListDataType } from './datatype/ListDataType.js';
+import { NamedValuesDataType } from './datatype/NamedValuesDataType.js';
 import { assert, loadJSONFile } from '../util/util.js';
 
 /**
@@ -70,10 +71,12 @@ export class JSONApp extends AppBase {
 
   async _loadDataType(typeJSON) {
     let id = this._typeID(typeJSON.name);
-    let values = array(typeJSON.values);
+    let dataType = this._typeID(typeJSON.basetype);
     let type;
-    if (values.length) {
+    if (dataType == "Enum" || !dataType && values.length) {
       type = new EnumDataType(id);
+      let values = array(typeJSON.values);
+      assert(values.length, "Enum needs the values defined in the intents.*.json file");
       for (let value of values) {
         if (!value.name) {
           throw new Error("Enum value of enum data type " + id + " of app " + this.id + " is not correctly defined in the intents JSON file")
@@ -84,8 +87,10 @@ export class JSONApp extends AppBase {
         }
         type.addValue(value.id, terms);
       }
-    } else {
+    } else if (dataType = "List") {
       type = new ListDataType(id);
+    } else if (dataType = "NamedValues") {
+      type = new NamedValuesDataType(id);
     }
     this.dataTypes[id] = type;
   }

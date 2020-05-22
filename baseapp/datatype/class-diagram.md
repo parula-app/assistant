@@ -5,6 +5,7 @@
     * EnumDataType
       * LanguageDataType
     * ListDataType
+    * NamedValuesDataType
       * LocationDataType
   * OpenEndedDataType
     * NumberDataType

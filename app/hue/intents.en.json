@@ -45,11 +45,11 @@
                 },
                 {
                     "name": "Device",
-                    "values": []
+                    "basetype": "Pia.NamedValues"
                 },
                 {
                     "name": "Room",
-                    "values": []
+                    "basetype": "Pia.NamedValues"
                 }
             ]
         }

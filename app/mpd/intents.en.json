@@ -93,15 +93,15 @@
             "types": [
                 {
                     "name": "SongAndArtist",
-                    "values": []
+                    "basetype": "Pia.List"
                 },
                 {
                     "name": "SongTitle",
-                    "values": []
+                    "basetype": "Pia.List"
                 },
                 {
                     "name": "Artist",
-                    "values": []
+                    "basetype": "Pia.List"
                 }
             ]
         }

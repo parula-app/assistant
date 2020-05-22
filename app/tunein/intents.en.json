@@ -84,23 +84,11 @@
             "types": [
                 {
                     "name": "Station",
-                    "values": []
+                    "basetype": "Pia.List"
                 },
                 {
                     "name": "Genre",
-                    "values": []
-                },
-                {
-                    "name": "SongAndArtist",
-                    "values": []
-                },
-                {
-                    "name": "SongTitle",
-                    "values": []
-                },
-                {
-                    "name": "Artist",
-                    "values": []
+                    "basetype": "Pia.List"
                 }
             ]
         }
