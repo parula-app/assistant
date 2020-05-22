@@ -36,7 +36,7 @@ export default class Hue extends JSONApp {
     const authenticatedAPI = await hue.api.createLocal(hostname).connect(auth);
     // Test the connection
     const bridgeConfig = await authenticatedAPI.configuration.getConfiguration();
-    console.log(`Connected to Hue bridge '${bridgeConfig.name}' at ${bridgeConfig.ipaddress}`);
+    console.info(`Connected to Hue bridge '${bridgeConfig.name}' at ${bridgeConfig.ipaddress}`);
     return authenticatedAPI;
   }
 
@@ -68,7 +68,7 @@ export default class Hue extends JSONApp {
     let bridges = await hue.discovery.upnpSearch();
     console.timeEnd("hue-discovery")
     // array of bridges that were found
-    console.log(JSON.stringify(bridges, null, 2));
+    console.info(JSON.stringify(bridges, null, 2));
     bridges = bridges.filter(bridge => !bridge.error);
     if (!bridges.length) {
       throw new Error("No Philips Hue bridge found");
@@ -80,10 +80,22 @@ export default class Hue extends JSONApp {
     let deviceType = this.dataTypes.Device;
     let conn = await this.connect();
     let lights = await conn.lights.getAll();
-    console.log("Hue lights:");
+    console.info("Hue lights:");
     for (let light of lights) {
-      console.log(" ", light.name, light.id);
-      deviceType.addValue(light.name, light.id);
+      console.info(" ", light.name, light.id);
+      deviceType.addValue(light.name, {
+        id: light.id,
+        type: "light",
+      });
+    }
+    let groups = await conn.groups.getAll();
+    console.info("Hue rooms and groups:");
+    for (let group of groups) {
+      console.info(" ", group.name, group.id);
+      deviceType.addValue(group.name, {
+        id: group.id,
+        type: "group",
+      });
     }
   }
 
@@ -154,23 +166,31 @@ export default class Hue extends JSONApp {
   /**
    * Command
    * @param args {null}
-   *    Light {id}  light ID
+   *    Light {
+   *      id {integer}  light or group ID
+   *      type {string enum}  "light" or "group"
+   *    }
    *    State {string enum} "on" or "off"
    * @param client {ClientAPI}
    */
   async lightOnOff(args, client) {
     const kValidStates = [ "on", "off" ];
     let state = args.State;
-    let light = args.Light;
+    let type = args.Light.type;
+    let id = args.Light.id;
     assert(kValidStates.includes(state), "State must be either on or off");
     let conn = await this.connect();
-    let lightState = new hue.lightStates.LightState();
-    if (state == "on") {
-      lightState = lightState.on();
-    } else if (state == "off") {
-      lightState = lightState.off();
+    if (type == "light") {
+      let lightState = new hue.lightStates.LightState();
+      if (state == "on") {
+        lightState.on();
+      } else if (state == "off") {
+        lightState.off();
+      }
+      await conn.lights.setLightState(id, lightState);
+    } else if (type == "group") {
+      await conn.groups.setGroupState(id, { on: state == "on" });
     }
-    await conn.lights.setLightState(light, lightState);
   }
 }
 
