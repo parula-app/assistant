@@ -25,6 +25,7 @@
     "beamWidth": 500
   },
   "maryTTS": {
+    "url": "http://localhost:59125",
     "voice": "cmu-rms"
   }
 }

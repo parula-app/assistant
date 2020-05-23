@@ -28,6 +28,7 @@
     "beamWidth": "DeepSpeech: Beam width for the CTC decoder"
   },
   "maryTTS": {
+    "url": "URL of the MaryTTS server, usually running locally",
     "voice": "The MaryTTS voice name, e.g. cmu-rms, dfki-spike, dfki-prudence or cmu-slt-hsmm. Download them by running  ./gradlew runInstallerGui  in the marytts directory."
   }
 }

@@ -12,7 +12,6 @@ import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 import { getConfig } from '../../util/config.js';
 
-const kTTS_URL = "http://localhost:59125";
 const kTTS_Bitrate = 48000;
 let gServerParams = {
   INPUT_TYPE: "TEXT",
@@ -54,7 +53,8 @@ export async function textToSpeech(text) {
   // fixup
   text = text.replace(/'s/g, " is");
   let startTime = new Date();
-  let url = kTTS_URL + '/process?' + new URLSearchParams(gServerParams).toString() +
+  let config = getConfig().maryTTS;
+  let url = config.url + '/process?' + new URLSearchParams(gServerParams).toString() +
     '&INPUT_TEXT=' + encodeURIComponent(text);
   let response = await fetch(url, { cache: 'no-cache' })
   if (!response.ok) {
