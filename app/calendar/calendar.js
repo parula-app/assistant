@@ -17,7 +17,7 @@ export default class Calendar extends JSONApp {
 
   async load(lang) {
     await super.load(lang);
-    let startTime = new Date();
+    console.time("calendar-connect");
 
     await nSQL().createDatabase({
       id: kDBName,
@@ -40,7 +40,7 @@ export default class Calendar extends JSONApp {
           }
         },
         {
-          name: "calendars",
+          name: "sync",
           model: {
             "id:uuid": { pk: true },
             "name:string": {},
@@ -63,40 +63,43 @@ export default class Calendar extends JSONApp {
     let account = await dav.createAccount({
       server: config.serverURL,
       //loadCollections: true,
-      loadObjects: true,
+      //loadObjects: true,
       xhr: xhr,
     });
-    console.log("Calendar fetch took " + (new Date() - startTime) + "ms");
-    const parseStartTime = new Date();
+    console.timeEnd("calendar-connect");
     let events = [];
-    /*let calendarsDB = await nSQL("events").query("select", [
-      "url",
-      "syncToken",
-    ]).exec();*/
+    let syncTokens = await nSQL("sync").query("select", [
+      "syncToken", "url",
+    ]).exec();
     for (let calendar of account.calendars) {
-      console.log('Found calendar ' + calendar.displayName);
-      /*
-      let calendarDB = calendarsDB.find(cal => cal.url == calendar.url);
-      console.info("sync token", calendarDB ? calendarDB.syncToken : null);
+      //console.log("Found calendar", calendar);
+      let syncTokenRow = syncTokens.find(row => row.url == calendar.url);
+      let syncToken = syncTokenRow ? syncTokenRow.syncToken : null;
+      console.info("sync token", syncToken);
+      console.time("calendar sync " + calendar.displayName);
       calendar = await dav.syncCalendar(calendar, {
-        syncToken: calendarDB ? calendarDB.syncToken : null,
+        syncToken: syncToken,
         xhr: xhr,
       });
-      */
-      await nSQL("calendars").query("upsert", {
+      console.timeEnd("calendar sync " + calendar.displayName);
+      console.time("calendar parse " + calendar.displayName);
+      await nSQL("sync").query("upsert", {
+        id: calendar.id,
         name: calendar.displayName,
         url: calendar.url,
         syncToken: calendar.syncToken,
       }).exec();
+
+      console.log("Got", calendar.objects.length, "calendar entries for", calendar.displayName);
 
       for (let event of calendar.objects) {
         for (let ev of parseICS(event.calendarData)) {
           events.push(ev);
         }
       }
+      console.timeEnd("calendar parse " + calendar.displayName);
     }
-    console.log("Calendar parse took " + (new Date() - parseStartTime) + "ms");
-    nSQL().useDatabase(kDBName);
+
     for (let ev of events) {
       console.log(`  ${ev.summary} is in ${Sugar.Date(ev.start).relative().replace(" from now", "")}` + (ev.location ? ` in ${ev.location}` : ''));
       //console.log(ev);
