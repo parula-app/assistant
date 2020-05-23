@@ -20,11 +20,12 @@ let gServerParams = {
   AUDIO_OUT: "WAVE_FILE",
   AUDIO: "WAVE_FILE",
   LOCALE: "en_US",
-  //VOICE: "cmu-rms", // male, US, soft
-  //VOICE: "dfki-spike", // male, GB
-  //VOICE: "dfki-prudence", // female, GB, posh
-  VOICE: "cmu-slt-hsmm", // female, US, bad quality, default voice in source
-  // User overrides voice in config.maryTTS.voice
+  //VOICE set by pref config.maryTTS.voice
+  // "cmu-slt" female, US
+  // "cmu-rms" male, US
+  // "dfki-spike" male, GB
+  // "dfki-prudence" female, GB, posh
+  VOICE: "cmu-slt-hsmm", // female, US, bad quality, default in source
 };
 
 export async function load(lang) {
@@ -50,6 +51,8 @@ export function sampleRate() {
  *    WAV format, sampleRate(), 1 channel, 16 bit
  */
 export async function textToSpeech(text) {
+  // fixup
+  text = text.replace(/'s/g, " is");
   let startTime = new Date();
   let url = kTTS_URL + '/process?' + new URLSearchParams(gServerParams).toString() +
     '&INPUT_TEXT=' + encodeURIComponent(text);

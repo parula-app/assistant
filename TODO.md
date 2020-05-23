@@ -37,9 +37,9 @@
 * Bible
 * Clock
 * TODO list, Shopping list
+* Lights
 
 ## TODO
-* Lights
 * Reminder, Alarm
 * Calendar
   * Sync only when necessary

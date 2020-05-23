@@ -20,7 +20,7 @@
 4. Install MaryTTS
    1. `git clone https://github.com/marytts/marytts/`
    2. Build it with `./gradlew`
-   3. Install voices en-US `cmu-rms`, en-GB `dfki-spike`, and en-GB `dfki-prudence` by running `./gradlew runInstallerGui`
+   3. Install voices en-US `cmu-slt`, en-US `cmu-rms`, en-GB `dfki-spike`, and en-GB `dfki-prudence` by running `./gradlew runInstallerGui`
    4. Restart the server: `./gradlew run`
    5. Open `http://localhost:59125` in a browser, to check whether the server is running and the voices are listed in the dropdown.
 
