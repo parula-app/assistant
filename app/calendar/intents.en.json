@@ -7,7 +7,7 @@
                     "name": "UpcomingEvents",
                     "samples": [
                       "(Tell me|) what is on (my|the) calendar",
-                      "(Tell me|) my appointments",
+                      "(Tell me|) my (appointments|events)",
                       "(Tell me|) my upcoming (appointments|events)",
                       "My calendar"
                     ]
@@ -21,8 +21,8 @@
                 {
                     "name": "EventsAt",
                     "samples": [
-                      "(Tell me|) (my|) appointments (on|for) {Date}",
-                      "(Which|What) appointments do I have on {Date}?"
+                      "(Tell me|) (my|) (appointments|events) (on|for) {Date}",
+                      "(Which|What) (appointments|events) do I have on {Date}?"
                     ],
                     "slots": [
                         {

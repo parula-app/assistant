@@ -95,19 +95,26 @@ export default class Calendar extends JSONApp {
    * @param client {ClientAPI}
    */
   async eventsAt(args, client) {
-    let min = Sugar.Date(args.Date);
-    let max = Sugar.Date(args.Date);
-    let day = Sugar.Date(args.Date).setHours(0, 0, 0, 0);
-    let timeOutput = min.relative();
-    if (min.isToday()) {
-      max.advance({ hours: 2 });
-    }
-    if (min == day) { // input was a day without time
-      max.advance({ days: 1}, true); // end of day
+    let min = new Date(args.Date);
+    let max = new Date(args.Date);
+    let day = new Date(args.Date);
+    day.setHours(0, 0, 0, 0);
+    let minSugar = Sugar.Date(min);
+    let timeOutput = minSugar.relative();
+    if (min.valueOf() == day.valueOf()) { // input was a day without time
+      //max = max.advance({ days: 1}, true); // end of day
+      max.setHours(0, 0, 0, 0);
+      max.setUTCDate(max.getUTCDate() + 1);
+      if (minSugar.isToday()) {
+        timeOutput = "today";
+      }
     } else {
-      max.advance({ hours: 2 });
+      //max = max.advance({ hours: 2});
+      max.setUTCHours(max.getUTCHours() + 2);
     }
-    let prefix = "Your events on %time% are:".replace("%time%", timeOutput);
+    console.log("min", min);
+    console.log("max", max);
+    let prefix = "Your events %time% are:".replace("%time%", timeOutput);
     return await this.readEvents(events =>
       events.filter(event =>
         event.start >= min &&
@@ -136,10 +143,10 @@ export default class Calendar extends JSONApp {
       return "You have no appointments scheduled";
     }
 
-    return prefix.replace("%count%", events.length) + " " +
+    return prefix.replace("%count%", events.length) + " \n" +
       events.map(ev => {
         return `In ${Sugar.Date(ev.start).relative()}: ${ev.summary}`;
-      }).join(". ");
+      }).join(". \n");
   }
 
   /**
