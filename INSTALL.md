@@ -8,7 +8,15 @@
       * We'll be working on Raspberry Pi 4 support soon. Raspberry Pi 3 will not be supported.
 
 2. Install OS dependencies
-   * `# apt install yarnpkg mpg123 mpd sox libasound2-dev default-jre-headless default-jdk`
+   * Ubuntu, Debian etc.
+      * `# apt install yarnpkg mpg123 mpd sox libasound2-dev default-jre-headless default-jdk`
+   * Fedora, RedHat etc.
+      1. Install RPM Fusion (for mpd)
+         * `# dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm`
+      2. `# dnf install mpg123 mpd sox alsa-lib-devel java-1.8.0-openjdk-headless java-1.8.0-openjdk-devel`
+      3. Install Yarn
+         1. Complete step 3 below.
+         2. `# npm install -g yarn`
 
 3. Install node.js
    1. Go to the [node.js website](https://nodejs.org/en/) and download node 13 or 14 or later.[^nodeversion]
