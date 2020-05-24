@@ -1,6 +1,7 @@
-This is a voice app that plays songs via MPD.
-<https://www.musicpd.org/>
+Plays local music stored on the local disk.
 
-MPD needs to be running
-and the server name is configured in config.json:
-`"mpc": { "server": "localhost" }`
+Uses MPD <https://www.musicpd.org/> for the
+music archive management, playlist, and playback.
+
+MPD needs to be running.
+The server name is configured in config under `mpd`.
