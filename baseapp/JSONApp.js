@@ -13,18 +13,23 @@ import { assert, loadJSONFile } from '../util/util.js';
 export class JSONApp extends AppBase {
   /**
    * @param id {string} App ID
-   * @param directory {string} path (relative from project root dir)
+   * @param directory {string} (Optional) path (relative from project root dir)
    *   where the JSON files are. Their names must be "intents.<lang>.json",
    *   whereas lang is a 2-digit ISO language code, e.g. "en" or "de".
+   *   If null, defaults to ./app/<id>/
    */
   constructor(id, directory) {
     super(id);
-    assert(directory && typeof(directory) == "string");
-    if (!directory.endsWith("/")) {
-      directory += "/";
-    }
-    if (!directory.startsWith(".")) {
-      directory = "./" + directory;
+    if (directory) {
+      assert(typeof(directory) == "string");
+      if (!directory.endsWith("/")) {
+        directory += "/";
+      }
+      if (!directory.startsWith(".")) {
+        directory = "./" + directory;
+      }
+    } else {
+      directory = "./app/" + id + "/";
     }
     this.directory = directory;
     this.dataDir = "./data/" + id + "/";

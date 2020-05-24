@@ -7,7 +7,7 @@ const kDBName = "TODOList";
 
 export default class TODOList extends JSONApp {
   constructor() {
-    super("TODO", "app/todolist/");
+    super("todolist");
     this._db = null;
   }
 

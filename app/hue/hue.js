@@ -6,7 +6,7 @@ import { wait, assert } from '../../util/util.js';
 
 export default class Hue extends JSONApp {
   constructor() {
-    super("hue", "app/hue/");
+    super("hue");
     this._connection = null;
   }
 

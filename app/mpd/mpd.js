@@ -12,7 +12,7 @@ import { getConfig } from '../../util/config.js';
  */
 export default class MPD extends JSONApp {
   constructor() {
-    super("mpd", "app/mpd/");
+    super("mpd");
   }
 
   async load(lang) {

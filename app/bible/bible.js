@@ -33,7 +33,7 @@ BibleText.gBible = gBible;
 
 export default class BibleApp extends JSONApp {
   constructor() {
-    super("bible", "app/bible/");
+    super("bible");
   }
 
   async load(userLang) {

@@ -2,7 +2,7 @@ import { JSONApp } from '../../baseapp/JSONApp.js';
 
 export default class Clock extends JSONApp {
   constructor() {
-    super("clock", "app/clock/");
+    super("clock");
   }
 
   async load(lang) {

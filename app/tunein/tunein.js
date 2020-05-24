@@ -8,7 +8,7 @@ import { getConfig } from '../../util/config.js';
 
 export default class TuneIn extends JSONApp {
   constructor() {
-    super("tunein", "app/tunein/");
+    super("tunein");
     this._genres = new Map(); // title -> Genre JSON
     this._stations = new Map(); // name -> Station JSON
   }

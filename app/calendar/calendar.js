@@ -5,11 +5,9 @@ import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
 
-const kDBName = "Calendar";
-
 export default class Calendar extends JSONApp {
   constructor() {
-    super("Calendar", "app/calendar/");
+    super("calendar");
     this._db = [];
   }
 

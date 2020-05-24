@@ -2,7 +2,7 @@ import { JSONApp } from '../../baseapp/JSONApp.js';
 
 export default class PlayControl extends JSONApp {
   constructor() {
-    super("play", "app/playcontrol/");
+    super("playcontrol");
   }
 
   async load(lang) {
