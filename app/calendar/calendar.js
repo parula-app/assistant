@@ -67,6 +67,7 @@ export default class Calendar extends JSONApp {
       xhr: xhr,
     });
     console.timeEnd("calendar-connect");
+    const now = new Date();
     let events = [];
     let syncTokens = await nSQL("sync").query("select", [
       "syncToken", "url",
@@ -94,7 +95,9 @@ export default class Calendar extends JSONApp {
 
       for (let event of calendar.objects) {
         for (let ev of parseICS(event.calendarData)) {
-          events.push(ev);
+          if (ev.start > now) {
+            events.push(ev);
+          }
         }
       }
       console.timeEnd("calendar parse " + calendar.displayName);
