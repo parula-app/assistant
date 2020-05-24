@@ -1,8 +1,6 @@
 import dav from 'dav';
 import { parseICS } from './ics.js';
 import Sugar from 'sugar-date';
-import nanoSQL from "@nano-sql/core";
-const nSQL = nanoSQL.nSQL;
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
@@ -12,46 +10,13 @@ const kDBName = "Calendar";
 export default class Calendar extends JSONApp {
   constructor() {
     super("Calendar", "app/calendar/");
-    this._db = null;
+    this._db = [];
   }
 
   async load(lang) {
     await super.load(lang);
     console.time("calendar-connect");
 
-    await nSQL().createDatabase({
-      id: kDBName,
-      mode: "PERM", // SnapDB
-      //path: "~/.pia/db.nano/", TODO not working
-      tables: [
-        {
-          name: "events",
-          model: {
-            "uid:uuid": { pk: true },
-            "summary:string": {},
-            "allday:boolean": {},
-            "start:date": {},
-            "end:date": {},
-            "reminder:date": {},
-            "location:string": {},
-            "recurring:boolean": {},
-            "participants:string": {},
-            "notes:string": {},
-          }
-        },
-        {
-          name: "sync",
-          model: {
-            "id:uuid": { pk: true },
-            "name:string": {},
-            "url:string": {},
-            "syncToken:string": {},
-          }
-        }
-      ],
-      version: 1, // schema version
-    });
-    nSQL().useDatabase(kDBName);
 
     let config = getConfig().calendar;
     let xhr = new dav.transport.Basic(
@@ -69,9 +34,7 @@ export default class Calendar extends JSONApp {
     console.timeEnd("calendar-connect");
     const now = new Date();
     let events = [];
-    let syncTokens = await nSQL("sync").query("select", [
-      "syncToken", "url",
-    ]).exec();
+    let syncTokens = [];
     for (let calendar of account.calendars) {
       //console.log("Found calendar", calendar);
       let syncTokenRow = syncTokens.find(row => row.url == calendar.url);
@@ -84,13 +47,6 @@ export default class Calendar extends JSONApp {
       });
       console.timeEnd("calendar sync " + calendar.displayName);
       console.time("calendar parse " + calendar.displayName);
-      await nSQL("sync").query("upsert", {
-        id: calendar.id,
-        name: calendar.displayName,
-        url: calendar.url,
-        syncToken: calendar.syncToken,
-      }).exec();
-
       console.log("Got", calendar.objects.length, "calendar entries for", calendar.displayName);
 
       for (let event of calendar.objects) {
@@ -103,19 +59,7 @@ export default class Calendar extends JSONApp {
       console.timeEnd("calendar parse " + calendar.displayName);
     }
 
-    for (let ev of events) {
-      console.log(`  ${ev.summary} is in ${Sugar.Date(ev.start).relative().replace(" from now", "")}` + (ev.location ? ` in ${ev.location}` : ''));
-      //console.log(ev);
-      await nSQL("events").query("upsert", {
-        uid: ev.uid,
-        summary: ev.summary,
-        allday: ev.start.dateOnly,
-        start: ev.start,
-        end: ev.end,
-        reminder: ev.reminder,
-        location: ev.location,
-      }).exec();
-    }
+    this._db = events;
   }
 
   /**
@@ -182,15 +126,9 @@ export default class Calendar extends JSONApp {
    */
   async readEvents(filterFunc, prefix, client) {
     const now = new Date();
-    nSQL().useDatabase(kDBName);
-    let events = await nSQL("events").query("select", [
-      "summary",
-      "start",
-      "reminder",
-      "location",
-    ]).where([
-      [ "start", ">", now ],
-    ]).exec();
+    let events = this._db
+      .filter(event => event.start > now)
+      .sort((a, b) => a.start - b.start);
 
     events = filterFunc(events);
 
@@ -216,13 +154,10 @@ export default class Calendar extends JSONApp {
     let time = args.Time;
     assert(summary, "Need summary");
     assert(time, "Need time");
-    return; // TODO
 
-    nSQL().useDatabase(kDBName);
-    await nSQL("tasks").query("upsert", {
-      task: task,
-      list: list,
-    }).exec();
+    this._db.push(event);
+    // TODO Add to CalDAV
+    return new Error("Not yet implemented"); // TODO
 
     return "I added %summary% on %time% to your calendar"
       .replace("%summary%", summary)
@@ -241,14 +176,9 @@ export default class Calendar extends JSONApp {
     let time = args.Time;
     assert(summary, "Need summary");
     assert(time, "Need time");
-    return; // TODO
+    return new Error("Not yet implemented"); // TODO
 
-    nSQL().useDatabase(kDBName);
-    await nSQL("tasks").query("delete").where([
-      [ "summary", "=", summary ],
-      "AND",
-      [ "time", "=", time ],
-    ]).exec();
+    // TODO Remove from CalDAV
 
     return "I cancelled %summary% on %time% from your calendar"
       .replace("%summary%", summary)
