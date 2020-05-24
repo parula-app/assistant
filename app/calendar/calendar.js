@@ -126,7 +126,7 @@ export default class Calendar extends JSONApp {
   async upcomingEvents(args, client) {
     const kLimit = 5;
     let prefix = "Your next %count% events are:";
-    await this.readEvents(events =>
+    return await this.readEvents(events =>
       events.slice(0, kLimit)
     , prefix, client);
   }
@@ -137,8 +137,8 @@ export default class Calendar extends JSONApp {
    * @param client {ClientAPI}
    */
   async nextEvent(args, client) {
-    let prefix = "Your next event is:";
-    await this.readEvents(events =>
+    let prefix = "Your next appointment is:";
+    return await this.readEvents(events =>
       events.slice(0, 1)
     , prefix, client);
   }
@@ -150,10 +150,10 @@ export default class Calendar extends JSONApp {
    * }
    * @param client {ClientAPI}
    */
-  async eventAt(args, client) {
-    let min = Sugar.Date.create(args.Date);
-    let max = Sugar.Date.create(args.Date);
-    let day = Sugar.Date.create(args.Date).setHours(0, 0, 0, 0);
+  async eventsAt(args, client) {
+    let min = Sugar.Date(args.Date);
+    let max = Sugar.Date(args.Date);
+    let day = Sugar.Date(args.Date).setHours(0, 0, 0, 0);
     let timeOutput = min.relative();
     if (min.isToday()) {
       max.advance({ hours: 2 });
@@ -164,7 +164,7 @@ export default class Calendar extends JSONApp {
       max.advance({ hours: 2 });
     }
     let prefix = "Your events on %time% are:".replace("%time%", timeOutput);
-    await this.readEvents(events =>
+    return await this.readEvents(events =>
       events.filter(event =>
         event.start >= min &&
         event.start <= max
@@ -198,7 +198,7 @@ export default class Calendar extends JSONApp {
       return "You have no appointments scheduled";
     }
 
-    return prefix.replace("%count%", events.length) +
+    return prefix.replace("%count%", events.length) + " " +
       events.map(ev => {
         return `In ${Sugar.Date(ev.start).relative()}: ${ev.summary}`;
       }).join(". ");
