@@ -4,12 +4,31 @@
             "invocationName": "calendar",
             "intents": [
                 {
-                    "name": "Read",
+                    "name": "UpcomingEvents",
                     "samples": [
                       "(Tell me|) what is on (my|the) calendar",
                       "(Tell me|) my appointments",
                       "(Tell me|) my upcoming (appointments|events)",
                       "My calendar"
+                    ]
+                },
+                {
+                    "name": "NextEvent",
+                    "samples": [
+                      "(Tell me|) (what is|) my next appointment"
+                    ]
+                },
+                {
+                    "name": "EventsAt",
+                    "samples": [
+                      "(Tell me|) (my|) appointments (on|for) {Date}",
+                      "(Which|What) appointments do I have on {Date}?"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Date",
+                            "type": "Pia.DateTime"
+                        }
                     ]
                 },
                 {
@@ -19,7 +38,7 @@
                     ],
                     "slots": [
                         {
-                            "name": "Summey",
+                            "name": "Summary",
                             "type": "Pia.Text"
                         },
                         {

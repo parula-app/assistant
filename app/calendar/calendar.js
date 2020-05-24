@@ -30,9 +30,9 @@ export default class Calendar extends JSONApp {
             "uid:uuid": { pk: true },
             "summary:string": {},
             "allday:boolean": {},
-            "start:datetime": {},
-            "end:datetime": {},
-            "reminder:datetime": {},
+            "start:date": {},
+            "end:date": {},
+            "reminder:date": {},
             "location:string": {},
             "recurring:boolean": {},
             "participants:string": {},
@@ -120,7 +120,64 @@ export default class Calendar extends JSONApp {
    * @param args {null}
    * @param client {ClientAPI}
    */
-  async read(args, client) {
+  async upcomingEvents(args, client) {
+    const kLimit = 5;
+    let prefix = "Your next %count% events are:";
+    await this.readEvents(events =>
+      events.slice(0, kLimit)
+    , prefix, client);
+  }
+
+  /**
+   * Command
+   * @param args {null}
+   * @param client {ClientAPI}
+   */
+  async nextEvent(args, client) {
+    let prefix = "Your next event is:";
+    await this.readEvents(events =>
+      events.slice(0, 1)
+    , prefix, client);
+  }
+
+  /**
+   * Command
+   * @param args {
+   *    Date {Date}
+   * }
+   * @param client {ClientAPI}
+   */
+  async eventAt(args, client) {
+    let min = Sugar.Date.create(args.Date);
+    let max = Sugar.Date.create(args.Date);
+    let day = Sugar.Date.create(args.Date).setHours(0, 0, 0, 0);
+    let timeOutput = min.relative();
+    if (min.isToday()) {
+      max.advance({ hours: 2 });
+    }
+    if (min == day) { // input was a day without time
+      max.advance({ days: 1}, true); // end of day
+    } else {
+      max.advance({ hours: 2 });
+    }
+    let prefix = "Your events on %time% are:".replace("%time%", timeOutput);
+    await this.readEvents(events =>
+      events.filter(event =>
+        event.start >= min &&
+        event.start <= max
+      )
+    , prefix, client);
+  }
+
+  /**
+   * @param filterFunc {Function(events)}
+   *    Gets and returns {Array of event}
+   *    Caller can reduce the events returned
+   *    using various filters or length criteria.
+   * @param prefix {string}   What to say before the results
+   *    May contain the placeholder %count%
+   */
+  async readEvents(filterFunc, prefix, client) {
     const now = new Date();
     nSQL().useDatabase(kDBName);
     let events = await nSQL("events").query("select", [
@@ -132,12 +189,13 @@ export default class Calendar extends JSONApp {
       [ "start", ">", now ],
     ]).exec();
 
+    events = filterFunc(events);
+
     if (!events.length) {
       return "You have no appointments scheduled";
     }
 
-    return "You have %count% appointments in your calendar: "
-      .replace("%count%", events.length) +
+    return prefix.replace("%count%", events.length) +
       events.map(ev => {
         return `In ${Sugar.Date(ev.start).relative()}: ${ev.summary}`;
       }).join(". ");
