@@ -27,6 +27,7 @@ export class JSONApp extends AppBase {
       directory = "./" + directory;
     }
     this.directory = directory;
+    this.dataDir = "./data/" + id + "/";
   }
 
   /**

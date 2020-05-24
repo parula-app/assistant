@@ -156,11 +156,11 @@ function dataURL(relPath, lang) {
     lang = "en"; // TODO i18n
   }
   assert(relPath && typeof(relPath) == "string");
-  return "./app/bible/jwdata/" + lang + "/" + relPath;
+  return "./data/bible/" + lang + "/" + relPath;
 }
 
 function mediaURL(relPath) {
-  return "./app/bible/data/media/" + relPath;
+  return "./data/bible/media/" + relPath;
 }
 
 /**

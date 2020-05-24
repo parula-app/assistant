@@ -19,7 +19,7 @@ export default class TuneIn extends JSONApp {
   }
 
   async loadStations() {
-    let genres = JSON.parse(await readFileAsync(this.directory + "fetch/genres-stations.json"));
+    let genres = JSON.parse(await readFileAsync(this.dataDir + "genres-stations.json"));
     for (let genre of genres) {
       this.loadGenre(genre);
     }
