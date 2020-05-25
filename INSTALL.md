@@ -46,6 +46,7 @@
 6. Install node packages
    1. `cd` to the directory where this file is.
    2. `yarn install`
+   3. `cp config-min.json config.json`
 
 7. Run Pia
    1. `cd` to the directory where this file is.
