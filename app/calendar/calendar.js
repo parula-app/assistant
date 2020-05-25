@@ -14,9 +14,10 @@ export default class Calendar extends JSONApp {
   async load(lang) {
     await super.load(lang);
     console.time("calendar-connect");
-
-
     let config = getConfig().calendar;
+    if (!config.username) {
+      return;
+    }
     let xhr = new dav.transport.Basic(
       new dav.Credentials({
         username: config.username,
