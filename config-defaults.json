@@ -16,7 +16,7 @@
     "maxCommandLength": 10
   },
   "deepSpeech": {
-    "modelDir": "./model/",
+    "modelDir": "./data/deepspeech-0.6.1-models/",
     "model": "",
     "lm": "",
     "trie": "",
