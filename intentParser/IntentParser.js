@@ -153,7 +153,7 @@ export default class IntentParser {
         continue;
       }
     }
-    console.log("Match results with variables:"); for (let match of intentMatches.sort((a, b) => (a.overallScore - b.overallScore))) { console.log(" ", match.intent.app.id, match.intent.id, ", command score", Math.round(match.score * 100) / 100, ", overall score", Math.round(match.overallScore * 100) / 100, ", args", match.args, match.argsScores); }
+    console.log("Match results with variables:"); for (let match of intentMatches.sort((a, b) => (a.overallScore - b.overallScore)).slice(0, 5)) { console.log(" ", match.intent.app.id, match.intent.id, ", command score", Math.round(match.score * 100) / 100, ", overall score", Math.round(match.overallScore * 100) / 100, ", args", match.args, match.argsScores); }
 
     /* Take the best match, considering score of command and variables.
      * A strong variable match should be preferred over a good command
