@@ -9,6 +9,8 @@
                       "(Tell me|) what is on (my|the) calendar",
                       "(Tell me|) my (appointments|events)",
                       "(Tell me|) my upcoming (appointments|events)",
+                      "(Tell me|What are|) my (appointments|events) this week",
+                      "(Tell me|What are|) my (appointments|events) this month",
                       "My calendar"
                     ]
                 },
