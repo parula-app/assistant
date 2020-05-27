@@ -69,9 +69,10 @@ export default class Calendar extends JSONApp {
   async upcomingEvents(args, client) {
     const kLimit = 5;
     let prefix = "Your next %count% events are:";
+    let zeroAnswer = "You have no appointments scheduled";
     return await this.readEvents(events =>
       events.slice(0, kLimit)
-    , prefix, client);
+    , prefix, zeroAnswer, client);
   }
 
   /**
@@ -81,9 +82,10 @@ export default class Calendar extends JSONApp {
    */
   async nextEvent(args, client) {
     let prefix = "Your next appointment is:";
+    let zeroAnswer = "You have no appointments scheduled";
     return await this.readEvents(events =>
       events.slice(0, 1)
-    , prefix, client);
+    , prefix, zeroAnswer, client);
   }
 
   /**
@@ -104,9 +106,9 @@ export default class Calendar extends JSONApp {
       //max = max.advance({ days: 1}, true); // end of day
       max.setHours(0, 0, 0, 0);
       max.setUTCDate(max.getUTCDate() + 1);
-      if (minSugar.isToday()) {
+      /*if (minSugar.isToday()) {
         timeOutput = "today";
-      }
+      }*/
     } else {
       //max = max.advance({ hours: 2});
       max.setUTCHours(max.getUTCHours() + 2);
@@ -114,12 +116,13 @@ export default class Calendar extends JSONApp {
     console.log("min", min);
     console.log("max", max);
     let prefix = "Your events %time% are:".replace("%time%", timeOutput);
+    let zeroAnswer = "You have no appointments scheduled for %time%".replace("%time%", timeOutput);
     return await this.readEvents(events =>
       events.filter(event =>
         event.start >= min &&
         event.start <= max
       )
-    , prefix, client);
+    , prefix, zeroAnswer, client);
   }
 
   /**
@@ -129,8 +132,9 @@ export default class Calendar extends JSONApp {
    *    using various filters or length criteria.
    * @param prefix {string}   What to say before the results
    *    May contain the placeholder %count%
+   * @param zeroAnswer {string}   What to say when there are no events matching
    */
-  async readEvents(filterFunc, prefix, client) {
+  async readEvents(filterFunc, prefix, zeroAnswer, client) {
     const now = new Date();
     let events = this._db
       .filter(event => event.start > now)
@@ -139,7 +143,7 @@ export default class Calendar extends JSONApp {
     events = filterFunc(events);
 
     if (!events.length) {
-      return "You have no appointments scheduled";
+      return zeroAnswer;
     }
 
     return prefix.replace("%count%", events.length) + " \n" +
