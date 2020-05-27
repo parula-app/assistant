@@ -7,7 +7,7 @@
                     "name": "Read",
                     "samples": [
                       "Tell me what is on (my|the|) {List} list",
-                      "Tell me what is on (my|the|) {List} list",
+                      "What do I have {List}"
                       "What is on my {List} list"
                     ],
                     "slots": [

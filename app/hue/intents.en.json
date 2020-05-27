@@ -5,6 +5,12 @@
             "intents": [
                 {
                     "name": "LightOnOff",
+                    "samples": [
+                      "Turn {State} the light (in the|) {Light}",
+                      "Turn the light (in the|) {Light} {State}",
+                      "Turn the {Light} {State}",
+                      "Turn {Light} {State}"
+                    ],
                     "slots": [
                         {
                             "name": "State",
@@ -14,12 +20,6 @@
                             "name": "Light",
                             "type": "Device"
                         }
-                    ],
-                    "samples": [
-                      "Turn {State} the light {Light}",
-                      "Turn the light {Light} {State}",
-                      "Turn the {Light} {State}",
-                      "Turn {Light} {State}"
                     ]
                 }
             ],
