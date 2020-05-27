@@ -33,5 +33,10 @@ export async function wait(seconds) {
  * @returns {JSON}
  */
 export function loadJSONFile(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    try {
+      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (ex) {
+      console.error("JSON syntax error in file " + filePath + " : " + ex.message);
+      throw ex;
+    }
 }

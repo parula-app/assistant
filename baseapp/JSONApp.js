@@ -44,8 +44,9 @@ export class JSONApp extends AppBase {
   }
 
   async _loadIntentsFile(lang) {
-    console.info("Loading from " + this.directory + "intents." + lang + ".json");
-    let json = loadJSONFile(this.directory + "intents." + lang + ".json");
+    let filename = this.directory + "intents." + lang + ".json";
+    console.info("Loading from " + filename);
+    let json = loadJSONFile(filename);
     assert(json);
     json = json.interactionModel.languageModel;
     //this.id = json.invocationName;
