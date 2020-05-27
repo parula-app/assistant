@@ -7,6 +7,10 @@
   * Include recent commands in match confidence
   * Resolve open variables with context
   * Translate pronouns
+* Modifier words, before or afterintent matching
+  * please, can you, could you, would you, tell me (removed, or increases politeness and length in response)
+  * quickly (reduces reponse length)
+  * again (takes variables from previous commands)
 * Apps via commandline (stdin/out) and HTTPS
    * Load language model as JSON via special command parameter / URL suffix
    * Command text input, output, errors etc. via JSON REST protocol.

@@ -41,7 +41,7 @@
    6. Download the [DeepSpeech 0.6.1 models](https://github.com/mozilla/DeepSpeech/releases/download/v0.6.1/deepspeech-0.6.1-models.tar.gz).[^modelversion]
    7. `tar xzf /path/to/deepspeech-models.tar.gz`
 
-[^modelversion]: The DeepSpeech mode version needs to match the version of DeepSpeech npm module perfectly
+[^modelversion]: The DeepSpeech model version needs to match the version of DeepSpeech npm module perfectly
 
 6. Install node packages
    1. `cd` to the directory where this file is.
