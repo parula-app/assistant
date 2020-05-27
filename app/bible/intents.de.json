@@ -56,30 +56,11 @@
                         }
                     ],
                     "samples": [
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {Verse} in {Language} vor",
-                        "Lies mir {BibleBook} {Chapter} Vers {Verse} in {Language} vor",
-                        "Lies mir {BibleBook} {Chapter} {Verse} vor",
-                        "Lies mir {BibleBook} {Chapter} Vers {Verse} vor",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {Verse} vor",
-                        "Lies mir {BibleBook} {Chapter} Vers {Verse}",
-                        "Schlage {BibleBook} {Chapter} Vers {Verse} auf",
-                        "Schlage {BibleBook} Kapitel {Chapter} Vers {Verse} auf",
-                        "Lies {BibleBook} {Chapter} {Verse}",
-                        "Lies {BibleBook} {Chapter} Vers {Verse}",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {Verse}",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {Verse}",
-                        "Lies mir {BibleBook} Kapitel {Chapter} {Verse}",
-                        "Lies mir {BibleBook} {Chapter} {Verse}",
-                        "{BibleBook} Kapitel {Chapter} Vers {Verse}",
-                        "{BibleBook} {Chapter} Vers {Verse}",
-                        "{BibleBook} {Chapter} {Verse}",
-                        "Lies das Buch {BibleBook} Kapitel {Chapter} Vers {Verse}",
-                        "Öffne {BibleBook} Kapitel {Chapter} Vers {Verse}",
-                        "Öffne {BibleBook} {Chapter} {Verse}",
-                        "Öffne {BibleBook} {Chapter} Vers {Verse}",
-                        "Lese mir {BibleBook} Kapitel {Chapter} Vers {Verse} vor",
-                        "Lese mir {BibleBook} {Chapter} Vers {Verse} vor",
-                        "Lese mir {BibleBook} {Chapter} {Verse} vor"
+                        "(Lies|Lese) (mir|) {BibleBook} (Kapitel|) {Chapter} (Vers|) {Verse} (in {Language}|) (vor|)",
+                        "Schlage {BibleBook} (Kapitel|) {Chapter} (Vers|) {Verse} (in {Language}|) auf",
+                        "Öffne {BibleBook} (Kapitel|) {Chapter} (Vers|) {Verse} (in {Language}|)",
+                        "Lies das Buch {BibleBook} Kapitel {Chapter} Vers {Verse} (in {Language}|) (vor|)",
+                        "{BibleBook} (Kapitel|) {Chapter} (Vers|) {Verse} (in {Language}|)"
                     ]
                 },
                 {
@@ -110,13 +91,11 @@
                         }
                     ],
                     "samples": [
-                        "Lies mir {BibleBook}  {Chapter} in {Language} vor",
-                        "Lies mir {BibleBook} Kapitel {Chapter} in {Language} vor",
-                        "Lies {BibleBook}  {Chapter}",
-                        "Lies {BibleBook} Kapitel {Chapter} ",
-                        "Lies mir {BibleBook} Kapitel {Chapter} vor",
-                        "Lies mir {BibleBook} {Chapter} vor",
-                        "Lese {BibleBook} Kapitel {Chapter}"
+                        "(Lies|Lese) (mir|) {BibleBook} (Kapitel|) {Chapter} (in {Language}|) (vor|)",
+                        "Schlage {BibleBook} (Kapitel|) {Chapter} (in {Language}|) auf",
+                        "Öffne {BibleBook} (Kapitel|) {Chapter} (in {Language}|)",
+                        "Lies das Buch {BibleBook} Kapitel {Chapter} (in {Language}|) (vor|)",
+                        "{BibleBook} (Kapitel|) {Chapter} (in {Language}|)"
                     ]
                 },
                 {
@@ -224,41 +203,11 @@
                         }
                     ],
                     "samples": [
-                        "Lese mir {BibleBook}  {Chapter} Vers {VerseFrom} und {VerseTo}",
-                        "Lies mir {BibleBook}  {Chapter} Vers {VerseFrom} und {VerseTo}",
-                        "Lese mir {BibleBook}  {Chapter} Vers {VerseFrom} und {VerseTo} vor",
-                        "Lies mir {BibleBook}  {Chapter} Vers {VerseFrom} und {VerseTo} vor",
-                        "Lies mir {BibleBook}  {Chapter} Vers {VerseFrom} und {VerseTo} in {Language} vor",
-                        "Lies mir {BibleBook}  {Chapter} Vers {VerseFrom} bis {VerseTo} in {Language} vor",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {VerseFrom} und {VerseTo} in {Language} vor",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} in {Language} vor",
-                        "Öffne {BibleBook} Kapitel {Chapter} Vers {VerseFrom} in {VerseTo} in {Language} ",
-                        "Öffne {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} in {Language} ",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {VerseFrom} und {VerseTo} in {Language} ",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} in {Language} ",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {VerseFrom} und {VerseTo} in {Language} vor",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} in {Language} vor",
-                        "Lese {BibleBook}  {Chapter} Verse {VerseFrom} bis {VerseTo} vor",
-                        "Lies {BibleBook}  {Chapter} Verse {VerseFrom} bis {VerseTo} vor",
-                        "Lese {BibleBook} {Chapter} {VerseFrom} bis {VerseTo} vor",
-                        "Lese {BibleBook} {Chapter} Vers {VerseFrom} bis {VerseTo} vor",
-                        "Lese {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} vor",
-                        "Lese {BibleBook} {Chapter}  {VerseFrom} bis {VerseTo}",
-                        "Lese {BibleBook} {Chapter} Vers {VerseFrom} bis {VerseTo}",
-                        "Lese {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo}",
-                        "Lies {BibleBook} {Chapter} {VerseFrom} bis {VerseTo}",
-                        "Lies {BibleBook} {Chapter} Vers {VerseFrom} bis {VerseTo}",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo}",
-                        "Lies {BibleBook} {Chapter} {VerseFrom} bis {VerseTo} vor",
-                        "Lies {BibleBook}  {Chapter} Vers {VerseFrom} bis {VerseTo} vor",
-                        "Lies {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} vor",
-                        "Lies mir {BibleBook}  {Chapter}  {VerseFrom} bis {VerseTo} ",
-                        "Lies mir {BibleBook}  {Chapter} Vers {VerseFrom} bis {VerseTo} ",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} ",
-                        "Lies mir {BibleBook} {Chapter}  {VerseFrom} bis {VerseTo} vor",
-                        "Lies mir {BibleBook} {Chapter} Vers {VerseFrom} bis {VerseTo} vor",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Verse {VerseFrom} bis {VerseTo} vor",
-                        "Lies mir {BibleBook} Kapitel {Chapter} Vers {VerseFrom} bis {VerseTo} vor"
+                        "(Lies|Lese) (mir|) {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo} (in {Language}|) (vor|)",
+                        "Schlage {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|) auf",
+                        "Öffne {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|)",
+                        "Lies das Buch {BibleBook} Kapitel {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|) (vor|)",
+                        "{BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|)"
                     ]
                 },
                 {
@@ -285,45 +234,50 @@
                         {
                             "id": "ge",
                             "name": {
-                                "value": "Erster Mose",
+                                "value": "1. Mose",
                                 "synonyms": [
-                                    "Erstes Buch Mose"
+                                    "(1.|1|Erste|Erster) Mose",
+                                    "(1.|1|Erstes) Buch Mose"
                                 ]
                             }
                         },
                         {
                             "id": "ex",
                             "name": {
-                                "value": "Zweiter Mose",
+                                "value": "2. Mose",
                                 "synonyms": [
-                                    "Zweites Buch Mose"
+                                    "(2.|2|Zweite|Zweiter) Mose",
+                                    "(2.|2|Zweites) Buch Mose"
                                 ]
                             }
                         },
                         {
                             "id": "le",
                             "name": {
-                                "value": "Dritter Mose",
+                                "value": "3. Mose",
                                 "synonyms": [
-                                    "Drittes Buch Mose"
+                                    "(3.|3|Dritte|Dritter) Mose",
+                                    "(3.|3|Drittes) Buch Mose"
                                 ]
                             }
                         },
                         {
                             "id": "nu",
                             "name": {
-                                "value": "Vierter Mose",
+                                "value": "4. Mose",
                                 "synonyms": [
-                                    "Viertes Buch Mose"
+                                    "(4.|4|Vierte|Vierter) Mose",
+                                    "(4.|4|Viertes) Buch Mose"
                                 ]
                             }
                         },
                         {
                             "id": "de",
                             "name": {
-                                "value": "Fünfter Mose",
+                                "value": "5. Mose",
                                 "synonyms": [
-                                    "Fünftes Buch Mose"
+                                    "(5.|5|Fünfte|Fünfter) Mose",
+                                    "(5.|5|Fünftes) Buch Mose"
                                 ]
                             }
                         },
@@ -348,37 +302,55 @@
                         {
                             "id": "1sa",
                             "name": {
-                                "value": "Erster Samuel"
+                                "value": "1. Samuel",
+                                "synonyms": [
+                                    "(1.|1|Erste) Samuel"
+                                ]
                             }
                         },
                         {
                             "id": "2sa",
                             "name": {
-                                "value": "Zweiter Samuel"
+                                "value": "2. Samuel",
+                                "synonyms": [
+                                    "(2.|2|Zweite) Samuel"
+                                ]
                             }
                         },
                         {
                             "id": "1ki",
                             "name": {
-                                "value": "Erster Könige"
+                                "value": "1. Könige",
+                                "synonyms": [
+                                    "(1.|1|Erste) Könige"
+                                ]
                             }
                         },
                         {
                             "id": "2ki",
                             "name": {
-                                "value": "Zweiter Könige"
+                                "value": "2. Könige",
+                                "synonyms": [
+                                    "(2.|2|Zweite) Könige"
+                                ]
                             }
                         },
                         {
                             "id": "1ch",
                             "name": {
-                                "value": "Erster Chronika"
+                                "value": "1. Chronika",
+                                "synonyms": [
+                                    "(1.|1|Erste|Erster) Chronika"
+                                ]
                             }
                         },
                         {
                             "id": "2ch",
                             "name": {
-                                "value": "Zweiter Chronika"
+                                "value": "2. Chronika",
+                                "synonyms": [
+                                    "(2.|2|Zweite|Zweiter) Chronika"
+                                ]
                             }
                         },
                         {
@@ -570,13 +542,19 @@
                         {
                             "id": "1co",
                             "name": {
-                                "value": "Erster Korinther"
+                                "value": "1. Korinther",
+                                "synonyms": [
+                                    "(1.|1|Erste|Erster) (Brief an die|) Korinther"
+                                ]
                             }
                         },
                         {
                             "id": "2co",
                             "name": {
-                                "value": "Zweiter Korinther"
+                                "value": "2. Korinther",
+                                "synonyms": [
+                                    "(2.|2|Zweite|Zweiter) (Brief an die|) Korinther"
+                                ]
                             }
                         },
                         {
@@ -606,25 +584,37 @@
                         {
                             "id": "1th",
                             "name": {
-                                "value": "Erster Thessalonicher"
+                                "value": "1. Thessalonicher",
+                                "synonyms": [
+                                    "(1.|1|Erste|Erster) (Brief an die|) Thessalonicher"
+                                ]
                             }
                         },
                         {
                             "id": "2th",
                             "name": {
-                                "value": "Zweiter Thessalonicher"
+                                "value": "2. Thessalonicher",
+                                "synonyms": [
+                                    "(2.|2|Zweite|Zweiter) (Brief an die|) Thessalonicher"
+                                ]
                             }
                         },
                         {
                             "id": "1ti",
                             "name": {
-                                "value": "Erster Timotheus"
+                                "value": "1. Timotheus",
+                                "synonyms": [
+                                    "(1.|1|Erste|Erster) (Brief an|) Timotheus"
+                                ]
                             }
                         },
                         {
                             "id": "2ti",
                             "name": {
-                                "value": "Zweiter Timotheus"
+                                "value": "2. Timotheus",
+                                "synonyms": [
+                                    "(2.|2|Zweite|Zweiter) (Brief an|) Timotheus"
+                                ]
                             }
                         },
                         {
@@ -654,31 +644,46 @@
                         {
                             "id": "1pe",
                             "name": {
-                                "value": "Erster Petrus"
+                                "value": "1. Petrus",
+                                "synonyms": [
+                                    "(1.|1|Erste|Erster) (Brief des|) Petrus"
+                                ]
                             }
                         },
                         {
                             "id": "2pe",
                             "name": {
-                                "value": "Zweiter Petrus"
+                                "value": "2. Petrus",
+                                "synonyms": [
+                                    "(2.|2|Zweite|Zweiter) (Brief des|) Petrus"
+                                ]
                             }
                         },
                         {
                             "id": "1jo",
                             "name": {
-                                "value": "Erster Johannes"
+                                "value": "1. Johannes",
+                                "synonyms": [
+                                    "(1.|1|Erste|Erster) (Brief des|) Johannes"
+                                ]
                             }
                         },
                         {
                             "id": "2jo",
                             "name": {
-                                "value": "Zweiter Johannes"
+                                "value": "2. Johannes",
+                                "synonyms": [
+                                    "(2.|2|Zweite|Zweiter) (Brief des|) Johannes"
+                                ]
                             }
                         },
                         {
                             "id": "3jo",
                             "name": {
-                                "value": "Dritter Johannes"
+                                "value": "3. Johannes",
+                                "synonyms": [
+                                    "(3.|3|Dritte|Dritter) (Brief des|) Johannes"
+                                ]
                             }
                         },
                         {

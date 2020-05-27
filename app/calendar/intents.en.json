@@ -22,7 +22,7 @@
                     "name": "EventsAt",
                     "samples": [
                       "(Tell me|) (my|) (appointments|events) (on|for) {Date}",
-                      "(Which|What) (appointments|events) do I have on {Date}?"
+                      "(Which|What) (appointments|events) do I have (on|) {Date}?"
                     ],
                     "slots": [
                         {

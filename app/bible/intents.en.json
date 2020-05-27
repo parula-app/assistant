@@ -55,24 +55,10 @@
                         }
                     ],
                     "samples": [
-                        "Read {BibleBook}  {Chapter}  {Verse} in {Language}",
-                        "Read {BibleBook}  {Chapter} verse {Verse} in {Language}",
-                        "Read {BibleBook} chapter {Chapter} verse {Verse} in {Language} to me",
-                        "Read {BibleBook} {Chapter} verse {Verse} to me",
-                        "Read {BibleBook} chapter {Chapter} verse {Verse} to me",
-                        "Read {BibleBook} {Chapter} {Verse} in {Language}",
-                        "Read {BibleBook} {Chapter} verse {Verse} in {Language}",
-                        "Read {BibleBook} chapter {Chapter} verse {Verse} in {Language}",
-                        "{BibleBook} chapter {Chapter} verse {Verse}",
-                        "{BibleBook} {Chapter} verse {Verse}",
-                        "{BibleBook} {Chapter} {Verse}",
-                        "Read the book of {BibleBook} chapter {Chapter} verse {Verse}",
-                        "Open {BibleBook} chapter {Chapter} verse {Verse}",
-                        "Open {BibleBook} {Chapter} {Verse}",
-                        "Open {BibleBook} {Chapter} verse {Verse}",
-                        "Read {BibleBook} chapter {Chapter} verse {Verse}",
-                        "Read {BibleBook} {Chapter} verse {Verse}",
-                        "Read {BibleBook} {Chapter} {Verse}"
+                        "Read {BibleBook} (chapter|) {Chapter} (verse|birth|) {Verse} (in {Language}|) (to me|)",
+                        "Open {BibleBook} (chapter|) {Chapter} (verse|birth|) {Verse} (in {Language}|)",
+                        "{BibleBook} (chapter|) {Chapter} (verse|birth|) {Verse} (in {Language}|)",
+                        "Read the book of {BibleBook} chapter {Chapter} verse {Verse}"
                     ]
                 },
                 {
@@ -103,15 +89,10 @@
                         }
                     ],
                     "samples": [
-                        "Open {BibleBook} {Chapter} in {Language} ",
-                        "Open {BibleBook} chapter {Chapter} in {Language} ",
-                        "Read {BibleBook} {Chapter} in {Language} ",
-                        "Read {BibleBook} chapter {Chapter} in {Language} ",
-                        "Read {BibleBook} {Chapter} to me",
-                        "Read {BibleBook} chapter {Chapter} to me",
-                        "Read the book of {BibleBook} chapter {Chapter}",
-                        "Read {BibleBook} {Chapter}",
-                        "Read {BibleBook} chapter {Chapter}"
+                        "Read {BibleBook} (chapter|) {Chapter} (in {Language}|) (to me|)",
+                        "Open {BibleBook} (chapter|) {Chapter} (in {Language}|)",
+                        "{BibleBook} (chapter|) {Chapter} (in {Language}|)",
+                        "Read the book of {BibleBook} chapter {Chapter}"
                     ]
                 },
                 {
@@ -212,34 +193,7 @@
                         }
                     ],
                     "samples": [
-                        "Read {BibleBook} {Chapter} verse {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook}  {Chapter} verse {VerseFrom} and {VerseTo}",
-                        "Open {BibleBook} chapter {Chapter} verse {VerseFrom} and {VerseTo}",
-                        "Read {BibleBook} {Chapter} verse {VerseFrom} and {VerseTo}",
-                        "Read {BibleBook} chapter {Chapter} verse {VerseFrom} and {VerseTo}",
-                        "Read {BibleBook} {Chapter} verse {VerseFrom} and {VerseTo} in {Language}",
-                        "Read {BibleBook} chapter {Chapter} verse {VerseFrom} and {VerseTo} in {Language}",
-                        "Open {BibleBook} {Chapter} verse {VerseFrom} and {VerseTo} in {Language}",
-                        "Open {BibleBook} chapter {Chapter} verse {VerseFrom} and {VerseTo} in {Language}",
-                        "Open {BibleBook} {Chapter} verse {VerseFrom} to {VerseTo} in {Language}",
-                        "Open {BibleBook} chapter {Chapter} verse {VerseFrom} to {VerseTo} in {Language}",
-                        "Read {BibleBook} {Chapter} verse {VerseFrom} to {VerseTo} in {Language}",
-                        "Read {BibleBook} chapter {Chapter} verse {VerseFrom} to {VerseTo} in {Language}",
-                        "Open {BibleBook} {Chapter} verse {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook} {Chapter} verses {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook} chapter {Chapter} verses {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook} {Chapter}  {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook} {Chapter} from {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook} {Chapter} from verse {VerseFrom} to {VerseTo}",
-                        "Open {BibleBook} chapter {Chapter} from verse {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook} {Chapter}  {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook} {Chapter} from {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook} {Chapter} from verse {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook} chapter {Chapter} from verse {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook} chapter {Chapter} verse {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook}  {Chapter} verse {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook}  {Chapter} verses {VerseFrom} to {VerseTo}",
-                        "Read {BibleBook} chapter {Chapter} verses {VerseFrom} to {VerseTo}"
+                        "(Read|Open) {BibleBook} (chapter|) {Chapter} (verse|birth|from verse|) {VerseFrom} (to|and|) {VerseTo} (in {Language}|)"
                     ]
                 },
                 {
@@ -257,16 +211,14 @@
                 {
                     "name": "Pia.More",
                     "samples": [
-                        "What do you know about this verse",
-                        "I would like to know more",
-                        "What can you tell me about this verse",
-                        "Tell me more",
-                        "Give me more information about this verse",
-                        "Give me more information about this",
-                        "Give me more information",
+                        "What do you know about this (verse|)",
+                        "What can you tell me about this (verse|)",
+                        "Give me more information (about this|) (verse|)",
                         "I want some more information",
                         "Can you tell me more verses like this",
+                        "Tell me more",
                         "Can you tell me more",
+                        "I would like to know more",
                         "More like this",
                         "I would like to know verses like this",
                         "Which other verses like this do you know",
@@ -293,10 +245,7 @@
                             "name": {
                                 "value": "Genesis",
                                 "synonyms": [
-                                    "First Moses",
-                                    "First book of Moses",
-                                    "First book of Mose",
-                                    "First Mose"
+                                    "(1.|1|First|One) (book of|) (Moses|Mose)"
                                 ]
                             }
                         },
@@ -305,10 +254,7 @@
                             "name": {
                                 "value": "Exodus",
                                 "synonyms": [
-                                    "Second Moses",
-                                    "Second book of Moses",
-                                    "Second book of Mose",
-                                    "Second Mose"
+                                    "(2.|2|Second|Two) (book of|) (Moses|Mose)"
                                 ]
                             }
                         },
@@ -317,10 +263,7 @@
                             "name": {
                                 "value": "Leviticus",
                                 "synonyms": [
-                                    "Third Moses",
-                                    "Third book of Moses",
-                                    "Third book of Mose",
-                                    "Third Mose"
+                                    "(3.|4|Third|Three) (book of|) (Moses|Mose)"
                                 ]
                             }
                         },
@@ -329,10 +272,7 @@
                             "name": {
                                 "value": "Numbers",
                                 "synonyms": [
-                                    "Forth Moses",
-                                    "Forth book of Moses",
-                                    "Forth book of Mose",
-                                    "Forth Mose"
+                                    "(4.|4|Forth|Four) (book of|) (Moses|Mose)"
                                 ]
                             }
                         },
@@ -341,10 +281,7 @@
                             "name": {
                                 "value": "Deuteronomy",
                                 "synonyms": [
-                                    "Fifth Moses",
-                                    "Fifth book of Moses",
-                                    "Fifth book of Mose",
-                                    "Fifth Mose"
+                                    "(5.|5|Fifth|Five) (book of|) (Moses|Mose)"
                                 ]
                             }
                         },
@@ -372,58 +309,54 @@
                         {
                             "id": "1sa",
                             "name": {
-                                "value": "One Samuel",
+                                "value": "1 Samuel",
                                 "synonyms": [
-                                    "First Samuel"
+                                    "(1.|1|First|One) Samuel"
                                 ]
                             }
                         },
                         {
                             "id": "2sa",
                             "name": {
-                                "value": "Two Samuel",
+                                "value": "2 Samuel",
                                 "synonyms": [
-                                    "Second Samuel"
+                                    "(2.|2|Second|Two) Samuel"
                                 ]
                             }
                         },
                         {
                             "id": "1ki",
                             "name": {
-                                "value": "One Kings",
+                                "value": "1 Kings",
                                 "synonyms": [
-                                    "First Kings",
-                                    "First King"
+                                    "(1.|1|First|One) (Kings|King)"
                                 ]
                             }
                         },
                         {
                             "id": "2ki",
                             "name": {
-                                "value": "Two Kings",
+                                "value": "2 Kings",
                                 "synonyms": [
-                                    "Second Kings",
-                                    "Second King"
+                                    "(2.|2|Second|Two) (Kings|King)"
                                 ]
                             }
                         },
                         {
                             "id": "1ch",
                             "name": {
-                                "value": "One Chronicles",
+                                "value": "1 Chronicles",
                                 "synonyms": [
-                                    "First Chronicles",
-                                    "One Chronicle"
+                                    "(1.|1|First|One) (Chronicles|Chronicle)"
                                 ]
                             }
                         },
                         {
                             "id": "2ch",
                             "name": {
-                                "value": "Two Chronicles",
+                                "value": "2 Chronicles",
                                 "synonyms": [
-                                    "Second Chronicles",
-                                    "Two Chronicle"
+                                    "(2.|2|Second|Two) (Chronicles|Chronicle)"
                                 ]
                             }
                         },
@@ -638,22 +571,18 @@
                         {
                             "id": "1co",
                             "name": {
-                                "value": "One Corinthians",
+                                "value": "1 Corinthians",
                                 "synonyms": [
-                                    "First Corinthians",
-                                    "First letter to the Corinthians",
-                                    "First Corinthian"
+                                    "(1.|1|First|One) (Corinthians|Corinthian|letter to the Corinthians)"
                                 ]
                             }
                         },
                         {
                             "id": "2co",
                             "name": {
-                                "value": "Two Corinthians",
+                                "value": "2 Corinthians",
                                 "synonyms": [
-                                    "Second Corinthians",
-                                    "Second letter to the Corinthians",
-                                    "Second Corinthians"
+                                    "(2.|2|Second|Two) (Corinthians|Corinthian|letter to the Corinthians)"
                                 ]
                             }
                         },
@@ -684,42 +613,36 @@
                         {
                             "id": "1th",
                             "name": {
-                                "value": "One Thessalonians",
+                                "value": "1 Thessalonians",
                                 "synonyms": [
-                                    "First Thessalonians",
-                                    "First letter to the Thessalonians",
-                                    "First Thessalonian"
+                                    "(1.|1|First|One) (Thessalonians|Thessalonian|letter to the Thessalonians)"
                                 ]
                             }
                         },
                         {
                             "id": "2th",
                             "name": {
-                                "value": "Two Thessalonians",
+                                "value": "2 Thessalonians",
                                 "synonyms": [
-                                    "Second Thessalonians",
-                                    "Second letter to the Thessalonians",
-                                    "Second Thessalonian"
+                                    "(2.|2|Second|Two) (Thessalonians|Thessalonian|letter to the Thessalonians)"
                                 ]
                             }
                         },
                         {
                             "id": "1ti",
                             "name": {
-                                "value": "One Timothy",
+                                "value": "1 Timothy",
                                 "synonyms": [
-                                    "First Timothy",
-                                    "First letter to Timothy"
+                                    "(1.|1|First|One) (letter to|) Timothy"
                                 ]
                             }
                         },
                         {
                             "id": "2ti",
                             "name": {
-                                "value": "Two Timothy",
+                                "value": "2 Timothy",
                                 "synonyms": [
-                                    "Second Timothy",
-                                    "Second letter to Timothy"
+                                    "(2.|2|Second|Two) (letter to|) Timothy"
                                 ]
                             }
                         },
@@ -750,50 +673,45 @@
                         {
                             "id": "1pe",
                             "name": {
-                                "value": "One Peter",
+                                "value": "1 Peter",
                                 "synonyms": [
-                                    "First Peter",
-                                    "First letter of Peter"
+                                    "(1.|1|First|One) (letter of|letter by|) Peter"
                                 ]
                             }
                         },
                         {
                             "id": "2pe",
                             "name": {
-                                "value": "Two Peter",
+                                "value": "2 Peter",
                                 "synonyms": [
-                                    "Second Peter",
-                                    "Second letter of Peter"
+                                    "(2.|2|Second|Two) (letter of|letter by|) Peter"
                                 ]
                             }
                         },
                         {
                             "id": "1jo",
                             "name": {
-                                "value": "One John",
+                                "value": "1 John",
                                 "synonyms": [
-                                    "First John",
-                                    "First letter of John"
+                                    "(1.|1|First|One) (letter of|letter by|) John"
                                 ]
                             }
                         },
                         {
                             "id": "2jo",
                             "name": {
-                                "value": "Two John",
+                                "value": "2 John",
                                 "synonyms": [
-                                    "Second John",
-                                    "Second letter of John"
+                                    "(2.|2|Second|Two) (letter of|letter by|) John"
                                 ]
                             }
                         },
                         {
                             "id": "3jo",
                             "name": {
-                                "value": "Three John",
+                                "value": "3 John",
                                 "synonyms": [
-                                    "Third John",
-                                    "Third letter of John"
+                                    "(3.|3|Third|Three) (letter of|letter by|) John"
                                 ]
                             }
                         },
