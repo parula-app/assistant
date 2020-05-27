@@ -7,8 +7,10 @@
   * Include recent commands in match confidence
   * Resolve open variables with context
   * Translate pronouns
-* Modifier words, before or afterintent matching
-  * please, can you, could you, would you, tell me (removed, or increases politeness and length in response)
+* Translate responses
+  * Multiple sentences per response ID, with the same meaning, allowing variation
+* Modifier words, before or after intent matching
+  * please, can you, could you, would you, tell me (removed, or increases politeness in response)
   * quickly (reduces reponse length)
   * again (takes variables from previous commands)
 * Apps via commandline (stdin/out) and HTTPS
@@ -22,6 +24,7 @@
 * Language Model, 3 cases:
   * Commands from apps
   * Data types, like datetime, locations, and values from apps
+  * Modifier words (see above)
   * Text data type with english vocabulary
 * Go back to speech recognition with valid input
   * Let speech recognition re-run on values, with limited vocabulary. See e.g. DateTime.
