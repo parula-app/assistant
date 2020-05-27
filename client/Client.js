@@ -31,14 +31,28 @@ export class Client {
 
   async load(lang) {
     let apps = await (new MetaLoader()).findApps();
-    await Promise.all(apps.map(app =>
-      app.load(lang)
-    ));
-
+    await this.loadApps(apps, lang);
     this.lang = lang;
     this.clientAPI = new ClientAPI(this);
     this.intentParser = new IntentParser(this.clientAPI);
     await this.intentParser.load(apps);
+  }
+
+  async loadApps(apps, lang) {
+    let results = await Promise.allSettled(apps.map(app =>
+      app.load(lang)
+    ));
+    let i = 0;
+    console.log("Applications loaded:");
+    for (let app of apps) {
+      let result = results[i++];
+      let output = "success";
+      if (result.status == "rejected") {
+        let ex = result.reason;
+        output = ex ? ex.message || ex : ex;
+      }
+      console.log("  " + app.id + ":", output);
+    }
   }
 
   async start() {
