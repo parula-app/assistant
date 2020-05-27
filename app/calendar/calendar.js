@@ -16,7 +16,7 @@ export default class Calendar extends JSONApp {
     console.time("calendar-connect");
     let config = getConfig().calendar;
     if (!config.username) {
-      return;
+      throw new Error("No calendar configured");
     }
     let xhr = new dav.transport.Basic(
       new dav.Credentials({
