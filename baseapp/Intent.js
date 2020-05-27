@@ -88,6 +88,7 @@ export class Intent {
     if (alternatives) {
       this.commands = this.commands.concat(alternatives);
     } else {
+      command = this.fixCommand(command);
       this.commands.push(command);
     }
   }
@@ -131,10 +132,20 @@ export class Intent {
       if (expCommands) {
         result = result.concat(expCommands);
       } else {
+        expCommand = this.fixCommand(expCommand);
         result.push(expCommand);
       }
     }
     return result;
+  }
+
+  /**
+   * Remove double spaces and ?. etc.
+   */
+  fixCommand(command) {
+    return command.replace(/[\?\.]/g, "") // ?.
+      .replace(/  /g, " ").replace(/  /g, " ") // double spaces
+      .trim(); // leading/trailing spaces
   }
 
   /**
