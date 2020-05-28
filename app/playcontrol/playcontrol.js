@@ -43,7 +43,7 @@ export default class PlayControl extends JSONApp {
         return app;
       }
     }
-    throw new Error("No media is playing at the moment");
+    throw this.error("nothing-playing");
   }
 
   /**
@@ -81,12 +81,13 @@ export default class PlayControl extends JSONApp {
    */
   async volume(args, client) {
     let volume = args.Volume;
-    if (typeof(volume) != "number") {
-      throw new Error("Need new volume as number");
-    }
+    assert(typeof(volume) == "number", "Need new volume as number");
     // Range 0..100
-    if (volume < 0 || volume > 100) {
-      throw new Error("Volume number too high or too low");
+    if (volume > 100) {
+      throw this.error("volume-too-high");
+    }
+    if (volume < 0) {
+      throw this.error("volume-too-low");
     }
     // We'll interpret 0..10 as if 10 is the max
     if (volume > 0 && volume <= 10) {
@@ -105,12 +106,12 @@ export default class PlayControl extends JSONApp {
    */
   async relativeVolume(args, client) {
     let relativeVolume = args.RelativeVolume;
-    if (typeof(relativeVolume) != "number") {
-      throw new Error("Need relative volume");
+    assert(typeof(relativeVolume) == "number", "Need relative volume");
+    if (relativeVolume > 10) {
+      throw this.error("relative-volume-too-high");
     }
-    // Range -10..10
-    if (relativeVolume < -10 || relativeVolume > 10) {
-      throw new Error("Relative volume too high or too low");
+    if (relativeVolume < -10) {
+      throw this.error("relative-volume-too-low");
     }
     // Convert to range -100..100
     relativeVolume *= 10;

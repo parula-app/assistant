@@ -53,11 +53,8 @@
                 }
             ],
             "responses": {
-                "time": "It's %time%",
-                "date": [
-                    "%date%",
-                    "It is %date%"
-                ]
+                "no-bridge": "No Philips Hue bridge found",
+                "press-link-button": "The Link button was not pressed. Please press the big button on the Hue bridge and try again."
             }
         }
     }

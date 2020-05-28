@@ -50,13 +50,13 @@ export default class TODOList extends JSONApp {
     ]).exec();
 
     if (!tasks.length) {
-      return "You have no tasks on your %list% list".replace("%list%", list);
+      return this.getResponse("list-empty", { list });
     }
 
-    return "You have %count% tasks on your %list% list: "
-      .replace("%count%", tasks.length)
-      .replace("%list%", list) +
-      tasks.map(taskRow => taskRow.task).join(", ");
+    return this.getResponse("list-prefix", {
+      count: tasks.length,
+      list: list,
+    }) + " \n" + tasks.map(taskRow => taskRow.task).join(", ");
   }
 
   /**
@@ -78,9 +78,7 @@ export default class TODOList extends JSONApp {
       list: list,
     }).exec();
 
-    return "I added %task% to your %list% list"
-      .replace("%task%", task)
-      .replace("%list%", list);
+    return this.getResponse("added", { task, list });
   }
 
   /**
@@ -103,8 +101,6 @@ export default class TODOList extends JSONApp {
       [ "task", "=", task ],
     ]).exec();
 
-    return "I removed %task% from your %list% list"
-      .replace("%task%", task)
-      .replace("%list%", list);
+    return this.getResponse("removed", { task, list });
   }
 }

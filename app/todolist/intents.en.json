@@ -78,7 +78,13 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "responses": {
+                "list-empty": "You have no tasks on your %list% list",
+                "list-prefix": "You have %count% tasks on your %list% list:",
+                "added": "I added %task% to your %list% list",
+                "removed": "I removed %task% from your %list% list"
+            }
         }
     }
 }

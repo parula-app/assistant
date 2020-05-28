@@ -1,6 +1,7 @@
 import * as huePackage from 'node-hue-api';
 const hue = huePackage.default.v3;
 import { JSONApp } from '../../baseapp/JSONApp.js';
+import { AppError } from '../../baseapp/AppBase.js';
 import { getConfig } from '../../util/config.js';
 import { wait, assert } from '../../util/util.js';
 
@@ -71,7 +72,7 @@ export default class Hue extends JSONApp {
     console.info(JSON.stringify(bridges, null, 2));
     bridges = bridges.filter(bridge => !bridge.error);
     if (!bridges.length) {
-      throw new Error("No Philips Hue bridge found");
+      throw this.error("no-bridge");
     }
     return bridges[0].ipAddress;
   }
@@ -119,17 +120,17 @@ export default class Hue extends JSONApp {
     let deviceName = "pia"; // TODO add hostname
     try {
       let createdUser = await unauthenticatedAPI.users.createUser("pia-" + this.id, deviceName);
-      console.log('************************************************************************\n');
-      console.log('The following password to the Hue bridge has been created,\n' +
-                  'which allows full access to your Hue bridge.\n' +
-                  'It will be saved in your local settings file. Please do not share it.');
+      console.log("************************************************************************\n");
+      console.log("The following password to the Hue bridge has been created,\n" +
+                  "which allows full access to your Hue bridge.\n" +
+                  "It will be saved in your local settings file. Please do not share it.");
       console.log(`Hue bridge user: ${createdUser.username}`);
       //console.log(`Hue bridge key: ${createdUser.clientkey}`); -- needed only for Streaming API
-      console.log('************************************************************************\n');
+      console.log("************************************************************************\n");
       return createdUser.username;
     } catch(ex) {
       if (ex.getHueErrorType && ex.getHueErrorType() === 101) {
-        throw new NeedLinkButtonPress();
+        throw new NeedLinkButtonPress(this);
       } else {
         throw ex;
       }
@@ -166,7 +167,7 @@ export default class Hue extends JSONApp {
   /**
    * Command
    * @param args {null}
-   *    Light {
+   *    Light { // the NamedValue created in `listDevices()`
    *      id {integer}  light or group ID
    *      type {string enum}  "light" or "group"
    *    }
@@ -194,9 +195,8 @@ export default class Hue extends JSONApp {
   }
 }
 
-class  NeedLinkButtonPress extends Error {
-  constructor() {
-    super("The Link button on the Hue bridge was not pressed. Please press the Link button and try again.");
-    this.name = "NeedLinkButtonPress";
+class  NeedLinkButtonPress extends AppError {
+  constructor(app) {
+    super(app, "press-link-button");
   }
 }

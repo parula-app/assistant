@@ -68,20 +68,19 @@ export class AppBase {
   }
 
   error(id, args) {
-    let message = this.getResponse(id, args);
-    return new AppError(message, id, args, false);
+    return new AppError(this, id, args, false);
   }
 
   unexpectedError(id, args) {
-    let message = this.getResponse(id, args);
-    return new AppError(message, id, args, true);
+    return new AppError(this, id, args, true);
   }
 }
 
 export class AppError extends Error {
-  constructor(message, id, args, isBug) {
+  constructor(app, errorID, args, isBug) {
+    let message = app.getResponse(errorID, args);
     super(message);
-    this.id = id;
+    this.id = errorID;
     this.args = args || [];
     this.doNotShow = !isBug;
   }

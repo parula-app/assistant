@@ -3,6 +3,7 @@ import * as mpcjs from 'mpc-js';
 const MPC = mpcjs.default.MPC;
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
+import { assert } from '../../util/util.js';
 
 
 /**
@@ -17,11 +18,11 @@ export default class MPD extends JSONApp {
 
   async load(lang) {
     await super.load(lang);
-    this.kArtistSeparator = " by "; // TODO localize
     await this.loadSongs();
   }
 
   async loadSongs() {
+    const kArtistSeparator = this.getResponse("song-artist-separator"); // " by "
     let songType = this.dataTypes.SongTitle;
     let artistType = this.dataTypes.Artist;
     let songAndArtistType = this.dataTypes.SongAndArtist;
@@ -39,7 +40,7 @@ export default class MPD extends JSONApp {
           songType.addValue(title);
         }
         if (title && artist) {
-          let term = title + this.kArtistSeparator + artist;
+          let term = title + kArtistSeparator + artist;
           let value = {
             artist: artist,
             songTitle: title,
@@ -105,7 +106,7 @@ export default class MPD extends JSONApp {
   async playSongTitle(args, client) {
     let song = args.Song;
     if (!song) {
-      throw new Error("I found no such song");
+      throw this.error("not-found-song");
     }
 
     let mpc = await this.connect();
@@ -139,7 +140,7 @@ export default class MPD extends JSONApp {
   async playArtist(args, client) {
     let artist = args.Artist;
     if (!artist) {
-      throw new Error("I found no such artist");
+      throw this.error("not-found-artist");
     }
 
     let mpc = await this.connect();
@@ -199,12 +200,13 @@ export default class MPD extends JSONApp {
    */
   async volume(args, client) {
     let volume = args.Volume;
-    if (typeof(volume) != "number") {
-      throw new Error("Need new volume as number");
-    }
+    assert(typeof(volume) == "number", "Need new volume as number");
     // Range 0..100
-    if (volume < 0 || volume > 100) {
-      throw new Error("Volume number too high or too low");
+    if (volume > 100) {
+      throw this.error("volume-too-high");
+    }
+    if (volume < 0) {
+      throw this.error("volume-too-low");
     }
 
     let mpc = await this.connect();
@@ -219,11 +221,12 @@ export default class MPD extends JSONApp {
    */
   async relativeVolume(args, client) {
     let relativeVolume = args.RelativeVolume;
-    if (typeof(relativeVolume) != "number") {
-      throw new Error("Need relative volume");
+    assert(typeof(relativeVolume) == "number", "Need relative volume");
+    if (relativeVolume > 100) {
+      throw this.error("relative-volume-too-high");
     }
-    if (relativeVolume < -100 || relativeVolume > 100) {
-      throw new Error("Volume number too high or too low");
+    if (relativeVolume < -100) {
+      throw this.error("relative-volume-too-low");
     }
 
     let mpc = await this.connect();
