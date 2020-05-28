@@ -225,14 +225,7 @@ function runLater(millisec, func, errorCallback) {
 function Exception(msg)
 {
   this._message = msg;
-
-  // get stack
-  try {
-    not.found.here += 1; // force a native exception ...
-  } catch (e) {
-    this.stack = e.stack; // ... to get the current stack
-  }
-  //debug("ERROR (exception): " + msg + "\nStack:\n" + this.stack);
+  this.stack = new Error().stack;
 }
 Exception.prototype =
 {
