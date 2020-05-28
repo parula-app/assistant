@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "tunein",
+            "invocationName": "radio",
             "intents": [
                 {
                     "name": "Pia.Fallback",
@@ -84,11 +84,11 @@
             "types": [
                 {
                     "name": "Station",
-                    "basetype": "Pia.List"
+                    "basetype": "Pia.NamedValues"
                 },
                 {
                     "name": "Genre",
-                    "basetype": "Pia.List"
+                    "basetype": "Pia.NamedValues"
                 }
             ],
             "responses": {
