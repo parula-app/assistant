@@ -39,9 +39,18 @@ export class Client {
   }
 
   async loadApps(apps, lang) {
+    // Load all apps in parallel
     let results = await Promise.allSettled(apps.map(app =>
       app.load(lang)
     ));
+    // Show stack for unexpected errors during app load
+    for (let result of results.filter(result => result.status == "rejected")) {
+      let ex = result.reason;
+      if (!ex.doNotShow) {
+        console.error(ex);
+      }
+    }
+    // Show status for each app: succeeded or the error message
     let i = 0;
     console.log("Applications loaded:");
     for (let app of apps) {

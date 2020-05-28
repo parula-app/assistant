@@ -33,6 +33,14 @@ export class JSONApp extends AppBase {
     }
     this.directory = directory;
     this.dataDir = "./data/" + id + "/";
+
+    /**
+     * Sentence may be either a string or an Array of strings.
+     * The array contains alternative sentences with the same meaning.
+     *
+     * {Object Map ID {string} -> sentence {string or Array of string}}
+     */
+    this._responses = {};
   }
 
   /**
@@ -56,6 +64,7 @@ export class JSONApp extends AppBase {
     for (let intentJSON of array(json.intents)) {
       await this._loadIntent(intentJSON);
     }
+    this._responses = json.responses;
   }
 
   async _loadIntent(intentJSON) {
@@ -110,6 +119,36 @@ export class JSONApp extends AppBase {
       name = "Pia.Number";
     }
     return name;
+  }
+
+  /**
+   * Translates the response into the user language.
+   * Uses the ID to look up the response in the user's language,
+   * replaces the placeholders with the values you supply,
+   * and returns the sentence for the end user.
+   *
+   * @param id {string} ID of the response string.
+   * @param args {Object Map} Values for the placeholders in the string.
+   *    E.g. translated string "We are %place%" with args `{ place: "home" }`
+   *    will return "We are home".
+   * @returns {string}  Sentence to speak to the end user.
+   */
+  getResponse(id, args) {
+    args = args || [];
+    let response = this._responses[id];
+    if (!response) {
+      console.error("DEVELOPER: Missing string for ID " + id);
+      return id;
+    }
+    if (Array.isArray(response)) {
+      // Pick a random response from the alternatives
+      response = response[Math.floor(Math.random() * response.length)];
+    }
+    // Replace placeholders
+    for (let name in args) {
+      response = response.replace("%" + name + "%", args[name]);
+    }
+    return response;
   }
 }
 

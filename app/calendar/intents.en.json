@@ -7,10 +7,9 @@
                     "name": "UpcomingEvents",
                     "samples": [
                       "(Tell me|) what is on (my|the) calendar",
-                      "(Tell me|) my (appointments|events)",
-                      "(Tell me|) my upcoming (appointments|events)",
-                      "(Tell me|What are|) my (appointments|events) this week",
-                      "(Tell me|What are|) my (appointments|events) this month",
+                      "(Tell me|) my (upcoming|) (appointments|events)",
+                      "Which (appointments|events) do I have",
+                      "(Tell me|What are|) my (appointments|events) this (week|month)",
                       "My calendar"
                     ]
                 },
@@ -65,7 +64,18 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "responses": {
+              "event-short": "In %startTimeRelative%: %summary%",
+              "next-is": "Your next appointment is:",
+              "next-are": "Your next appointments are:",
+              "events-at-time": "Your events %time% are:",
+              "zero": "You have no appointments scheduled",
+              "zero-at-time": "You have no appointments scheduled for %time%",
+              "not-configured": "No calendar configured",
+              "add-done": "I added %summary% on %time% to your calendar",
+              "remove-done": "I cancelled %summary% on %time% from your calendar"
+            }
         }
     }
 }

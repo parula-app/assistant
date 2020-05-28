@@ -16,7 +16,7 @@ export default class Calendar extends JSONApp {
     console.time("calendar-connect");
     let config = getConfig().calendar;
     if (!config.username) {
-      throw new Error("No calendar configured");
+      throw this.error("not-configured");
     }
     let xhr = new dav.transport.Basic(
       new dav.Credentials({
@@ -68,8 +68,8 @@ export default class Calendar extends JSONApp {
    */
   async upcomingEvents(args, client) {
     const kLimit = 5;
-    let prefix = "Your next %count% events are:";
-    let zeroAnswer = "You have no appointments scheduled";
+    let prefix = this.tr("next-are");
+    let zeroAnswer = this.tr("zero");
     return await this.readEvents(events =>
       events.slice(0, kLimit)
     , prefix, zeroAnswer, client);
@@ -81,8 +81,8 @@ export default class Calendar extends JSONApp {
    * @param client {ClientAPI}
    */
   async nextEvent(args, client) {
-    let prefix = "Your next appointment is:";
-    let zeroAnswer = "You have no appointments scheduled";
+    let prefix = this.tr("next-is");
+    let zeroAnswer = this.tr("zero");
     return await this.readEvents(events =>
       events.slice(0, 1)
     , prefix, zeroAnswer, client);
@@ -115,8 +115,8 @@ export default class Calendar extends JSONApp {
     }
     console.log("min", min);
     console.log("max", max);
-    let prefix = "Your events %time% are:".replace("%time%", timeOutput);
-    let zeroAnswer = "You have no appointments scheduled for %time%".replace("%time%", timeOutput);
+    let prefix = this.tr("events-at-time", { time: timeOutput });
+    let zeroAnswer = this.tr("zero-at-time", { time: timeOutput });
     return await this.readEvents(events =>
       events.filter(event =>
         event.start >= min &&
@@ -131,7 +131,6 @@ export default class Calendar extends JSONApp {
    *    Caller can reduce the events returned
    *    using various filters or length criteria.
    * @param prefix {string}   What to say before the results
-   *    May contain the placeholder %count%
    * @param zeroAnswer {string}   What to say when there are no events matching
    */
   async readEvents(filterFunc, prefix, zeroAnswer, client) {
@@ -146,9 +145,12 @@ export default class Calendar extends JSONApp {
       return zeroAnswer;
     }
 
-    return prefix.replace("%count%", events.length) + " \n" +
+    return prefix + " \n" +
       events.map(ev => {
-        return `In ${Sugar.Date(ev.start).relative()}: ${ev.summary}`;
+        return this.tr("event-short", {
+          startTimeRelative: Sugar.Date(ev.start).relative(),
+          summary: ev.summary,
+        });
       }).join(". \n");
   }
 
@@ -167,11 +169,12 @@ export default class Calendar extends JSONApp {
 
     this._db.push(event);
     // TODO Add to CalDAV
-    return new Error("Not yet implemented"); // TODO
+    throw new Error("Not yet implemented"); // TODO
 
-    return "I added %summary% on %time% to your calendar"
-      .replace("%summary%", summary)
-      .replace("%time%", time);
+    return this.tr("add-done", {
+      summary: summary,
+      time: Sugar.Date(time).full(),
+    });
   }
 
   /**
@@ -186,12 +189,13 @@ export default class Calendar extends JSONApp {
     let time = args.Time;
     assert(summary, "Need summary");
     assert(time, "Need time");
-    return new Error("Not yet implemented"); // TODO
+    throw new Error("Not yet implemented"); // TODO
 
     // TODO Remove from CalDAV
 
-    return "I cancelled %summary% on %time% from your calendar"
-      .replace("%summary%", summary)
-      .replace("%time%", time);
+    return this.tr("remove-done", {
+      summary: summary,
+      time: Sugar.Date(time).full(),
+    });
   }
 }

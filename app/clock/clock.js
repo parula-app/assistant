@@ -16,7 +16,7 @@ export default class Clock extends JSONApp {
    */
   async time(args, client) {
     const format = { hour: 'numeric', minute: 'numeric' };
-    return "It's " + new Date().toLocaleTimeString(client.lang, format).replace(":", " ");
+    return this.tr("time", { time: new Date().toLocaleTimeString(client.lang, format).replace(":", " ") });
   }
 
   /**
@@ -26,7 +26,7 @@ export default class Clock extends JSONApp {
    */
   async date(args, client) {
     const format = { weekday: 'long', month: 'long', day: 'numeric' };
-    return new Date().toLocaleDateString(client.lang, format);
+    return this.tr("date", { date: new Date().toLocaleDateString(client.lang, format) });
   }
 
   /**

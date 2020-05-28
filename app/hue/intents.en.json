@@ -51,7 +51,14 @@
                     "name": "Room",
                     "basetype": "Pia.NamedValues"
                 }
-            ]
+            ],
+            "responses": {
+                "time": "It's %time%",
+                "date": [
+                    "%date%",
+                    "It is %date%"
+                ]
+            }
         }
     }
 }

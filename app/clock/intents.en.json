@@ -23,7 +23,7 @@
                 {
                     "name": "TestTimeParse",
                     "samples": [
-                      "Test Tell me the time {Time}"
+                      "Tell me the time {Time}"
                     ],
                     "slots": [
                         {
@@ -32,7 +32,14 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "responses": {
+              "time": "It's %time%",
+              "date": [
+                  "%date%",
+                  "It is %date%"
+              ]
+            }
         }
     }
 }

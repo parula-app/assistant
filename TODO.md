@@ -7,8 +7,6 @@
   * Include recent commands in match confidence
   * Resolve open variables with context
   * Translate pronouns
-* Translate responses
-  * Multiple sentences per response ID, with the same meaning, allowing variation
 * Modifier words, before or after intent matching
   * please, can you, could you, would you, tell me (removed, or increases politeness in response)
   * quickly (reduces reponse length)
