@@ -5,6 +5,7 @@ const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
+import { assert } from '../../util/util.js';
 
 export default class TuneIn extends JSONApp {
   constructor() {
@@ -55,12 +56,10 @@ export default class TuneIn extends JSONApp {
    * @returns {URL}  The streaming MP3
    */
   async playStation(args, client) {
-    if (!args.Station) {
-      throw new Error("Need station");
-    }
+    assert(args.Station, "Need station");
     let station = this._stations.get(args.Station);
     if (!station) {
-      throw new Error("I don't know this station");
+      throw this.error("not-found-station");
     }
     return await this._playStation(station, client);
   }
@@ -73,16 +72,14 @@ export default class TuneIn extends JSONApp {
    * @returns {URL}  The streaming MP3
    */
   async playGenre(args, client) {
-    if (!args.Genre) {
-      throw new Error("Need genre");
-    }
+    assert(args.Genre, "Need genre");
     let genre = this._genres.get(args.Genre);
     if (!genre) {
-      throw new Error("I don't know this genre");
+      throw this.error("not-found-genre");
     }
     let stations = genre.popularStations && genre.popularStations.length ? genre.popularStations : genre.stations || [];
     if (!stations.length) {
-      throw new Error("I found no radio station for this genre");
+      throw this.error("not-found-station-in-genre");
     }
     let station = pickRandom(stations);
     let session = client.userSession;
@@ -132,7 +129,7 @@ export default class TuneIn extends JSONApp {
     let url = m3uContents.split("\n")[0];
     if (url.toLowerCase().includes("html")) {
       console.error("Got an HTML page while trying to fetch m3u for the radio station at <" + m3u + ">", m3uContents.substr(0, 50));
-      throw new Error("The radio station is not available");
+      throw this.error("station-not-available");
     }
     await client.player.playAudio(url, this, () => {
       // called when the stream ends
@@ -193,12 +190,13 @@ export default class TuneIn extends JSONApp {
    */
   async volume(args, client) {
     let volume = args.Volume;
-    if (typeof(volume) != "number") {
-      throw new Error("Need new volume as number");
-    }
+    assert(typeof(volume) == "number", "Need new volume as number");
     // Range 0..100
-    if (volume < 0 || volume > 100) {
-      throw new Error("Volume number too high or too low");
+    if (volume > 100) {
+      throw this.error("volume-too-high");
+    }
+    if (volume < 0) {
+      throw this.error("volume-too-low");
     }
 
     await client.player.setVolume(volume);
@@ -212,11 +210,12 @@ export default class TuneIn extends JSONApp {
    */
   async relativeVolume(args, client) {
     let relativeVolume = args.RelativeVolume;
-    if (typeof(relativeVolume) != "number") {
-      throw new Error("Need relative volume");
+    assert(typeof(relativeVolume) == "number", "Need relative volume");
+    if (relativeVolume > 100) {
+      throw this.error("relative-volume-too-high");
     }
-    if (relativeVolume < -100 || relativeVolume > 100) {
-      throw new Error("Volume number too high or too low");
+    if (relativeVolume < -100) {
+      throw this.error("relative-volume-too-low");
     }
 
     await client.player.setRelativeVolume(relativeVolume);

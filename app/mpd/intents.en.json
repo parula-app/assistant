@@ -120,11 +120,7 @@
                 ],
                 "song-artist-separator": " by ",
                 "volume-too-high": "That volume number is too high. Please use numbers between 11 to 100 or from 0 to 10.",
-                "volume-too-low": [
-                  "I don't know what to do with a negative volume.",
-                  "So, you want a negative volume? You want me to take your breath away?",
-                  "A negative volume? Sorry, I can't do noise cancellation yet."
-                ],
+                "volume-too-low": "I don't know what to do with a negative volume.",
                 "relative-volume-too-high": "That relative volume number is too high.",
                 "relative-volume-too-low": "That relative volume number is too low."
             }
