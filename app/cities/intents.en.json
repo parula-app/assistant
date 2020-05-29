@@ -1,0 +1,106 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "cities",
+            "intents": [
+                {
+                    "name": "Info",
+                    "samples": [
+                      "(Tell me|What do you know) about (the country|the city|the town|the village|) {Location}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "Pia.Location"
+                        }
+                    ]
+                },
+                {
+                    "name": "Where",
+                    "samples": [
+                      "Where is {Location} (located|)"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "Pia.Location"
+                        }
+                    ]
+                },
+                {
+                    "name": "Timezone",
+                    "samples": [
+                      "What is the timezone (of|in) {Location}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "Pia.Location"
+                        }
+                    ]
+                },
+                {
+                    "name": "Population",
+                    "samples": [
+                      "How many inhabitants does {Location} have",
+                      "What is the population of {Location}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "Pia.Location"
+                        }
+                    ]
+                },
+                {
+                    "name": "Language",
+                    "samples": [
+                      "Which language (is used|do they use|is spoken|do they speak) in {Location}",
+                      "What is the language (of|in|spoken in) {Location}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "Pia.Location"
+                        }
+                    ]
+                },
+                {
+                    "name": "Currency",
+                    "samples": [
+                      "What is the currency of {Location}",
+                      "Which currency (is used|do they use) in {Location}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Location",
+                            "type": "Pia.Location"
+                        }
+                    ]
+                }
+            ],
+            "responses": {
+                "where-city": "%location% is in %country%",
+                "where-country": "%location% is in %continent%. Its neighbor countries are:",
+                "population": [
+                  "%location% has roughly %population% inhabitats",
+                  "The population of %location% is roughly %population% inhabitants"
+                ],
+                "population-at-year": [
+                  "%location% has roughly %population% inhabitats, as of %year%",
+                  "The population of %location% is roughly %population% inhabitants, in %year%"
+                ],
+                "timezone": [
+                  "The timezone of %location% is %timezone%. That is %hourDelay% from Greenwich."
+                ],
+                "language": [
+                  "The language spoken in %location% is %language%"
+                ],
+                "currency": [
+                  "%location% uses the %currency%",
+                  "%currency% is the official currency in %location%"
+                ]
+            }
+        }
+    }
+}

@@ -38,7 +38,7 @@
 # Apps
 ## Done
 * MPD
-* TuneIn
+* Radio
 * Bible
 * Clock
 * TODO list, Shopping list
@@ -46,6 +46,7 @@
 
 ## TODO
 * Reminder, Alarm
+* Weather
 * Calendar
   * Sync only when necessary
 * Contacts
@@ -54,7 +55,6 @@
   * HFP Hands Free Profile or HSP Headset -> PulseAudio
   * PBAP Phone Book Access Profile
   * MAP Message Access Profile
-* Weather
 * Wikipedia
 * Google search
 

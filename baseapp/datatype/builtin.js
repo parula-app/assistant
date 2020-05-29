@@ -2,12 +2,14 @@ import { TextDataType } from './TextDataType.js';
 import { NumberDataType } from './NumberDataType.js';
 import { DateTimeDataType } from './DateTimeDataType.js';
 import { LanguageDataType } from './LanguageDataType.js';
+import { LocationDataType } from './LocationDataType.js';
 
 const kBuiltinTypes = [
   new TextDataType(),
   new NumberDataType(),
   new DateTimeDataType(),
   new LanguageDataType(),
+  new LocationDataType(),
 ];
 
 /**
