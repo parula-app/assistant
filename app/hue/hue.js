@@ -66,7 +66,7 @@ export default class Hue extends JSONApp {
    */
   async discoverBridge() {
     console.time("hue-discovery")
-    let bridges = await hue.discovery.upnpSearch();
+    let bridges = await huePackage.default.discovery.upnpSearch();
     console.timeEnd("hue-discovery")
     // array of bridges that were found
     console.info(JSON.stringify(bridges, null, 2));
