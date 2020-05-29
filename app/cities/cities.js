@@ -1,4 +1,5 @@
 import { JSONApp } from '../../baseapp/JSONApp.js';
+import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
 import langCodes from 'iso-639-1';
 import fs from 'fs';
@@ -21,6 +22,13 @@ export default class Cities extends JSONApp {
      * {ISO 2-letter code {string} -> Country {JSON}}
      */
     this._countries = new Map();
+
+    let config = getConfig().homeLocation;
+    this._lat = config.lat;
+    this._lon = config.lon;
+    if (!config.lat) {
+      config.log("\nPlease set your city and lat/lon GPS coordinates in config.homeLocation. This is needed for any location lookups.\n");
+    }
   }
 
   async load(lang) {
@@ -32,6 +40,11 @@ export default class Cities extends JSONApp {
     await this.loadCountries();
     await this.loadCities();
     console.timeEnd("Loading cities");
+
+    for (let city of this._dataType.valueIDs.sort((a, b) => a.distance - b.distance)) {
+      console.log(city.name, city.distance, city.population);
+    }
+    console.log(`Kept ${ this._dataType.valueIDs.length } cities`);
   }
 
   async loadCountries(lang) {
@@ -71,14 +84,14 @@ export default class Cities extends JSONApp {
    * 0. geonameid         : integer id of record in geonames database
    * 1. name              : name of geographical point (utf8) varchar(200)
    * 2. asciiname         : name of geographical point in plain ascii characters, varchar(200)
-   * 3. alternatenames    : alternatenames, comma separated, ascii names automatically transliterated, convenience attribute from alternatename table, varchar(10000)
+   * 3. alternatenames    : name in other languages, comma separated, varchar(10000)
    * 4. latitude          : latitude in decimal degrees (wgs84)
    * 5. longitude         : longitude in decimal degrees (wgs84)
    * 6. feature class     : see http://www.geonames.org/export/codes.html, char(1)
    * 7. feature code      : see http://www.geonames.org/export/codes.html, varchar(10)
    * 8. country code      : ISO-3166 2-letter country code, 2 characters
    * 9. cc2               : alternate country codes, comma separated, ISO-3166 2-letter country code, 200 characters
-   * 10. admin1 code       : fipscode (subject to change to iso code), see exceptions below, see file admin1Codes.txt for display names of this code; varchar(20)
+   * 10. admin1 code       : fipscode (soon iso code), see file admin1Codes.txt for display names of this code; varchar(20)
    * 11. admin2 code       : code for the second administrative division, a county in the US, see file admin2Codes.txt; varchar(80)
    * 12. admin3 code       : code for third level administrative division, varchar(20)
    * 13. admin4 code       : code for fourth level administrative division, varchar(20)
@@ -91,7 +104,7 @@ export default class Cities extends JSONApp {
   processCity(fields) {
     let city = {
       name: fields[1],
-      alternativeNames: fields[3].split(",").filter(n => n),
+      //alternativeNames: fields[3].split(",").filter(n => n),
       population: parseInt(fields[14]),
       lat: parseFloat(fields[4]),
       lon: parseFloat(fields[5]),
@@ -99,10 +112,31 @@ export default class Cities extends JSONApp {
       timezone: fields[17],
       modDate: new Date(fields[18]),
     };
-    this._dataType.addValue(city.name, city);
-    for (let alternativeName of city.alternativeNames) {
-      this._dataType.addValue(alternativeName, city);
+
+    // determine whether to add this city,
+    // depending on population size and distance from user
+    const kLonMultiplier = 0.5;
+    let distance = Math.abs(city.lat - this._lat) + Math.abs(city.lon - this._lon) * kLonMultiplier;
+    // if distance > roughly 100-200 km, drop cities < 10000 population
+    // if distance > roughly 1000 km, drop cities < 100000 population
+    // if distance > roughly 5000 km, drop cities < 1000000 population
+    // keep all cities world-wide > 1000000 population
+    /* but this is too coarse:
+    if (distance > 2 && city.population < 10000 ||
+      distance > 8 && city.population < 100000 ||
+      distance > 50 && city.population < 1000000) {
+      return;
+    } so calculate the ratio of population and distance² */
+    if (distance > 1 &&
+      city.population / (distance * distance) < 1000) {
+      return;
     }
+    city.distance = distance;
+
+    this._dataType.addValue(city.name, city);
+    /*for (let alternativeName of city.alternativeNames) {
+      this._dataType.addValue(alternativeName, city);
+    }*/
   }
 
   /**

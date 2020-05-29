@@ -12,6 +12,11 @@
     "hostname": "192.168.1.300",
     "auth": "secret"
   },
+  "homeLocation": {
+    "city": "Wiesbaden",
+    "lat": 50.06,
+    "lon": 8.245
+  },
   "audio": {
     "maxCommandLength": 15,
     "inputDevice": "hw(1,0)",

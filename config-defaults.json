@@ -12,6 +12,9 @@
     "hostname": null,
     "auth": null
   },
+  "homeLocation": {
+    "city": null
+  },
   "audio": {
     "maxCommandLength": 10
   },

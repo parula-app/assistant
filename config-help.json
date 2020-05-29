@@ -13,6 +13,11 @@
     "hostname": "The IP address or hostname of your Hue Bridge on your local network",
     "auth": "The authentication credential to your Hue Bridge. This is effectively a password."
   },
+  "homeLocation": {
+    "city": "The city where this device is. Needed for weather, navigation, restaurant recommendations etc.",
+    "lat": "The GPS latitude coordinate where this device is",
+    "lon": "The GPS longitude coordinate where this device is"
+  },
   "audio": {
     "maxCommandLength": "Finish the voice command after N seconds, e.g. when there is too much noise.",
     "inputDevice": "ALSA ID of the microphone audio device, e.g. hw(2,1), for 1. card 2. device. See aplay -l for a list. Empty = default device.",
