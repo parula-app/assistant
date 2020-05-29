@@ -1,6 +1,6 @@
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { getConfig } from '../../util/config.js';
-import { assert } from '../../util/util.js';
+import { round, assert } from '../../util/util.js';
 import langCodes from 'iso-639-1';
 import fs from 'fs';
 import readline from 'readline';
@@ -202,16 +202,17 @@ export default class Cities extends JSONApp {
   population(args, client) {
     let location = args.Location;
     assert(location, "Need the location");
+    let population = round(location.population, 2);
     if (location.modTime) {
       return this.getResponse("population-at-year", {
         location: location.name,
-        population: location.population,
+        population: population,
         year: location.modDate.getFullYear(),
       });
     } else {
       return this.getResponse("population", {
         location: location.name,
-        population: location.population,
+        population: population,
       });
     }
   }

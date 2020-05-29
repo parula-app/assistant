@@ -40,3 +40,13 @@ export function loadJSONFile(filePath) {
       throw ex;
     }
 }
+
+/**
+ * @param {integer} num - The number to round
+ * @param {integer} leadingDigits - How many significant digits at the start to keep
+ * @returns {integer} rounded num
+ */
+export function round(num, leadingDigits) {
+  let precision = Math.pow(10, num.toString().length - leadingDigits);
+  return Math.round(num / precision) * precision;
+}
