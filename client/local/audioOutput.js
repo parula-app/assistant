@@ -10,8 +10,7 @@ import { getConfig } from '../../util/config.js';
  *    WAV format, outputSampleRate(), 1 channel, 16 bit unsigned
  */
 export default function audioOutput(waveStream) {
-  let device = getConfig().audio.outputDevice; // e.g. "hw(0,0)", null = default
-  device = device ? device.replace("(", ":").replace(")", "") : null; // expects "hw:0,0" instead of "hw(0,0)"
+  let device = getConfig().audio.outputDevice; // e.g. "hw:0,0", null = default
   // TODO Gives "Failed to open output device" for me for "hw:0,0", despite matching the docs.
   let ao = new Speaker({
     channels: 1,

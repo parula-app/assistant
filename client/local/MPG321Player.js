@@ -12,7 +12,7 @@ export default class MPG321Player extends MPG123Player {
   }
 
   _createInstance() {
-    //.audioDevice(getConfig().audio.outputDevice); e.g. "hw0,0"
+    //.audioDevice(getConfig().audio.outputDevice); e.g. "hw:0,0"
     this._mpg = mpg321().quiet().remote();
   }
 

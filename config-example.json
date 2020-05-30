@@ -19,8 +19,8 @@
   },
   "audio": {
     "maxCommandLength": 15,
-    "inputDevice": "hw(1,0)",
-    "outputDevice": "hw(2,2)"
+    "inputDevice": "hw:1,0",
+    "outputDevice": "hw:2,2"
   },
   "maryTTS": {
     "voice": "cmu-slt"

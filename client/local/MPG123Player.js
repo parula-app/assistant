@@ -56,7 +56,7 @@ export default class MPG123Player extends Player {
 
   _createInstance() {
     console.log("for mp3, using output device " + getConfig().audio.outputDevice);
-    let device = getConfig().audio.outputDevice || undefined; // e.g. "hw0,0", and undefined (*not* null!) = default
+    let device = getConfig().audio.outputDevice || undefined; // e.g. "hw:0,0", and undefined (*not* null!) = default
     this._mpg = new mpg123.MpgPlayer(device, true); // no frame updates
   }
 
