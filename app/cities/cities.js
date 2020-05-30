@@ -27,7 +27,7 @@ export default class Cities extends JSONApp {
     this._lat = config.lat;
     this._lon = config.lon;
     if (!config.lat) {
-      config.log("\nPlease set your city and lat/lon GPS coordinates in config.homeLocation. This is needed for any location lookups.\n");
+      console.log("\nPlease set your city and lat/lon GPS coordinates in config.homeLocation. This is needed for any location lookups.\n");
     }
   }
 
@@ -41,9 +41,9 @@ export default class Cities extends JSONApp {
     await this.loadCities();
     console.timeEnd("Loading cities");
 
-    for (let city of this._dataType.valueIDs.sort((a, b) => a.distance - b.distance)) {
+    /*for (let city of this._dataType.valueIDs.sort((a, b) => a.distance - b.distance)) {
       console.log(city.name, city.distance, city.population);
-    }
+    }*/
     console.log(`Kept ${ this._dataType.valueIDs.length } cities`);
   }
 
@@ -203,7 +203,7 @@ export default class Cities extends JSONApp {
     let location = args.Location;
     assert(location, "Need the location");
     let population = round(location.population, 2);
-    if (location.modTime) {
+    if (false && location.modDate) { // not really useful
       return this.getResponse("population-at-year", {
         location: location.name,
         population: population,

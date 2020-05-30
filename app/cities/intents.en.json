@@ -6,7 +6,7 @@
                 {
                     "name": "Info",
                     "samples": [
-                      "(Tell me|What do you know) about (the country|the city|the town|the village|) {Location}"
+                      "(Tell me|What do you know) about (the country|the city|the town|the village|) (of|) {Location}"
                     ],
                     "slots": [
                         {
@@ -83,11 +83,11 @@
                 "where-city": "%location% is in %country%",
                 "where-country": "%location% is in %continent%. Its neighbor countries are:",
                 "population": [
-                  "%location% has roughly %population% inhabitats",
+                  "%location% has roughly %population% inhabitants",
                   "The population of %location% is roughly %population% inhabitants"
                 ],
                 "population-at-year": [
-                  "%location% has roughly %population% inhabitats, as of %year%",
+                  "%location% has roughly %population% inhabitants, as of %year%",
                   "The population of %location% is roughly %population% inhabitants, in %year%"
                 ],
                 "timezone": [

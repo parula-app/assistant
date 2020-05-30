@@ -19,7 +19,7 @@
 * Cache the last second
 * Better wake word
 * Acoustic echo cancellation
-* Language Model, 3 cases:
+* Language Model, 4 cases:
   * Commands from apps
   * Data types, like datetime, locations, and values from apps
   * Modifier words (see above)
@@ -37,7 +37,7 @@
 * Bible
 * Clock
 * TODO list, Shopping list
-* Lights
+* Lights for Hue
 
 ## TODO
 * Reminder, Alarm
@@ -55,7 +55,6 @@
 
 ## Integration
 * Android Intents
-* Philips hue
 * Node Red
 * Home Assistant <https://www.home-assistant.io>
 * ThingVerse, Almond, LUInet <https://almond.stanford.edu/thingpedia>
