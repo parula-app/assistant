@@ -43,6 +43,9 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   let commandStartTime = null;
   let lastVoiceTime = null;
 
+  // Cache the last few audio chunks before the wake word triggers
+  let startBuffer = [];
+
   function endCommand() {
     commandStartTime = null;
     lastVoiceTime = null;
@@ -61,6 +64,11 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     commandStartTime = new Date();
     try {
       newCommandCallback();
+
+      for (let previousBuffer of startBuffer) {
+        audioCallback(previousBuffer);
+      }
+      startBuffer.length = 0;
     } catch (ex) {
       console.error(ex);
     }
@@ -84,6 +92,12 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
             console.info("Command finished due to silence");
             endCommand();
             return;
+          }
+          // Wakeword cuts the start of the command.
+          // Workaround: Buffer last 3 frames.
+          startBuffer.push(buffer);
+          if (startBuffer.length >= 3) {
+            startBuffer.shift();
           }
         }
       } catch (ex) {
