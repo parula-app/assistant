@@ -64,6 +64,7 @@ export class DataType {
     let typeName = this.id.toLowerCase(); // TODO translate
     return [
       "it",
+      "its",
       "this",
       "that",
       "this " + typeName,
