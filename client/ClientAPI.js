@@ -37,22 +37,8 @@ export class ClientAPI {
     this._sentences = [];
 
     this._userSession = new Map();
-    this._userSettings = null;
-    this._userData = null;
 
     setInterval(() => this._removeOldContext(), 60 * 1000); // every minute
-  }
-
-  async load() {
-    this._userSettings = JSON.parse(await readFileAsync("./userSettings.json"));
-    this._userSettingsSaved = JSON.stringify(this._userSettings);
-  }
-
-  async save() {
-    let cur = JSON.stringify(this._userSettings);
-    if (cur != this._userSettingsSaved) {
-      await writeFileAsync("./userSettings.json", JSON.stringify(this._userSettings, null, 2));
-    }
   }
 
   /**
@@ -98,28 +84,6 @@ export class ClientAPI {
    */
   get userSession() {
     return this._userSession;
-  }
-
-  /**
-   * Configuration information for this user:
-   * Setup, credentials, settings, preferences.
-   *
-   * This must be small.
-   *
-   * @returns {Map}
-   */
-  get userSettings() {
-    setTimeout(() => this.save, 10000); // 10s TODO HACK
-    return this._userSettings;
-  }
-
-  /**
-   * Data that the user generates during normal usage.
-   *
-   * @returns {Map}
-   */
-  get userData() {
-    return this._userData;
   }
 
   /**
