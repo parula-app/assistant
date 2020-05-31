@@ -1,8 +1,4 @@
 ## Core
-* Storage
-  * Settings writable
-  * User data
-  * Data cache
 * Context
   * Include recent commands in match confidence
   * Resolve open variables with context
@@ -14,9 +10,11 @@
 * Apps via commandline (stdin/out) and HTTPS
    * Load language model as JSON via special command parameter / URL suffix
    * Command text input, output, errors etc. via JSON REST protocol.
+* Storage
+  * Settings writable
+  * Decide on DB
 
 ## Speech
-* Cache the last second
 * Better wake word
 * Acoustic echo cancellation
 * Language Model, 4 cases:
@@ -88,7 +86,8 @@
     * TV
     * Phone call
 
-## Release
+## Help needed
+* Better TTS
 * Raspberry Pi 4
   * Input device
   * DeepSpeech TFLite
