@@ -2,10 +2,14 @@
 'use strict';
 
 import { LocalClient } from './LocalClient.js';
+import { HTTPAppHub } from '../httpapp/HTTPAppHub.js';
 
 (async () => {
   try {
-    await new LocalClient().start();
+    let client = new LocalClient()
+    await client.start();
+
+    await new HTTPAppHub(client).start();
   } catch (ex) {
     console.error(ex);
   }

@@ -35,7 +35,7 @@ export class Client {
     this.lang = lang;
     this.clientAPI = new ClientAPI(this);
     this.intentParser = new IntentParser(this.clientAPI);
-    await this.intentParser.load(apps);
+    await this.intentParser.loadApps(apps);
   }
 
   async loadApps(apps, lang) {

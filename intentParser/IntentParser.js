@@ -42,11 +42,19 @@ export default class IntentParser {
   /**
    * @param apps {Array of AppBase}
    */
-  async load(apps) {
-    this.apps = apps;
+  async loadApps(apps) {
     for (let app of apps) {
-      this.loadCommands(app);
+      this.loadApp(app);
     }
+  }
+
+  /**
+   * @param app {AppBase}
+   */
+  async loadApp(app) {
+    assert(app.intents, "App has wrong type");
+    this.apps.push(app);
+    this.loadCommands(app);
   }
 
   loadCommands(app) {

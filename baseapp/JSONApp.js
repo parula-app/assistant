@@ -56,22 +56,27 @@ export class JSONApp extends AppBase {
     console.info("Loading from " + filename);
     let json = loadJSONFile(filename);
     assert(json);
+    this.loadIntentsJSON(json, lang);
+  }
+
+  loadIntentsJSON(json, lang) {
     json = json.interactionModel.languageModel;
     //this.id = json.invocationName;
     for (let typeJSON of array(json.types)) {
-      await this._loadDataType(typeJSON);
+      this._loadDataType(typeJSON);
     }
     for (let intentJSON of array(json.intents)) {
-      await this._loadIntent(intentJSON);
+      this._loadIntent(intentJSON);
     }
     this._responses = json.responses;
   }
 
-  async _loadIntent(intentJSON) {
+  _loadIntent(intentJSON) {
     let id = this._typeID(intentJSON.name);
     let intent = new Intent(this, id);
     for (let parameterJSON of array(intentJSON.slots)) {
       let id = parameterJSON.name;
+      assert(parameterJSON.type, "slot type is missing");
       let type = this.dataTypes[this._typeID(parameterJSON.type)];
       if (!type) {
         console.error("Unknown type " + parameterJSON.type); // TODO built-in types
@@ -85,7 +90,7 @@ export class JSONApp extends AppBase {
     this.intents[id] = intent;
   }
 
-  async _loadDataType(typeJSON) {
+  _loadDataType(typeJSON) {
     let id = this._typeID(typeJSON.name);
     let dataTypeName = this._typeID(typeJSON.basetype || "Pia.Enum");
     let type;
