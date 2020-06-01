@@ -79,6 +79,56 @@
                     ]
                 }
             ],
+            "types": [
+                {
+                    "name": "Continent",
+                    "type": "Pia.List",
+                    "values": [
+                        {
+                            "id": "NA",
+                            "name": {
+                                "value": "North America"
+                            }
+                        },
+                        {
+                            "id": "SA",
+                            "name": {
+                                "value": "South America"
+                            }
+                        },
+                        {
+                            "id": "EU",
+                            "name": {
+                                "value": "Europe"
+                            }
+                        },
+                        {
+                            "id": "AS",
+                            "name": {
+                                "value": "Asia"
+                            }
+                        },
+                        {
+                            "id": "AF",
+                            "name": {
+                                "value": "Africa"
+                            }
+                        },
+                        {
+                            "id": "OC",
+                            "name": {
+                                "value": "Ociania"
+                            }
+                        },
+                        {
+                            "id": "AN",
+                            "name": {
+                                "value": "Antarctica"
+                            }
+                        }
+                    ]
+                }
+            ],
             "responses": {
                 "where-city": "%location% is in %country%",
                 "where-country": "%location% is in %continent%. Its neighbor countries are:",

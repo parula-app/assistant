@@ -182,13 +182,14 @@ export default class Cities extends JSONApp {
     let location = args.Location;
     assert(location, "Need the location");
     if (location.continent) {
+      let continent = this.dataTypes.Continent.termForValueID(location.continent);
       let neighborCountries = location.neighbors.map(isoCode => {
         let country = this._countries.get(isoCode);
         return country ? country.name : isoCode;
       }).join(", ");
       return this.getResponse("where-country", {
         location: location.name,
-        continent: location.continent,
+        continent: continent,
       }) + " \n" + neighborCountries;
     } else {
       let country = this._countries.get(location.countryCode);

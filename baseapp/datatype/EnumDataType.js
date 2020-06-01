@@ -73,6 +73,14 @@ export class EnumDataType extends FiniteDataType {
     return this._terms.get(term);
   }
 
+  termForValueID(valueID) {
+    for (let [ term, curValueID ] of this._terms.entries()) {
+      if (valueID == curValueID) {
+        return term;
+      }
+    }
+  }
+
   /**
    * Adds a new unique value for this data type.
    * @param id {string}  ID for the new value
