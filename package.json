@@ -1,11 +1,11 @@
 {
-    "name": "Pia",
+    "name": "pia",
     "version": "0.1.0",
     "description": "Voice assistant",
     "main": "./start.js",
     "author": "Ben Bucksch",
-    "license": "GPL-3.0",
-    "homepage": "https://pia.bucksch.org",
+    "license": "AGPL-3.0",
+    "homepage": "https://pia.im",
     "repository": {
         "type": "git",
         "url": "git://github.com/benbucksch/pia.git"
