@@ -41,7 +41,7 @@ export class HTTPAppHub {
    * }
    */
   async registerApp(json) {
-    let app = new HTTPApp(json.appID, json.url);
+    let app = new HTTPApp(json.appID, json.url, json.authKey);
     await app.load("en");
     app.loadIntentsJSON(json.intents);
     this.apps.push(app);
