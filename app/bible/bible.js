@@ -125,7 +125,7 @@ export default class BibleApp extends JSONApp {
    * @param client {ClientAPI}
    */
   readBibleVerse(args, client) {
-    var lang = client.lang;
+    var lang = args.Language || client.lang;
     var { bookCode, chapter, chapterVerses } = getChapter(args, client, lang);
     var verse = parseInt(args.Verse);
     console.log(`Bible verse ${bookCode} ${chapter}:${verse} in ${lang}`);
@@ -147,7 +147,7 @@ export default class BibleApp extends JSONApp {
       args.Verse = args.VerseFrom;
       return this.readBibleVerse(args, client);
     }
-    var lang = client.lang;
+    var lang = args.Language || client.lang;
     var { bookCode, chapter, chapterVerses } = getChapter(args, client);
     var verseFrom = parseInt(args.VerseFrom);
     var verseTo = parseInt(args.VerseTo);
@@ -176,7 +176,7 @@ export default class BibleApp extends JSONApp {
   }
 
   readBibleChapter(args, client) {
-    let lang = client.lang;
+    var lang = args.Language || client.lang;
     let { bookCode, chapter, chapterVerses } = getChapter(args, client);
     console.log(`Bible chapter ${bookCode} ${chapter} in ${lang}`);
 
