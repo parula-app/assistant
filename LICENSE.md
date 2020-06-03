@@ -657,19 +657,6 @@ The trademarks included may be used only for the unmodified application,
 or with explicit permission.
 See e.g. AGPL v3.0 section 7 e).
 
-### Addons
-
-Addons that use only offical APIs are not considered part of the program
-and such addons are not subject to the license. Official APIs are those that
-are officially sactioned by the original author of the program.
-
-Compare the Linux kernel, which makes a similar distinction between
-`EXPORT_SYMBOL_GPL` and `EXPORT_SYMBOL`, where the latter may be
-used by non-GPL modules. Obviously, Addon APIs that you added yourself
-are not subject to this license exception, and addons that use such APIs
-are part of the program and must comply with the license, otherwise you
-could circumvent the entire license. Compare GPL 2.0 Section 10.
-
 ### Additional licenses
 
 When you make modifications and you keep this paragraph,
