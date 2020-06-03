@@ -639,15 +639,13 @@ and the commit IDs for these commits need to stay stable and unchanged
 across releases, so that merges between your changes and ours can work
 correctly and automatically over time and releases.
 
-Archive source drops do not count as workable "source code" in 2020 anymore.
-
 ### Copyright notices
 
 Any copyright notices for our contributions must be at least as prominent
 as your own copyright and origin notices, and in any case cannot be less
 prominent than the notice in our version. You cannot remove any notices,
-nor make them less prominent to end users. You cannot claim "(c) Gnomovision"
-and then hide the open source authors behind extra clicks.
+nor make them less prominent to end users. You cannot claim e.g.
+"(c) Speakero" and then hide the open source authors behind extra clicks.
 See e.g. AGPL v3.0 section 0 "prominently visible" and section 7 b).
 
 We would like it to be clearly evident to your end users that your program
@@ -661,12 +659,12 @@ See e.g. AGPL v3.0 section 7 e).
 
 ### Addons
 
-Addons that use only offical APIs (that are officially sactioned by the
-original authors of the program) are not considered part of the program
-and such addons are not subject to the license.
+Addons that use only offical APIs are not considered part of the program
+and such addons are not subject to the license. Official APIs are those that
+are officially sactioned by the original author of the program.
 
 Compare the Linux kernel, which makes a similar distinction between
-EXPORT_SYMBOL_GPL and EXPORT_SYMBOL, where the latter may be
+`EXPORT_SYMBOL_GPL` and `EXPORT_SYMBOL`, where the latter may be
 used by non-GPL modules. Obviously, Addon APIs that you added yourself
 are not subject to this license exception, and addons that use such APIs
 are part of the program and must comply with the license, otherwise you
@@ -675,7 +673,7 @@ could circumvent the entire license. Compare GPL 2.0 Section 10.
 ### Additional licenses
 
 When you make modifications and you keep this paragraph,
-you additionally give Ben Bucksch (the original author) the right to
+you additionally give the original author Ben Bucksch the right to
 additionally license the modified work including your modifications
 under different terms. Compare MPL 1.1 Section 6.1. This allows
 license changes without contacting all authors individually.
