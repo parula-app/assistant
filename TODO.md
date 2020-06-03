@@ -38,6 +38,7 @@
 * Lights for Hue
 
 ## TODO
+* Jokes
 * Reminder, Alarm
 * Weather
 * Calendar
