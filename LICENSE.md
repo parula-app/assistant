@@ -627,10 +627,10 @@ Given that git and version control today have become an essential part of the
 software development process, and you received the full version history as
 source code from us, we consider the full version history the
 "preferred form of the work for making modifications to it". That includes the
-commits and commit granularity your team used as the basis for its work and
-source code modifications. The version history contains essential information,
-and modifications become very difficult without the version history.
-This project defines "source code" to include the commit history.
+commits, commit messages and commit granularity your team used as the basis
+for its work and source code modifications. The version history contains
+essential information, and modifications become very difficult without
+the version history.
 
 You may strip files not covered by the license from the repository,
 as long as you adhere to the other requirements. In any case, the resulting
