@@ -25,6 +25,11 @@ export class NamedValuesDataType extends FiniteDataType {
     this._values = new Map();
 
     /**
+     * { Map of ID {string or number} -> value {any} }
+     */
+    //this._valuesByID = new Map();
+
+    /**
      * { Array of term {string} }
      */
     this._terms = [];
@@ -58,6 +63,29 @@ export class NamedValuesDataType extends FiniteDataType {
   }
 
   /**
+   * For any value, return a unique ID that allows to
+   * find the value again in the internal list of values.
+   * The ID must be unique (only this value has this ID)
+   * and stable within the lifetime of this application
+   * (until it stops running), ideally even after a restart.
+   *
+   * You need to overwrite this function to customize
+   * it to your values and their properties.
+   *
+   * @param value {any}
+   * @returns {string or number} ID
+   */
+  idForValue(value) {
+    return value.id || value.name || value.term;
+  }
+
+  valueForID(id) {
+    // memory vs. speed
+    //this._valuesByID.get(id);
+    return this.values.find(value => this.idForValue(value) == id);
+  }
+
+  /**
    * @param term {string}   What the user will say.
    * @param value {any}   The value object. Not shown to user.
    *   Can be string, integer or even an object.
@@ -68,6 +96,7 @@ export class NamedValuesDataType extends FiniteDataType {
     assert(term && typeof(term) == "string");
 
     this._values.set(term, value);
+    //this._valuesByID.set(this.idForValue(value), value);
     this._terms.push(term);
   }
 }
