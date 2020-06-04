@@ -20,7 +20,8 @@
      1. `# brew node yarn sox mpd mpg123 openjdk git`
      2. Skip step 3.
 3. Install node.js
-   1. Go to the [node.js website](https://nodejs.org/en/) and download node 12 or later.
+   1. Go to the [node.js website](https://nodejs.org/en/) and download node version 14 or later.
+      * node version 12 may work.
       * node version 10 in Ubuntu 20.04 is too old.
    2. Extract the archive somewhere.
    3. `ln -s`/your/path/to/node/`/usr/local/bin/node`
@@ -40,9 +41,11 @@
    3. `mkdir data`
    4. `cd data/`
    5. `tar xjf /path/to/pia-data.tar.bz2`
-   6. Download the [DeepSpeech 0.6.1 models](https://github.com/mozilla/DeepSpeech/releases/download/v0.6.1/deepspeech-0.6.1-models.tar.gz)
-      * The DeepSpeech model version needs to match the version of DeepSpeech npm module perfectly.
-   7. `tar xzf /path/to/deepspeech-models.tar.gz`
+   6. `mkdir deepspeech-0.7.3-models`
+      * The DeepSpeech model version needs to match the version of DeepSpeech npm module perfectly. Double-check the version that you have with `grep version node_modules/deepspeech/package.json`.
+   7. `cd deepspeech-0.7.3-models/`
+   8. Download the [DeepSpeech 0.7.3 model file](https://github.com/mozilla/DeepSpeech/releases/download/v0.7.3/deepspeech-0.7.3-models.pbmm) and [DeepSpeech 0.7.3 scorer file](https://github.com/mozilla/DeepSpeech/releases/download/v0.7.3/deepspeech-0.7.3-models.scorer) into this directory.
+   9. They are 1.2 GB, so while they download, you can already adjust config.json, see step 6.3. below.
 6. Install node packages
    1. `cd` to the Pia source directory
    2. `yarn install`
