@@ -8,14 +8,17 @@
       * We'll be working on Raspberry Pi 4 support soon. Raspberry Pi 3 will not be supported.
 2. Install OS dependencies
    * Ubuntu, Debian etc.
-     * `# apt install yarnpkg mpg123 mpd sox libasound2-dev default-jre-headless default-jdk`
+     * `# apt install yarnpkg mpg123 mpd sox libasound2-dev default-jre-headless default-jdk git`
    * Fedora, RedHat etc.
      1. Install RPM Fusion \(for mpd\)
         * `# dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm`
-     2. `# dnf install mpg123 mpd sox alsa-lib-devel java-1.8.0-openjdk-headless java-1.8.0-openjdk-devel`
+     2. `# dnf install mpg123 mpd sox alsa-lib-devel java-1.8.0-openjdk-headless java-1.8.0-openjdk-devel git`
      3. Install Yarn
         1. Complete step 3 below.
         2. `$ npm install -g yarn`
+   * Mac
+     1. `# brew node yarn sox mpd mpg123 openjdk git`
+     2. Skip step 3.
 3. Install node.js
    1. Go to the [node.js website](https://nodejs.org/en/) and download node 12 or later.
       * node version 10 in Ubuntu 20.04 is too old.
@@ -44,11 +47,20 @@
    1. `cd` to the Pia source directory
    2. `yarn install`
    3. `cp config-min.json config.json`
+   4. Adapt `config.json`
 7. Run Pia
    1. `cd` to the Pia source directory
    2. `yarn start`
-   3. Say "Hey Edison, what time is it?"
-   4. Find more commands to say by looking at `app/`\*`/intents.en.json`
+   3. You should see
+      ```text
+      (...)
+      Applications loaded:
+        clock: success
+      (...)
+      Listening to your command...
+      ```
+   4. Say "Hey Edison, what time is it?"
+   5. Find more commands to say by looking at `app/`\*`/intents.en.json`
 8. Configure the applications
 9. Create your own voice apps :-\)
    1. [Implement your voice commands](../develop/app/create-the-stub-files.md) in JavaScript, with the help of npm modules.
