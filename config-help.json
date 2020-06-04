@@ -25,12 +25,8 @@
   },
   "deepSpeech": {
     "modelDir": "DeepSpeech Model directory. Convenience parameter to specify model, lm and trie at the same time.",
-    "model": "DeepSpeech model -- output_graph.pbmm",
-    "lm": "Language model binary file, created with deepspeech/data/lm/generate_lm",
-    "trie": "Language model trie file, created with deepspeech/native_client/generate_trie",
-    "lmAlpha": "DeepSpeech: Language model weight (lm alpha)",
-    "lmBeta": "DeepSpeech: Word insertion bonus (lm beta)",
-    "beamWidth": "DeepSpeech: Beam width for the CTC decoder"
+    "model": "DeepSpeech model -- .pbmm or .tflit. Contains the phonemes. If not passed, path inferred from modelDir.",
+    "scorer": "DeepSpeech .scorer file. Contains the language model. If not passed, path inferred from modelDir."
   },
   "maryTTS": {
     "url": "URL of the MaryTTS server, usually running locally",

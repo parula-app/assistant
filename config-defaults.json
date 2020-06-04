@@ -19,13 +19,9 @@
     "maxCommandLength": 10
   },
   "deepSpeech": {
-    "modelDir": "./data/deepspeech-0.6.1-models/",
-    "model": "",
-    "lm": "",
-    "trie": "",
-    "lmAlpha": 0.75,
-    "lmBeta": 1.85,
-    "beamWidth": 500
+    "modelDir": "./data/deepspeech-%version%-models/",
+    "model": null,
+    "scorer": null
   },
   "maryTTS": {
     "url": "http://localhost:59125",

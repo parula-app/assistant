@@ -3,8 +3,9 @@
  * Uses DeepSpeech.
  */
 
-import Ds from 'deepspeech';
+import DeepSpeech from 'deepspeech';
 import { getConfig } from '../../util/config.js';
+import { loadJSONFile } from '../../util/util.js';
 import os from 'os';
 
 var model;
@@ -15,25 +16,25 @@ export async function load() {
     if (!config.modelDir.endsWith("/")) {
       config.modelDir += "/";
     }
-    let filename = "output_graph." + (os.arch() == "arm" || os.arch() == "arm64" ? "tflite" : "pbmm");
-    config.model = config.model || config.modelDir + filename;
-    config.lm = config.lm || config.modelDir + "lm.binary";
-    config.trie = config.trie || config.modelDir + "trie";
+    let deepSpeechPackage = loadJSONFile('./node_modules/deepspeech/package.json');
+    let version = deepSpeechPackage.version;
+    let dir = config.modelDir.replace("%version%", version);
+    let basename = `${dir}deepspeech-${version}-models.`;
+    config.model = config.model || basename + (os.arch() == "arm" || os.arch() == "arm64" ? "tflite" : "pbmm");
+    config.scorer = config.scorer || basename + "scorer";
   }
-  console.info('Loading model from file %s', config.model);
+  console.info('Loading model from file %s and scorer from file %s', config.model, config.scorer);
   const startTime = new Date();
-  model = new Ds.Model(config.model, config.beamWidth);
-  if (config.lm && config.trie) {
-    console.info('Loading language model from files %s and %s', config.lm, config.trie);
-    //const startTime = process.hrtime();
-    model.enableDecoderWithLM(config.lm, config.trie, config.lmAlpha, config.lmBeta);
-    //console.info('Loaded language model in %ds.', (new Date() - startTime) / 1000);
+  model = new DeepSpeech.Model(config.model);
+  model.enableExternalScorer(config.scorer);
+  if (config.beamWidth) { // normally part of the model file
+    model.setBeamWidth(config.beamWidth);
   }
   console.info('Loaded model in %ds.', (new Date() - startTime) / 1000);
 }
 
 export function unload() {
-  Ds.FreeModel(model);
+  DeepSpeech.FreeModel(model);
 }
 
 export function sampleRate() {
@@ -67,7 +68,7 @@ export class SpeechRecognizer {
    * Workaround: Wrap in `(async () => {...}();` ?
    */
   processAudio(audioBuffer) {
-    this.model.feedAudioContent(this.modelStream, audioBuffer.slice(0, audioBuffer.length / 2));
+    this.modelStream.feedAudioContent(audioBuffer.slice(0));
   }
 
   /**
@@ -77,7 +78,7 @@ export class SpeechRecognizer {
    * TODO should be async, but DeepSpeech is currently blocking :(
    */
   end() {
-    return this.model.finishStream(this.modelStream);
+    return this.modelStream.finishStream();
   }
 }
 
