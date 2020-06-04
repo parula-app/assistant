@@ -38,6 +38,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   detector.start(audioInputStream, kSampleRate);
 
   let vad = new VAD(VAD.Mode.VERY_AGGRESSIVE);
+  const kBufferFrames = 2;
 
   // Whether this is an active command
   let commandStartTime = null;
@@ -96,7 +97,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
           // Wakeword cuts the start of the command.
           // Workaround: Buffer last 3 frames.
           startBuffer.push(buffer);
-          if (startBuffer.length >= 3) {
+          if (startBuffer.length >= kBufferFrames) {
             startBuffer.shift();
           }
         }
