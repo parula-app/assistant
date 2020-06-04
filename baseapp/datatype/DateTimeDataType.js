@@ -13,15 +13,7 @@ export class DateTimeDataType extends OpenEndedDataType {
   }
 
   /**
-   * @param inputText {string} What the user said
-   * @returns {
-   *    value {number} the corresponding value ID, or null/undefined
-   *    score {float} Rate how well the inputText matches the data type value.
-   *      0..1, whereas
-   *      1 = no relation whatsoever
-   *      0.5 = half the string matches
-   *      0 = perfect match
-   * }
+   * @see DataType.valueForInput()
    */
   valueForInput(input) {
     if (input instanceof Date) {

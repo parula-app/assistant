@@ -8,12 +8,14 @@ import { assert } from '../../util/util.js';
  * They will typically come from the app model and app translation.
  *
  * The terms are translated into different languages,
- * but their corresponding IDs are language-independent.
+ * but their corresponding IDs (= values) are language-independent.
+ * Each value can have several terms associated, even for the same language.
+ * For this class: value = ID.
  *
- * E.g. one value might be:
+ * E.g. one entry might be:
  *   ID = "ge"
- *   English = "Genesis", "First book of Moses"
- *   German = "Erste Mose"
+ *   English = "Genesis", "1. book of Moses", ...
+ *   German = "1. Mose", "Erste Mose", ...
  *   etc.
  */
 export class EnumDataType extends FiniteDataType {
@@ -24,11 +26,11 @@ export class EnumDataType extends FiniteDataType {
     super(id);
 
     /**
-     * @see FiniteDataType.valueIDs
-     * E.g. [ "ge", "nu", ... ]
-     * { Set of id {string} }
+     * @see FiniteDataType.values
+     * E.g. "ge", "nu", ...
+     * { Set of ID {string} }
      */
-    this._valueIDs = new Set();
+    this._values = new Set();
 
     /**
      * @see FiniteDataType.terms
@@ -39,7 +41,7 @@ export class EnumDataType extends FiniteDataType {
      *   "Numbers": "nu",
      *   ...
      * }
-     * {Map of term {string} -> value ID {string}}
+     * {Map of term {string} -> value {string}}
      */
     this._terms = new Map();
 
@@ -52,10 +54,10 @@ export class EnumDataType extends FiniteDataType {
   }
 
   /**
-   * @returns {Array of string} IDs of the different enum values
+   * @returns {Array of string} All possible values = IDs
    */
-  get valueIDs() {
-    return [...this._valueIDs.values()];
+  get values() {
+    return [...this._values.values()];
   }
 
   /**
@@ -67,15 +69,15 @@ export class EnumDataType extends FiniteDataType {
 
   /**
    * @param term {string} What the user said
-   * @returns {string} the corresponding value ID, or null/undefined
+   * @returns {string} the corresponding value = ID, or null/undefined
    */
-  valueIDForTerm(term) {
+  valueForTerm(term) {
     return this._terms.get(term);
   }
 
-  termForValueID(valueID) {
-    for (let [ term, curValueID ] of this._terms.entries()) {
-      if (valueID == curValueID) {
+  termForValue(value) {
+    for (let [ term, curValue ] of this._terms.entries()) {
+      if (value == curValue) {
         return term;
       }
     }
@@ -83,26 +85,26 @@ export class EnumDataType extends FiniteDataType {
 
   /**
    * Adds a new unique value for this data type.
-   * @param id {string}  ID for the new value
+   * @param id {string}  ID = value
    * @param terms {Array of string}  Words that the user can say
    *     that each mean this value.
    */
   addValue(id, terms) {
     assert(id && typeof(id) == "string");
 
-    this._valueIDs.add(id);
+    this._values.add(id);
     this.addTerms(id, terms);
   }
 
   /**
    * Adds additional terms for an existing value.
-   * @param id {string}  ID of the value
+   * @param id {string}  ID = value
    * @param terms {Array of string}  Words that the user can say
    *     that each mean this value.
    */
   addTerms(id, terms) {
     assert(id && typeof(id) == "string");
-    assert(this._valueIDs.has(id));
+    assert(this._values.has(id));
 
     for (let term of terms) {
       this._terms.set(term, id);

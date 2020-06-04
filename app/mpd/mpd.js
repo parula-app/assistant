@@ -49,7 +49,7 @@ export default class MPD extends JSONApp {
         }
       }
     }
-    console.info('Read %d songs in %dms', songAndArtistType.valueIDs.length, new Date() - startTime);
+    console.info('Read %d songs in %dms', songAndArtistType.values.length, new Date() - startTime);
   }
 
   /**

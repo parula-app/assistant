@@ -165,7 +165,7 @@ export class Intent {
    *
    * @param args {JS obj: Parameter ID {string} -> value }
    *   Before calling this function, the enum variables will already be translated
-   *   from the translated word that the user spoke to their value ID.
+   *   from the translated word that the user spoke to their value.
    * @param clientAPI {ClientAPI}
    * @returns {string} Text to say to the end user. Needs to be translated.
    */
@@ -178,9 +178,9 @@ export class Intent {
         throw new Error("Parameter ID " + argID + " is unknown for intent " + intent.id);
       }
       if (type instanceof FiniteDataType) {
-        let valueID = args[argID];
-        if (!type.valueIDs.includes(valueID)) {
-          throw new Error("Argument " + valueID + " is unknown for datatype " + type.id + ". This happened while calling intent " + intent.id);
+        let value = args[argID];
+        if (!type.values.includes(value)) {
+          throw new Error("Argument " + value + " is unknown for datatype " + type.id + ". This happened while calling intent " + intent.id);
         }
       }
       // TODO check that all required parameters are there

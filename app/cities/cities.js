@@ -41,10 +41,10 @@ export default class Cities extends JSONApp {
     await this.loadCities();
     console.timeEnd("Loading cities");
 
-    /*for (let city of this._dataType.valueIDs.sort((a, b) => a.distance - b.distance)) {
+    /*for (let city of this._dataType.values.sort((a, b) => a.distance - b.distance)) {
       console.log(city.name, city.distance, city.population);
     }*/
-    console.log(`Kept ${ this._dataType.valueIDs.length } cities`);
+    console.log(`Kept ${ this._dataType.values.length } cities`);
   }
 
   async loadCountries(lang) {
@@ -182,7 +182,7 @@ export default class Cities extends JSONApp {
     let location = args.Location;
     assert(location, "Need the location");
     if (location.continent) {
-      let continent = this.dataTypes.Continent.termForValueID(location.continent);
+      let continent = this.dataTypes.Continent.termForValue(location.continent);
       let neighborCountries = location.neighbors.map(isoCode => {
         let country = this._countries.get(isoCode);
         return country ? country.name : isoCode;

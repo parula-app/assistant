@@ -2,10 +2,10 @@ import { FiniteDataType } from './FiniteDataType.js';
 import { assert } from '../../util/util.js';
 
 /**
- * A simple list of values. They have no ID.
+ * A simple list of values. They have no ID, but the term
+ * is identical to the value.
  *
- * It's a known list of values, typically from the application data.
- *
+ * Typically from the application data.
  * E.g. song titles, artist names
  */
 export class ListDataType extends FiniteDataType {
@@ -21,7 +21,7 @@ export class ListDataType extends FiniteDataType {
     this._values = [];
   }
 
-  get valueIDs() {
+  get values() {
     return this._values;
   }
 
@@ -29,7 +29,7 @@ export class ListDataType extends FiniteDataType {
     return this._values;
   }
 
-  valueIDForTerm(term) {
+  valueForTerm(term) {
     return term;
   }
 

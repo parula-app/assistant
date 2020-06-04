@@ -15,10 +15,12 @@ import { matchString } from '../../intentParser/matchString.js';
  * of your colleague in your contacts list.
  *
  * The terms are translated into different languages,
- * but their corresponding IDs are language-independent.
+ * but their corresponding values are the corresponding internal objects.
+ * The terms are what the user says, but the values are what
+ * the app receives.
  *
- * The string matching with user input and the mapping to ID is done
- * here in `valueForInput()`.
+ * The string matching with user input and the mapping to values
+ * is done here in `valueForInput()`.
   */
 export class FiniteDataType extends DataType {
   /**
@@ -36,15 +38,16 @@ export class FiniteDataType extends DataType {
   }
 
   /**
-   * The complete set of all IDs that are valid for this type.
-   * They are the IDs for the terms, e.g. "ge" for "Genesis".
+   * The complete set of all values that are valid for this type.
+   * They are the internal representations for the terms,
+   * e.g. "ge" for "Genesis". It may also be an JS object.
    * They are not shown to the user and not translated.
    * In some cases, e.g. for artists, they may be identical to the terms.
    *
-   * @returns {Array of string} IDs of the different enum values
+   * @returns {Array of string} All possible enum values
    * TODO make it a Set?
    */
-  get valueIDs() {
+  get values() {
     throw new Error("Implement this");
   }
 
@@ -74,16 +77,16 @@ export class FiniteDataType extends DataType {
 
   /**
    * @param term {string} What the user said
-   * @returns {string} the corresponding value ID, or null/undefined
+   * @returns {string} the corresponding value, or null/undefined
    */
-  valueIDForTerm(term) {
+  valueForTerm(term) {
     throw new Error("Implement this");
   }
 
   /**
    * @param inputText {string} What the user said
    * @returns {
-   *    value {string} the corresponding value ID, or null/undefined
+   *    value {string} the corresponding value, or null/undefined
    *    score {float} Rate how well the inputText matches the data type value.
    *      0..1, whereas
    *      1 = no relation whatsoever
@@ -105,7 +108,7 @@ export class FiniteDataType extends DataType {
         score: 1,
       };
     }
-    let value = this.valueIDForTerm(match.targetString);
+    let value = this.valueForTerm(match.targetString);
     return {
       value: value,
       score: match.score,

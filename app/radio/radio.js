@@ -26,7 +26,7 @@ export default class Radio extends JSONApp {
 
       // Genres
       for (let genreName of station.tags) {
-        let stationList = genreType.valueIDForTerm(genreName);
+        let stationList = genreType.valueForTerm(genreName);
         if (stationList) {
           stationList.push(station);
         } else {
