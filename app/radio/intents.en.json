@@ -20,13 +20,8 @@
                         }
                     ],
                     "samples": [
-                        "Play radio {Station}",
-                        "Play the radio station {Station}",
-                        "Play the station {Station}",
-                        "Play station {Station}",
-                        "Play radio station {Station}",
-                        "Play {Station}",
-                        "Play the station {Station} via TuneIn"
+                        "Play (the|) (radio|) (station|) {Station}",
+                        "Play {Station}"
                     ]
                 },
                 {
@@ -38,11 +33,8 @@
                         }
                     ],
                     "samples": [
-                        "Play {Genre}",
-                        "Play {Genre} music",
-                        "Play {Genre} for  me",
-                        "Play music {Genre}",
-                        "Play {Genre} via TuneIn"
+                        "Play (some|) {Genre} (music|) (for me|)",
+                        "Play {Genre}"
                     ]
                 },
                 {
@@ -75,9 +67,7 @@
                 {
                     "name": "Pia.More",
                     "samples": [
-                        "More music like this",
-                        "More songs like this",
-                        "More like this"
+                        "More (music|songs|) like this"
                     ]
                 }
             ],
