@@ -14,7 +14,7 @@
         "@nano-sql/core": "^2.3.7",
         "@nano-sql/plugin-fuzzy-search": "^2.0.2",
         "argparse": "^1.0.10",
-        "bumblebee-hotword-node": "^0.0.5",
+        "bumblebee-hotword-node": "^0.0.6",
         "dav": "^1.8.0",
         "deepspeech": "^0.7.3",
         "didyoumean2": "^4.0.0",
