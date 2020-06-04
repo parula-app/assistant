@@ -1,0 +1,1 @@
+Tells a random joke.

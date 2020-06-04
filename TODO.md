@@ -36,9 +36,9 @@
 * Clock
 * TODO list, Shopping list
 * Lights for Hue
+* Jokes
 
 ## TODO
-* Jokes
 * Reminder, Alarm
 * Weather
 * Calendar
