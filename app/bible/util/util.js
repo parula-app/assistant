@@ -2,37 +2,26 @@
  * (c) 2013-2019 Ben Bucksch
  */
 
-//var fs = require("fs").promises;
+import StringBundle from "../util/stringbundle.js";
+import fs from 'fs';
 
 /**
  * @param test {Boolean}
  * @param errorMsg {String}
  */
-function assert(test, errorMsg) {
+export function assert(test, errorMsg) {
   errorMsg = errorMsg || "assertion failed";
   if ( !test) {
     throw new Exception(errorMsg);
   }
 }
 
-function ddebug(msg) {
+export function ddebug(msg) {
   if (console) {
     console.debug(msg);
   }
 }
 
-
-/**
- * Create a subtype.
- */
-function extend(child, supertype)
-{
-  var properties = Object.create(null);
-  Object.getOwnPropertyNames(child.prototype).forEach(function(key) {
-    properties[key] = Object.getOwnPropertyDescriptor(child.prototype, key);
-  });
-  child.prototype = Object.create(supertype.prototype, properties);
-}
 
 /**
  * Creates a callback that calls a function with the given parameters.
@@ -46,7 +35,7 @@ function extend(child, supertype)
  * @param arg, arg, arg {...}   to be passed to |func|
  * @returns {Function}
  */
-function cbParams(func) {
+export function cbParams(func) {
   var args = Array.prototype.slice.call(arguments, 1); // remove first arg |func|, keep rest
   return function() {
     func.apply(null, args);
@@ -66,7 +55,7 @@ function cbParams(func) {
  * @param arg, arg, arg {...}   to be passed to |func|
  * @returns {Function}
  */
-function cbObj(obj, method) {
+export function cbObj(obj, method) {
   var args = Array.prototype.slice.call(arguments, 2); // remove args |obj| and |func|, keep rest
   return function() {
     method.apply(obj, args);
@@ -84,7 +73,7 @@ function cbObj(obj, method) {
  *     if false: remove only the first hit
  * @returns {Integer} number of hits removed (0, 1 or more)
  */
-function arrayRemove(array, element, all)
+export function arrayRemove(array, element, all)
 {
   var found = 0;
   var pos = 0;
@@ -98,19 +87,8 @@ function arrayRemove(array, element, all)
   return found;
 }
 
-/**
- * Check whether |element| is in |array|
- * @param array {Array}
- * @param element {Object}
- * @returns {boolean} true, if |array| has a member that equals |element|
- */
-function arrayContains(array, element)
-{
-  return array.indexOf(element) != -1;
-}
 
-
-function shortenText(text, maxLen) {
+export function shortenText(text, maxLen) {
   return text.length <= maxLen ? text : text.substr(0, maxLen) + "…";
 }
 
@@ -124,7 +102,7 @@ function shortenText(text, maxLen) {
  *     determines the number of 0s in front, e.g. 3
  * @returns e.g. "009"
  */
-function padLeading(str, pad, minlen) {
+export function padLeading(str, pad, minlen) {
     str = str + ""; // convert to String
     while (str.length < minlen) {
       str = pad + str;
@@ -132,137 +110,185 @@ function padLeading(str, pad, minlen) {
     return str;
 }
 
-function trim(str) {
+export function trim(str) {
   return str.replace(/^\s\s*/, "").replace(/\s\s*$/, "");
 }
+
+/* jQuery plugin to handle the enter key in <input> fields *
+$.fn.returnKey = function(fn) {
+  return this.each(function() {
+    $(this).bind("enterPressed", fn);
+    $(this).keyup(function(e) {
+      if(e.keyCode == 13) {
+        $(this).trigger("enterPressed");
+      }
+    });
+  });
+};
+*/
 
 /**
  * Translate string
  * @param id {String}   key in "appui.properties" file
  * @param args {String or Array of String}   replacement parameters
  */
-function tr(id, args) {
+export function tr(id, args) {
   if (typeof(args) == "string") {
     args = [ args ];
   }
   if ( !tr._sb) {
-    tr._sb = new StringBundle("appui")
+    tr._sb = new StringBundle("appui.properties")
   }
   return tr._sb.get(id, args);
 }
 
-function dataURL(relPath, lang) {
-  if (!lang) {
-    lang = "en"; // TODO i18n
-  }
+export function dataURL(relPath, lang) {
   assert(relPath && typeof(relPath) == "string");
-  return "./data/bible/" + lang + "/" + relPath;
+  return "data/bible/" + lang + "/" + relPath;
 }
 
-function mediaURL(relPath) {
-  return "./data/bible/media/" + relPath;
+export function mediaURL(relPath) {
+  return "data/bible/media/" + relPath;
 }
 
 /**
- * @param filename {String}  "/data/bar/baz.json" or relative "bar/baz.json"
- * @dataType {String-enum}  Expected type of file contents
+ * @param filePath {String}   file path relative to project root
+ * @param dataType {String-enum}  Expected type of file contents
  *    "text", "json", "xml" or "html"
- * @param successCallback {Function(result)}
- *    result {String or Object or DOMDocument}
- * @param errorCallback {Function(e {Exception or Error})}
+ * @returns {String or Object or DOMDocument}
  */
-function loadURL(filename, dataType, successCallback, errorCallback) {
-  assert(typeof(filename) == "string" && filename, "need filename");
-  assert(typeof(dataType) == "string" && dataType, "need type");
-  try {
-    console.log("Loading " + filename);
-    fs = loadURL.fs; // HACK
-    fs.readFile(filename, { encoding: "utf8", flag: "r" })
-    .then(data => {
-      if ( !data) {
-        throw "File is empty";
-      }
-      if (dataType == "json") {
-        data = JSON.parse(data);
-        //console.log("returning JSON " + JSON.stringify(data, null, 2).substr(0, 1000));
-      } else if (dataType == "text") {
-        // OK
-      } else {
-        throw "Unsupported data type " + dataType;
-      }
-      console.log("file loaded");
-      successCallback(data);
-    })
-    .catch(e => errorCallback(e));
-  } catch (e) {
-    errorCallback(e);
+export async function loadURL(filePath, dataType) {
+  assert(dataType == "json", "Only JSON supported for now");
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+/**
+ * Parses a URL query string into an object.
+ *
+ * @param queryString {String} query ("?foo=bar&baz=3") part of the URL,
+ *     with or without the leading question mark
+ * @returns {Object} JS map, e.g. { foo : "bar", baz: "3" } for the example above
+ */
+export function parseURLQueryString(queryString)
+{
+  if (URLSearchParams) {
+    let params = new URLSearchParams(queryString);
+    let result = {}
+    params.forEach((value, key) => {
+      result[key] = value;
+    });
+    return result;
   }
-}
 
-
-
-
-function runAsync(func, errorCallback) {
-  assert(typeof(func) == "function");
-  assert(typeof(errorCallback) == "function");
-  setTimeout(function() {
+  var queryParams = {};
+  if (queryString.charAt(0) == "?")
+    queryString = queryString.substr(1); // remove leading "?", if it exists
+  var queries = queryString.split("&");
+  for (var i = 0; i < queries.length; i++) {
     try {
-      func();
-    } catch (e) { errorCallback(e); }
-  }, 0);
+      if ( !queries[i]) {
+        continue;
+      }
+      var querySplit = queries[i].split("=");
+      var value = querySplit[1].replace(/\+/g, " "); // "+" is space, before decoding
+      queryParams[querySplit[0]] = decodeURIComponent(value);
+    } catch (e) {
+      // Errors parsing the query string are not fatal, we should just continue
+      errorNonCritical(e);
+    }
+  }
+  return queryParams;
 }
 
-function runLater(millisec, func, errorCallback) {
-  assert(typeof(func) == "function");
+export async function runAsync() {
+  return new Promise((successCallback, errorCallback) => {
+    setTimeout(function() {
+      try {
+        successCallback();
+      } catch (ex) { errorCallback(ex); }
+    }, 0);
+  });
+}
+
+export async function runLater(millisec) {
+  assert(typeof(millisec) == "number");
+  return new Promise((successCallback, errorCallback) => {
+    setTimeout(function() {
+      try {
+        successCallback();
+      } catch (ex) { errorCallback(ex); }
+    }, millisec);
+  });
+}
+
+/**
+ * @param promise {Promise}  Pass a called async function in here,
+ *     e.g. noAwait(load(), errorCallback);
+ */
+export function noAwait(promise, errorCallbback) {
+  assert(typeof(promise.resolve) == "function");
   assert(typeof(errorCallback) == "function");
-  setTimeout(function() {
+  (async () => {
     try {
-      func();
-    } catch (e) { errorCallback(e); }
-  }, millisec);
+      await promise;
+    } catch (ex) {
+      errorCallback(ex);
+    }
+  })();
 }
 
-function Exception(msg)
-{
-  this._message = msg;
-  this.stack = new Error().stack;
-}
-Exception.prototype =
-{
-  get message()
-  {
-    return this._message;
-  },
-  set message(msg)
-  {
+export class Exception {
+  constructor(msg) {
     this._message = msg;
-  },
-  toString : function()
-  {
+
+    // get stack
+    try {
+      not.found.here += 1; // force a native exception ...
+    } catch (e) {
+      this.stack = e.stack; // ... to get the current stack
+    }
+    //debug("ERROR (exception): " + msg + "\nStack:\n" + this.stack);
+  }
+
+  get message() {
+    return this._message;
+  }
+  set message(msg) {
+    this._message = msg;
+  }
+  toString() {
     return this._message;
   }
 }
 
-function NotReached(msg)
-{
-  Exception.call(this, msg);
+export class NotReached extends Exception {
+  constructor(msg) {
+    super(msg);
+  }
 }
-extend(NotReached, Exception);
 
-
-function UserCancelledException(msg)
-{
-  // The user knows they cancelled so I don't see a need
-  // for a message to that effect.
-  if (!msg)
-    msg = "";
-  Exception.call(this, msg);
+export class UserCancelledException extends Exception {
+  constructor(msg) {
+    // The user knows they cancelled, so I don't see a need
+    // for a message to that effect.
+    super(msg || "");
+  }
 }
-UserCancelledException.prototype =
-{
-}
-extend(UserCancelledException, Exception);
 
+export class ServerException extends Exception {
+  constructor(serverMsg, code, uri) {
+    super(serverMsg);
+    this.rootErrorMsg = serverMsg;
+    this.code = code;
+    this.uri = uri;
+  }
+}
+
+export function removeChildElements(domElement) {
+  while (domElement.firstChild) {
+    domElement.firstChild.remove();
+  }
+}
 
 /**
  * Return the contents of an object as multi-line string, for debugging.
@@ -272,7 +298,7 @@ extend(UserCancelledException, Exception);
  *    1 = just the properties directly on |obj|
  * @param curDepth {Integer} internal, ignore
  */
-function dumpObject(obj, name, maxDepth, curDepth)
+export function dumpObject(obj, name, maxDepth, curDepth)
 {
   if (curDepth == undefined)
     curDepth = 1;
@@ -306,23 +332,3 @@ function dumpObject(obj, name, maxDepth, curDepth)
     result += name + " is empty\n";
   return result;
 }
-
-/*
-module.exports = {
-  loadURL: loadURL,
-  assert: assert,
-  ddebug: ddebug,
-  extend: extend,
-  cbParams: cbParams,
-  cbObj: cbObj,
-  arrayRemove: arrayRemove,
-  shortenText: shortenText,
-  padLeading: padLeading,
-  trim: trim,
-  tr: tr,
-  dataURL: dataURL,
-  Exception: Exception,
-  NotReached: NotReached,
-  dumpObject: dumpObject,
-}
-*/

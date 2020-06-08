@@ -1,67 +1,73 @@
-/**
- * @param name {String}
- * must be an abbr. bible reference in English of the form
- * "1. Cor. 3:2-5".
- *
- * |quote| is the full text of the verses in |name|.
- */
-function BibleText(name, lang, storage) {
-  Source.call(this);
+import { assert, dataURL, loadURL } from "../util/util.js";
+import StringBundle from "../util/stringbundle.js"
+import { Source } from "../model/model.js";
 
-  if (!lang) {
-    lang = "en"; // TODO i18n
-  }
-  this._lang = lang;
-  if (storage instanceof Storage) {
-    this.storage = storage;
-  } else {
-    this.storage = null;
-  }
-
-  if ( !BibleText.books[0].num) {
-    BibleText.loadTranslation(lang);
-  }
-  if (name) {
-    this.name = name;
-    this.init();
-  }
-}
-BibleText.prototype = {
-  typename : "bibletext",
-  book : null, // one entry from |BibleText.books|
-  chapter : 0, // {Integer}
-  verse : 0, // {Integer}
+export class BibleText extends Source {
   /**
-   * {Integer-enum}
-   * 0 = single verse
-   * 1 = from a to b, e.g. "1-3"
-   * 2 = a and b, e.g. "3, 4"
-   * 3 = whole chapter
+   * |quote| will be the full text of the verses in |name|.
+   *
+   * @param storage {Storage}
+   * @param name {String}
+   * must be an abbr. bible reference in English of the form
+   * "1. Cor. 3:2-5".
    */
-  range : 0,
-  verseTo : 0, // {Integer}
-  storage : null, // {Storage}
+  constructor(storage, name) {
+    assert(storage.getID, "Need storage");
+    super("bibletext");
 
-  /**
-   * Footnotes from the bible
-   *
-   * |quote| here is a substring of |this.quote| = |this.descr| and
-   * shows to which word/phrase the footnote belongs.
-   *
-   * The value is the foot note, as plaintext
-   * Do not add HTML here. This isn't verified, though, so when you process
-   * this, do not use innerHTML = footnote or similar, but textContent = footnote;
-   *
-   * {Map quote {String} -> footnote {String}}
-   */
-  footnotes : null,
+    /**
+     * one entry from |BibleText.books|
+     */
+    this.book = null;
+    /**
+     * {Integer}
+     */
+    this.chapter = 0;
+    /**
+     * {Integer}
+     */
+    this.verse = 0;
+    /**
+     * {Integer-enum}
+     * 0 = single verse
+     * 1 = from a to b, e.g. "1-3"
+     * 2 = a and b, e.g. "3, 4"
+     * 3 = whole chapter
+     */
+    this.range = 0;
+    /**
+     * {Integer}
+     */
+    this.verseTo = 0;
+
+    /**
+     * Footnotes from the bible
+     *
+     * |quote| here is a substring of |this.quote| = |this.descr| and
+     * shows to which word/phrase the footnote belongs.
+     *
+     * The value is the foot note, as plaintext
+     * Do not add HTML here. This isn't verified, though, so when you process
+     * this, do not use innerHTML = footnote or similar, but textContent = footnote;
+     *
+     * {Map quote {String} -> footnote {String}}
+     */
+    this.footnotes = null;
+
+    this._storage = storage;
+
+    if (name) {
+      this.name = name;
+      this.init();
+    }
+  }
 
   /**
    * Must be called after setting |name|.
    * Parses the reference and sets internal variables
    * like book, chapter etc.
    */
-  init : function() {
+  init() {
     if ( !this.book && this.name) {
       this._parse();
     } else {
@@ -69,9 +75,9 @@ BibleText.prototype = {
     }
     this.name = this.prettyName;
     this.id = this.codeRef;
-  },
+  }
 
-  _setFromVars : function() {
+  _setFromVars() {
     assert(this.book && this.book.code, "BibleText: name or book missing");
     assert(this.chapter, "chapter missing");
     if (this.verse == 0 && this.verseTo == 0) {
@@ -86,16 +92,15 @@ BibleText.prototype = {
     } else {
       assert(false, "can't process verses " + this.verse + "-" + this.verseTo);
     }
-  },
+  }
 
   /**
-   * Contructor function
    * Make a copy of |this|, initing the new object
    * with the same values has |this| has,
    * and return the new object.
    */
-  clone : function() {
-    var n = new BibleText();
+  clone() {
+    var n = new BibleText(this._storage);
     n.book = this.book;
     n.chapter = this.chapter;
     n.verse = this.verse;
@@ -103,13 +108,13 @@ BibleText.prototype = {
     n.verseTo = this.verseTo;
     n.init();
     return n;
-  },
+  }
 
   /**
    * Makes the values of |this| match |other|.
    * @param other {BibleText}
    */
-  copyFrom : function(other) {
+  copyFrom(other) {
     assert(other instanceof BibleText);
     assert(other.book);
     this.book = other.book;
@@ -120,18 +125,13 @@ BibleText.prototype = {
     this.descr = "";
     this.init();
     return this;
-  },
-
-  _regexpExact : /^(\d)?\.?\s*([a-zA-Zöäü]+)\.?\s*(\d+)\s*:?\s*(\d+)?(\s*([\-\,])\s*(\d+))?/,
-  _regexpSearch : /(\d)?\.?\s*([a-zA-Zöäü]+)\.?\s*(\d+)\s*:?\s*(\d+)?(\s*([\-\,])\s?(\d+))?/,
-  _regexpExtensionChVerse : /\s*(\d+)\s*:\s*(\d+)(\s*([\-\,])\s*(\d+))?/,
-  _regexpExtensionVerse : /\s*(\d+)(\s*([\-\,])\s?(\d+))?/,
+  }
 
   /**
    * Takes |this.name| as Bible reference and tries
    * to get bible book, chapter and verse(s) from it.
    */
-  _parse : function() {
+  _parse() {
     assert(this.name, "BibleText.name must be set");
     // digit (optional), dot (optional), spaces (optional),
     // letters (mandatory), dot (optional), spaces (optional),
@@ -140,7 +140,7 @@ BibleText.prototype = {
     // digits (optional), spaces (optional),
     // "," or "-" (optional), spaces (optional),
     // digits (optional)
-    var matches = this._regexpExact.exec(this.name);
+    var matches = BibleText._regexpExact.exec(this.name);
     assert(matches, "BibleText: could not parse " + this.name);
     var bookNumPrefix = "";
     if (matches[1]) {
@@ -149,36 +149,26 @@ BibleText.prototype = {
     var bookName = matches[2];
     // bookCode = "1co"
     var bookCode = bookNumPrefix + bookName.toLowerCase();
-    var self = this;
-    BibleText.books.forEach(function(o) {
-      if (o.code == bookCode) { self.book = o; }
-    });
-    /*
+    this.book = BibleText.books.find(o => o.code == bookCode);
     // Can't do that in the same loop, because
     // pr = Proverbs, but pr = Eccl. in German,
     // but we normally need the Engl code.
     // TODO Fix Pr when it's really German, by passing in |lang|
     if ( !this.book) {
-      BibleText.books.forEach(function(o) {
-        if (o.longTrNoSpace == bookCode) { self.book = o; }
-      });
+      this.book = BibleText.books.find(o => o.longTrNoSpace == bookCode);
     }
     if ( !this.book) {
-      BibleText.books.forEach(function(o) {
-        if (o.abbrTrNoSpace == bookCode) { self.book = o; }
-      });
+      this.book = BibleText.books.find(o => o.abbrTrNoSpace == bookCode);
     }
-    */
-    assert(this.book, "Bible book " + bookCode + " not found");
+    assert(this.book, "BibleText: book " + bookCode + " not found");
     this.chapter = parseInt(matches[3]);
     if (this.book.chapterCount == 1) {
       this.verse = this.chapter;
       this.chapter = 1;
       return;
     }
-    if (this.chapter > this.book.chapterCount) {
-      throw new UserError(this.book.longTr + " chapter " + this.chapter + " does not exist");
-    }
+    assert(this.chapter <= this.book.chapterCount,
+        this.book.longTr + " chapter " + this.chapter + "does not exist");
     if ( !matches[4]) {
       this.range = 3;
       return;
@@ -196,7 +186,7 @@ BibleText.prototype = {
     if (this.range) {
       this.verseTo = parseInt(matches[7]);
     }
-  },
+  }
 
   /**
    * Creates a standardized, computer-readable Bible reference
@@ -210,7 +200,7 @@ BibleText.prototype = {
       }
     }
     return result;
-  },
+  }
 
   /**
    * @returns {String} (translated) e.g. "1. Mo. 5:3, 4"
@@ -228,9 +218,20 @@ BibleText.prototype = {
       result += (this.range == 1 ? "-" : ", ") + this.verseTo;
     }
     return result;
-  },
+  }
 
-  _fetchFromCache : function() {
+  get pageURL() {
+    let url = "/bible/" + this.book.code + "/" + this.chapter;
+    if (this.range != 3) {
+      url += "/" + this.verse;
+      if (this.range == 1 || this.range == 2) {
+        url += "/to/" + this.verseTo;
+      }
+    }
+    return url;
+  }
+
+  _fetchFromCache() {
     assert(this.book, "You need to call this._parse() first");
     if (this.quote) {
       return;
@@ -239,45 +240,44 @@ BibleText.prototype = {
       return;
     }*/
     var missing = false;
-    var self = this;
-    this.quote = this.verses().map(function(verse) {
-      var quote = self._verseCacheGet(self.book, self.chapter, verse);
+    this.quote = this.verses().map(verse => {
+      var quote = this._verseCacheGet(this.book, this.chapter, verse);
       if (!quote) {
         missing = true;
       }
-      return (self.range == 3 ? "(" + verse + ") " : "") + quote;
+      return (this.range == 3 ? "(" + verse + ") " : "") + quote;
     }).join(" ");
     if (missing) {
       this.quote = "";
     }
-  },
+  }
 
-  verses : function() {
+  verses() {
     var verses = [ this.verse ];
     if (this.range == 1) { // from a to b
-      for (var i = this.verse + 1; i <= this.verseTo; i++) {
+      for (let i = this.verse + 1; i <= this.verseTo; i++) {
         verses.push(i);
       }
     } else if (this.range == 2) { // a and b
       verses.push(this.verseTo);
     } else if (this.range == 3) { // whole chapter
-      var maxVerse = this.book.maxVerse[this.chapter];
+      let maxVerse = this.book.maxVerse[this.chapter];
       if ( !maxVerse) {
         return []; // happens to work
       }
       verses = [];
-      for (var i = 1; i <= maxVerse; i++) {
+      for (let i = 1; i <= maxVerse; i++) {
         verses.push(i);
       }
     }
     return verses;
-  },
+  }
 
   /**
    * @param ref {BibleText}   other text to compare
    * @returns {Boolean} |ref| is part of |this| or identical.
    */
-  contains : function(ref) {
+  contains(ref) {
     assert(ref instanceof BibleText);
     if (ref.book != this.book || ref.chapter != this.chapter) {
       return false;
@@ -292,23 +292,43 @@ BibleText.prototype = {
     var refVerses = "," + ref.verses().join(",") + ","; // TODO use array diffing
     var thisVerses = "," + this.verses().join(",") + ",";
     return thisVerses.indexOf(refVerses) >= 0;
-  },
+  }
 
   /**
    * Based on the reference in |this.name|,
    * loads the source text from internet or
    * files, and fills |this.quote| with it.
-   * @param successCallback({string} quote)
    */
-  load : function(successCallback, errorCallback) {
+  async load() {
     this._fetchFromCache();
     if (this.quote) {
-      successCallback(this.quote);
-      return;
-    } else {
-      errorCallback(new UserError(this.book.longTr + " " + this.chapter + " verse " + this.verse + " does not exist"));
+      return this.quote;
     }
-  },
+    assert(false, "Bible should be loaded already");
+    assert(this.book, "You need to call this._parse() first");
+    this.quote = "";
+    var url = dataURL("bible/chapters/" + this.book.code + "-" + this.chapter + ".json");
+    var json = await loadURL(url, "json");
+    try {
+      let curVerse;
+      for (let verse in json) {
+        let text = json[verse];
+        text = text.replace(/[′·]/g, "");
+        curVerse = parseInt(verse);
+        this._verseCacheSet(this.book, this.chapter, curVerse, text);
+      };
+      this.book.maxVerse[this.chapter] = curVerse;
+
+      this._fetchFromCache();
+      return this.quote;
+    } catch (ex) {
+      if (ex.code == 404) {
+        throw new Exception(this.book.longTr + " chapter " + this.chapter + " does not exist");
+      } else {
+        throw ex;
+      }
+    }
+  }
 
   /**
    * In case an object is not listed in this.relations, but the object
@@ -317,77 +337,68 @@ BibleText.prototype = {
    * chapter, but the object references a specific verse. This would break
    * the backlink. This function finds these.
    *
-   * @successCallback {Function(results {Array of Detail})}
+   * @returns {Array of Detail}
    */
-  findAllReferencingObjects : function(storage, successCallback, errorCallback) {
-    var self = this;
+  async findAllReferencingObjects(storage) {
     var result = [];
-    storage.iterate(function(obj) {
-      if (obj.sources.some(function(ref) {
+    await storage.iterate(obj => {
+      if (obj.sources.some(ref => {
           if ( !(ref instanceof BibleText)) {
             return false;
           }
-          return self.contains(ref);
+          return this.contains(ref);
         })) {
         result.push(obj);
       }
-    }, function() {
-      successCallback(result);
-    }, errorCallback);
-  },
+    });
+    return result;
+  }
 
   /**
    *
    * Loads cross references (between bible verses) from the server.
    *
-   * @successCallback {Function(results {Array of BibleText})}
+   * @returns {Array of BibleText}
    */
-  findCrossReferences : function(successCallback, errorCallback) {
-    var self = this;
-    this.storage.cache.crossref.loadForBibleBook(this.book, function(storage) {
-      var result = [];
-      storage.iterate(function(subj) {
-        if (self.contains(subj)) {
-          result = result.concat(subj.sources);
-        }
-      }, function() {
-        successCallback(result);
-      }, errorCallback);
-    }, errorCallback);
-  },
+  async findCrossReferences() {
+    var storage = await this._storage.crossref.loadForBibleBook(this.book);
+    var result = [];
+    await storage.iterate(subj => {
+      if (this.contains(subj)) {
+        result = result.concat(subj.sources);
+      }
+    });
+    return result;
+  }
 
   /**
    * Loads footnotes from the server
    *
-   * @successCallback {Function(results = this.footnotes)}
+   * @returns this.footnotes
    */
-  findFootnotes : function(successCallback, errorCallback) {
+  async findFootnotes() {
     if (this.footnotes) {
-      successCallback(this.footnotes);
-      return;
+      return this.footnotes;
     }
-    var self = this;
     var result = this.footnotes || {};
     this.footnotes = result;
-    this.storage.cache.footnote.loadForBibleBook(this.book, function(storage) {
-      storage.iterate(function(subj) {
-        if (self.contains(subj)) {
-          for (var quote in subj.footnotes) {
-            result[quote] = subj.footnotes[quote]; // add
-          }
+    var storage = await this._storage.footnote.loadForBibleBook(this.book);
+    await storage.iterate(subj => {
+      if (this.contains(subj)) {
+        for (let quote in subj.footnotes) {
+          result[quote] = subj.footnotes[quote]; // add
         }
-      }, function() {
-        successCallback(result);
-      }, errorCallback);
-    }, errorCallback);
-  },
+      }
+    });
+    return result;
+  }
 
   /**
    * @returns {BibleText} new object that represents
    * the next verse.
    * If this is the last verse in the chapter, goes to the next chapter.
    */
-  nextVerse : function() {
+  nextVerse() {
     var n = this.clone();
     n.verse++;
     n.range = 0;
@@ -399,14 +410,14 @@ BibleText.prototype = {
     }
     n.init();
     return n;
-  },
+  }
 
   /**
    * @returns {BibleText} new object that represents
    * the previous verse.
    * If this is the first verse in the chapter, goes to the previous chapter.
    */
-  prevVerse : function() {
+  prevVerse() {
     var n = this.clone();
     n.verse--;
     n.range = 0;
@@ -418,14 +429,14 @@ BibleText.prototype = {
     }
     n.init();
     return n;
-  },
+  }
 
   /**
    * @returns {BibleText} new object that represents
    * the (whole) next chapter.
    * If this is the last chapter, goes to the next book.
    */
-  nextChapter : function() {
+  nextChapter() {
     var n = this.clone();
     n.chapter++;
     if (n.chapter > n.book.chapterCount) {
@@ -438,14 +449,14 @@ BibleText.prototype = {
     }
     n.init();
     return n;
-  },
+  }
 
   /**
    * @returns {BibleText} new object that represents
    * the (whole) previous chapter.
    * If this is the first chapter, goes to the previous book.
    */
-  prevChapter : function() {
+  prevChapter() {
     var n = this.clone();
     n.chapter--;
     if (n.chapter < 1) {
@@ -458,7 +469,7 @@ BibleText.prototype = {
     }
     n.init();
     return n;
-  },
+  }
 
   /**
    * Give context
@@ -467,7 +478,7 @@ BibleText.prototype = {
    * the (whole) chapter in which this verse is.
    * E.g. if you have Mt. 24:14, you'll get Mt. 24.
    */
-  wholeChapter : function(highlight) {
+  wholeChapter(highlight) {
     var n = this.clone();
     n.verse = 0;
     n.verseTo = 0;
@@ -477,7 +488,7 @@ BibleText.prototype = {
       n.highlight = this;
     }
     return n;
-  },
+  }
 
   /**
    * @param book {one entry from |books|}
@@ -485,35 +496,99 @@ BibleText.prototype = {
    * @param verse {Integer} single verse
    * @returns {String} source or null/undefined
    */
-  _verseCacheGet : function(book, chapter, verse) {
-    try {
-      return BibleText.gBible[this.lang][book.code][chapter][verse];
-    } catch (e) {
+  _verseCacheGet(book, chapter, verse) {
+    // TODO rewrite caller to use storage.bible as Storage
+    if ( !this._storage.bible.verses) {
       return undefined;
     }
-  },
-
-}
-extend(BibleText, Source);
-
-// static functions
-
-BibleText.loadTranslation = function(lang) {
-  var sb = new StringBundle("biblebooks", lang);
-  // TODO use this.storage.cache.bibleBooks and adapt all callers
-  var i = 0;
-  BibleText.books.forEach(function(o) { // TODO l18n
-    o.num = ++i;
-    o.maxVerse = [];
-    if (!o.abbr) {
-      o.abbr = {};
-      o.long = {};
+    var bookA = this._storage.bible.verses[book.code];
+    if ( !bookA) {
+      return undefined;
     }
-    o.abbr[lang] = sb.get("abbr." + o.code);
-    o.long[lang] = sb.get("long." + o.code);
-    //o.abbrTrNoSpace = o.abbrTr.replace(/ /, "").replace(/\./g, "").toLowerCase();
-    //o.longTrNoSpace = o.longTr.replace(/ /, "").replace(/\./g, "").toLowerCase();
-  });
+    var chA = bookA[chapter];
+    if ( !chA) {
+      return undefined;
+    }
+    return chA[verse];
+  }
+
+  /**
+   * writes to cache
+   */
+  _verseCacheSet(book, chapter, verse, source) {
+    // TODO rewrite caller to use storage.bible as Storage
+    if ( !this._storage.bible.verses) {
+      this._storage.bible.verses = {};
+    }
+    var bookArray = this._storage.bible.verses[book.num];
+    if ( !bookArray) {
+      bookArray = this._storage.bible.verses[book.num] = [];
+    }
+    var chapterArray = bookArray[chapter];
+    if ( !chapterArray) {
+      chapterArray = bookArray[chapter] = [];
+    }
+    chapterArray[verse] = source;
+  }
+
+  fromJSON(json, needRelations) {
+    // not calling super
+    this.name = json.name || json.id.replace("bible-", "");
+    this.init();
+    this.id = json.id;
+  }
+
+  toJSON() {
+    // Do *not* call super, save *only* the ref
+    var json = {};
+    json.typename = this.typename;
+    json.id = this.id;
+    json.name = this.codeRef;
+    json.userModified = this.userModified;
+    return json;
+  }
+  /* Full save would be:
+  toJSON() {
+    var json = super.toJSON();
+    json.bookNum = this.book.num;
+    json.chapter = this.chapter;
+    json.verse = this.verse;
+    if (this.range) {
+      json.range = this.range;
+      json.verseTo = this.verseTo;
+    }
+    return json;
+  }
+  */
+
+  static loadTranslation(lang) {
+    var sb = new StringBundle("biblebooks.properties", lang);
+    // TODO? use storage.bible.books and adapt all callers
+    var i = 0;
+    BibleText.books.forEach(o => {
+      o.num = ++i;
+      o.maxVerse = [];
+      o.abbrTr = sb.get("abbr." + o.code);
+      o.longTr = sb.get("long." + o.code);
+      if (!o.long) {
+        o.long = {};
+      }
+      o.long[lang] = sb.get("long." + o.code);
+      o.abbrTrNoSpace = o.abbrTr.replace(/ /, "").replace(/\./g, "").toLowerCase();
+      o.longTrNoSpace = o.longTr.replace(/ /, "").replace(/\./g, "").toLowerCase();
+      o.pageURL = "/bible/" + o.code + "/";
+    });
+    return sb;
+  }
+
+  static bookFromCode(bookCode) {
+    for (let book of BibleText.books) {
+      if (book.code == bookCode) {
+        return book;
+      }
+    }
+    throw new Error("Bible book code " + bookCode + " not found");
+  }
 }
 
 /**
@@ -598,8 +673,11 @@ BibleText.books = [
   { code : "re", chapterCount : 22, group: "special" },
 ];
 
-// Array of book num, chapter, verse
-BibleText._verseCache = [];
+
+BibleText._regexpExact = /^(\d)?\.?\s*([a-zA-Zöäü]+)\.?\s*(\d+)\s*:?\s*(\d+)?(\s*([\-\,])\s*(\d+))?/;
+BibleText._regexpSearch = /(\d)?\.?\s*([a-zA-Zöäü]+)\.?\s*(\d+)\s*:?\s*(\d+)?(\s*([\-\,])\s?(\d+))?/;
+BibleText._regexpExtensionChVerse = /\s*(\d+)\s*:\s*(\d+)(\s*([\-\,])\s*(\d+))?/;
+BibleText._regexpExtensionVerse = /\s*(\d+)(\s*([\-\,])\s?(\d+))?/;
 
 
 /**
@@ -607,15 +685,15 @@ BibleText._verseCache = [];
  *
  * The object instance stays and changes the text it points to.
  */
-function BibleBookmark(name) {
-  BibleText.apply(this, arguments);
-}
-BibleBookmark.prototype = {
+export class BibleBookmark extends BibleText {
+  constructor(name) {
+    super(name);
+  }
 
   /**
    * Changes the current bookmark to this text.
    */
-  changeTo : function(bibleText) {
+  changeTo(bibleText) {
     this.copyFrom(bibleText);
     /*
     this.book = n.book;
@@ -627,23 +705,23 @@ BibleBookmark.prototype = {
     */
 
     this.save(this.codeRef);
-  },
+  }
 
-  nextChapter : function() {
-    var n = BibleText.prototype.nextChapter.apply(this, arguments);
+  nextChapter() {
+    var n = super.nextChapter();
     this.changeTo(n);
     return this;
-  },
-  prevChapter : function() {
-    var n = BibleText.prototype.prevChapter.apply(this, arguments);
+  }
+  prevChapter() {
+    var n = super.prevChapter();
     this.changeTo(n);
     return this;
-  },
-  wholeChapter : function() {
-    var n = BibleText.prototype.wholeChapter.apply(this, arguments);
+  }
+  wholeChapter() {
+    var n = super.wholeChapter();
     this.changeTo(n);
     return this;
-  },
+  }
 
   /**
    * Caller must overwrite this function with its own implementation.
@@ -651,11 +729,10 @@ BibleBookmark.prototype = {
    *
    * Use BibleBookmark(str) to load it again.
    */
-  save : function(str) {
+  save(str) {
     // IMPLEMENT THIS IN CALLER
-  },
-};
-extend(BibleBookmark, BibleText);
+  }
+}
 
 
 
@@ -671,7 +748,7 @@ extend(BibleBookmark, BibleText);
  *        this is the link target.
  * }}
  */
-function findBibleTexts(text) {
+export function findBibleTexts(text) {
   assert(typeof(text) == "string");
   var result = [];
   var iColon = 0;
@@ -687,27 +764,27 @@ function findBibleTexts(text) {
         lastResult = null;
       }
     }
-    ["(", ";", "—"].forEach(function(delim) {
-      var i = text.lastIndexOf(delim, iColon);
+    ["(", ";", "—"].forEach(delim => {
+      let i = text.lastIndexOf(delim, iColon);
       if (i != -1 && i > startIndex) {
         startIndex = i;
       }
     });
-    [")", ";", "—", "."].forEach(function(delim) {
-      var i = text.indexOf(delim, iColon);
+    [")", ";", "—", "."].forEach(delim => {
+      let i = text.indexOf(delim, iColon);
       if (i != -1 && i < endIndex) {
         endIndex = i;
       }
     });
-    var area = trim(text.substring(startIndex, endIndex));
-    var bt = new BibleText();
+    var area = text.substring(startIndex, endIndex).trim();
+    var bt = new BibleText(this._storage);
     var ref;
-    var match = bt._regexpSearch.exec(area);
+    var match = BibleText._regexpSearch.exec(area);
     if (match) {
       ref = match[0];
       bt.name = ref;
     } else if (lastResult && area[0] == ";") { // e.g. "6:17" from  "Mt 5:1, 2; 6:17"
-      match = bt._regexpExtensionChVerse.exec(area);
+      match = BibleText._regexpExtensionChVerse.exec(area);
       if (match) {
         ref = match[0];
         // add "Mt " before "6:17"
@@ -724,13 +801,13 @@ function findBibleTexts(text) {
         obj : bt,
       });
 
-      var comma = trim(area.substr(match.index + ref.length));
+      var comma = area.substr(match.index + ref.length).trim();
       if (comma[0] == ",") { // e.g. ", 17" from  "Mt 5:1, 2, 17"
-        match = bt._regexpExtensionVerse.exec(comma.substr(1));
+        match = BibleText._regexpExtensionVerse.exec(comma.substr(1));
         if (match) {
           ref = match[0];
           var lastBt = bt;
-          bt = new BibleText()
+          bt = new BibleText(this._storage);
           // add "Mt 5:" before ", 17"
           bt.name = lastBt.book.code + " " + lastBt.chapter + ":" + ref;
           try {
@@ -761,16 +838,14 @@ function findBibleTexts(text) {
  * Iterates over all |Source|s in the DB
  * and converts then into |BibleText| objects.
  *
-function convertSourceToBibleText(storage, successCallback, errorCallback) {
-  storage.getAll(Source, function(sources) {
-    sources.forEach(function(source) {
-      try {
-        var b = new BibleText(source.name);
-        source.__proto__ = BibleText.prototype; // HACK: Changing type
-        source.init();
-      } catch (e) { console.log(e); }
-      successCallback();
-    });
-  }, errorCallback);
+function convertSourceToBibleText(storage) {
+  var sources = await storage.getAll(Source);
+  sources.forEach(source => {
+    try {
+      var b = new BibleText(storage, source.name);
+      source.__proto__ = BibleText.prototype; // HACK: Changing type
+      source.init();
+    } catch (e) { console.log(e); }
+  });
 }
 */

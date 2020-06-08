@@ -1,40 +1,5 @@
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is String Bundle.
- *
- * The Initial Developer of the Original Code is Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2008
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Myk Melez <myk@mozilla.org> (API)
- *   Ben Bucksch <ben.bucksch  beonex> <http://business.beonex.com>
- *       (generic implementation)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+import { assert } from "../util/util.js";
+import fs from 'fs';
 
 /**
  * A string bundle.
@@ -50,30 +15,24 @@
  * and then use the instance's |get| and |getAll| methods to retrieve strings
  * (you can get both plain and formatted strings with |get|):
  *
- *   var strings = new StringBundle("strings");
+ *   var strings =
+ *     new StringBundle("strings.properties");
  *   var foo = strings.get("foo");
  *   var barFormatted = strings.get("bar", [arg1, arg2]);
  *   for each (var string in strings.getAll())
  *     dump (string.key + " = " + string.value + "\n");
  *
- * @param bundle {String}
- *        the filename of the string bundle,
- *        in your addon's locale/<lang>/ directory,
- *        without the file extension.
- *        E.g. "main" or "dialogs/person".
- * @param lang {String} The language
+ * @param path {String}
+ *        relative filename of the string bundle, in your addon's locale/<lang>/ directory
  */
-function StringBundle(bundle, lang) {
-  if (!lang) {
-    lang = "en"; // TODO l18n
-  }
-  this._filename = "./app/bible/locale/" + lang + "/" + bundle + ".properties";
+export default function StringBundle(path, lang) {
+  this._filename = "./app/bible/locale/" + lang + "/" + path;
 }
 
 StringBundle.prototype = {
   /**
-   * the URL of the string bundle
-   * @type String
+   * Relative file path of the string bundle
+   * {string}
    */
   _filename: null,
 
@@ -89,9 +48,9 @@ StringBundle.prototype = {
   _ensureLoaded : function() {
     if (this._properties)
       return;
-    var fileContent = StringBundle.readURLasUTF8(this._filename);
+    var fileContent = fs.readFileSync(this._filename, 'utf8');
     this._properties = {};
-    //console.log(this._filename + ": " + fileContent);
+    //console.log(this._url + ": " + fileContent);
     var spLines = StringBundle.splitLines(fileContent);
     for (var i in spLines) {
       var line = spLines[i];
@@ -111,13 +70,13 @@ StringBundle.prototype = {
     try {
       this._ensureLoaded();
     } catch (e) {
-      console.error("Could not get stringbundle <" + this._filename +
+      console.error("Could not get stringbundle <" + this._url +
           ">, error: " + e);
       throw e;
     }
     if (this._properties[key] === undefined) {
       var msg = "Could not get key " + key + " from stringbundle <" +
-          this._filename + ">";
+          this._url + ">";
       console.error(msg);
       throw msg;
     }
@@ -213,16 +172,22 @@ StringBundle.prototype = {
 
 
 /**
- * Reads UTF8 data from a file.
+ * Reads UTF8 data from a URL.
  *
- * @param filename {String}   what you want to read
+ * @param url {String}   what you want to read
  * @return {String}   the contents of the file, as one long string
  */
-StringBundle.readURLasUTF8 = function(filename)
+StringBundle.readURLasUTF8 = function(url)
 {
-  assert(filename && typeof(filename) == "string", "filename required");
-  var fsSync = StringBundle.readURLasUTF8.fsSync;
-  return fsSync.readFileSync(filename, { encoding: "utf8" });
+  assert(url && typeof(url) == "string", "uri must be a string");
+  var req = new XMLHttpRequest();
+  console.log("trying to open " + url);
+  req.onerror = function (e) { console.error(e); }
+  req.onload = function () {}
+  //req.overrideMimeType("text/plain; charset=UTF-8");
+  req.open("GET", url, false); // sync
+  req.send(); // blocks
+  return req.responseText;
 }
 
 /**

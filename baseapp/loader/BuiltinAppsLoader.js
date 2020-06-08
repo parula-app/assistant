@@ -5,6 +5,8 @@ import fs from 'fs';
 import util from 'util';
 const readdir = util.promisify(fs.readdir);
 
+import Bible from '../../app/bible/bible.js';
+
 /**
  * Discovers build-in apps in top-level directory app/
  *

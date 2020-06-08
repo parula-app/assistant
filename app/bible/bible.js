@@ -1,30 +1,17 @@
 import { JSONApp } from '../../baseapp/JSONApp.js';
-import fs from "fs";
-
-// TODO convert to require modules
-var global = this;
-function load(file) {
-    var jsCode = fs.readFileSync("./app/bible/" + file, { encoding: "utf8" });
-    eval.call(global, jsCode);
-};
-load("util.js");
-loadURL.fs = fs.promises; // HACK
-load("stringbundle.js");
-StringBundle.readURLasUTF8.fsSync = fs;
-load("model.js");
-load("bibletext.js");
-load("storage.js");
-load("load-json.js");
-load("load-json-crossref.js");
-load("load-maindb.js");
+import { Detail, Person, Place, Event, Source, Topic, Notes, Relation, GeoCoordinate, Media, Image } from "./model/model.js";
+import { BibleText } from './model/bibletext.js';
+import { loadMainDB } from './model/load-maindb.js';
+import StringBundle from './util/stringbundle.js';
+import { dataURL } from "./util/util.js";
+import fs from 'fs';
+import util from 'util';
+const readFileAsync = util.promisify(fs.readFile);
 
 const kLanguages = [ "en", "de", "fr", "it", "es" ];
 // { Map lang -> {Storage} }
 var gStorage = {};
-// { Map lang -> { Map bibleBookCode -> { Array[chapter] -> { Array[verse] -> {string} text }}}}
-// i.e. gBible[lang][bookCode][chapter][verse], e.g. gBible["en"]["re"][21][4]
 var gBible = {};
-BibleText.gBible = gBible;
 
 
 
@@ -41,15 +28,17 @@ export default class BibleApp extends JSONApp {
 
     // TODO Promise.all()
     for (let lang of kLanguages) {
-      loadMainDB(lang, db => {
-        gStorage[lang] = db;
-
-        if (lang == userLang) {
-          this.addValues(db);
-        }
-      }, e => console.error(e));
+      let storage = await loadMainDB(lang);
+      gStorage[lang] = storage;
+      if (lang == userLang) {
+        await this.addValues(storage);
+      }
 
       BibleText.loadTranslation(lang);
+
+      // { Map bibleBookCode -> { Array[chapter] -> { Array[verse] -> {string} text } } }
+      // i.e. verses[bookCode][chapter][verse], e.g. gBible["en"]["re"][21][4]
+      gBible[lang] = storage.bible.verses = JSON.parse(await readFileAsync(dataURL("bible.json", lang), "utf8"));
 
       for (let langTo of kLanguages) {
         let langNames = getTranslation("language." + langTo, lang, null).split(";");
@@ -57,24 +46,16 @@ export default class BibleApp extends JSONApp {
           gLanguageNames[langName.toLowerCase()] = langTo;
         }
       }
-
-      fs.readFile(dataURL("bible.json", lang), { encoding: "utf8" }, (e, content) => {
-        if (e) {
-          console.error(e);
-          return;
-        }
-        gBible[lang] = JSON.parse(content);
-      });
     }
   }
 
-  addValues(storage) {
+  async addValues(storage) {
     let personType = this.dataTypes.Person;
     let placeType = this.dataTypes.Place;
 
     // Value is {Array of Detail}, because there can be
     // several persons with the same name.
-    function add(type, name, detail) {
+    const add = (type, name, detail) => {
       let entry = type.entireMap.get(name);
       if (!entry) {
         type.addValue(detail.name, [ detail ]);
@@ -83,7 +64,7 @@ export default class BibleApp extends JSONApp {
       }
     }
 
-    storage.iterate(detail => {
+    await storage.iterate(detail => {
       let type;
       if (detail instanceof Person) {
         type = personType;
@@ -98,7 +79,7 @@ export default class BibleApp extends JSONApp {
           }
         }
       }
-    }, () => {}, ex => console.error(ex));
+    });
   }
 
   /**
@@ -313,7 +294,7 @@ function escapeText(text) {
 function getBibleBook(bookCode) {
   var book = BibleText.books.find(book => book.code == bookCode);
   if (!book) {
-     throw new Exception(`No bible book with code ${bookCode}`);
+     throw new Error(`No bible book with code ${bookCode}`);
   }
   return book;
 }
@@ -572,7 +553,7 @@ function pause(ms, client) {
 
 
 
-class UserError extends Exception {
+class UserError extends Error {
   constructor(msgID, msgParameters) {
     super(msgID);
     this._isUserError = true; // in case instanceof fails
@@ -586,12 +567,12 @@ class UserError extends Exception {
 }
 
 function getErrorMessage(msgID, lang, msgParameters) {
-  var sb = new StringBundle("errors", lang); // make it a global sbErrors[lang]?
+  var sb = new StringBundle("errors.properties", lang); // make it a global sbErrors[lang]?
   return _getTranslatedFormattedString(sb, msgID, lang, msgParameters);
 }
 
 function getTranslation(msgID, lang, msgParameters) {
-  var sb = new StringBundle("responses", lang); // make it a global sbResponses[lang]?
+  var sb = new StringBundle("responses.properties", lang); // make it a global sbResponses[lang]?
   return _getTranslatedFormattedString(sb, msgID, lang, msgParameters);
 }
 

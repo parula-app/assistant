@@ -1,5 +1,6 @@
 import { Intent } from "../baseapp/Intent.js";
 import { DataType } from "../baseapp/datatype/DataType.js";
+import { assert } from "../util/util.js";
 
 /**
  * @see ClientAPI.context
