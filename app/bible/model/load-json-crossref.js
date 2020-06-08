@@ -20,13 +20,24 @@ import { BibleText } from "../model/bibletext.js";
  * Call loadForBibleBook()
  */
 export class LoadCrossrefJSON {
-  constructor(storage) {
+  /**
+   * @param storage {Storage}   where the loaded objects should be added
+   * @param lookupStorage {Storage}   where the Bible text is stored
+   */
+  constructor(storage, lookupStorage) {
     //assert(storage instanceof Storage);
+    assert(storage.getID, "Need storage");
+    assert(lookupStorage.getID, "Need global storage");
 
     /**
      * {Storage}
      */
     this._storage = storage;
+
+    /**
+     * {Storage}
+     */
+    this._lookupStorage = lookupStorage;
 
     /**
      * have loaded this already
@@ -97,7 +108,7 @@ export class LoadCrossrefJSON {
       return existing;
     }
     //console.log("  loading " + ref);
-    var bt = new BibleText(this._storage, ref);
+    var bt = new BibleText(this._lookupStorage, ref);
     bt.id = "bible-" + ref;
     this._storage.add(bt);
     return bt;

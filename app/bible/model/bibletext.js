@@ -1,5 +1,5 @@
 import { assert, dataURL, loadURL } from "../util/util.js";
-import StringBundle from "../util/stringbundle.js"
+import StringBundle from "../util/stringbundle.js";
 import { Source } from "../model/model.js";
 
 export class BibleText extends Source {
@@ -307,7 +307,7 @@ export class BibleText extends Source {
     assert(false, "Bible should be loaded already");
     assert(this.book, "You need to call this._parse() first");
     this.quote = "";
-    var url = dataURL("bible/chapters/" + this.book.code + "-" + this.chapter + ".json");
+    var url = dataURL("bible/chapters/" + this.book.code + "-" + this.chapter + ".json", this._storage.lang);
     var json = await loadURL(url, "json");
     try {
       let curVerse;
@@ -516,6 +516,7 @@ export class BibleText extends Source {
    * writes to cache
    */
   _verseCacheSet(book, chapter, verse, source) {
+    assert(false, "Bible should be loaded already");
     // TODO rewrite caller to use storage.bible as Storage
     if ( !this._storage.bible.verses) {
       this._storage.bible.verses = {};
@@ -740,6 +741,7 @@ export class BibleBookmark extends BibleText {
  * Search for Bible references in a text.
  * @param text {String}   a paragraph or more of human-language text
  *     that may contain e.g. "Mt. 3:1"
+ * @param storage {Storage}  with bible texts
  * @returns {Array of {
  *    index {Integer}  position in |text| where bible ref starts
  *        this is the link text.
@@ -748,8 +750,9 @@ export class BibleBookmark extends BibleText {
  *        this is the link target.
  * }}
  */
-export function findBibleTexts(text) {
+export function findBibleTexts(text, storage) {
   assert(typeof(text) == "string");
+  assert(storage.getID, "Need storage");
   var result = [];
   var iColon = 0;
   while ((iColon = text.indexOf(":", iColon + 2)) != -1) { // find : (colon)
@@ -777,7 +780,7 @@ export function findBibleTexts(text) {
       }
     });
     var area = text.substring(startIndex, endIndex).trim();
-    var bt = new BibleText(this._storage);
+    var bt = new BibleText(storage);
     var ref;
     var match = BibleText._regexpSearch.exec(area);
     if (match) {
@@ -807,7 +810,7 @@ export function findBibleTexts(text) {
         if (match) {
           ref = match[0];
           var lastBt = bt;
-          bt = new BibleText(this._storage);
+          bt = new BibleText(storage);
           // add "Mt 5:" before ", 17"
           bt.name = lastBt.book.code + " " + lastBt.chapter + ":" + ref;
           try {

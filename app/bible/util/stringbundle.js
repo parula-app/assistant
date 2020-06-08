@@ -16,7 +16,7 @@ import fs from 'fs';
  * (you can get both plain and formatted strings with |get|):
  *
  *   var strings =
- *     new StringBundle("strings.properties");
+ *     new StringBundle("strings.properties", "en");
  *   var foo = strings.get("foo");
  *   var barFormatted = strings.get("bar", [arg1, arg2]);
  *   for each (var string in strings.getAll())
@@ -24,6 +24,7 @@ import fs from 'fs';
  *
  * @param path {String}
  *        relative filename of the string bundle, in your addon's locale/<lang>/ directory
+ * @param lang {String} ISO 2-letter language code
  */
 export default function StringBundle(path, lang) {
   this._filename = "./app/bible/locale/" + lang + "/" + path;
@@ -32,7 +33,7 @@ export default function StringBundle(path, lang) {
 StringBundle.prototype = {
   /**
    * Relative file path of the string bundle
-   * {string}
+   * {String}
    */
   _filename: null,
 
@@ -50,7 +51,7 @@ StringBundle.prototype = {
       return;
     var fileContent = fs.readFileSync(this._filename, 'utf8');
     this._properties = {};
-    //console.log(this._url + ": " + fileContent);
+    //console.log(this._filename + ": " + fileContent);
     var spLines = StringBundle.splitLines(fileContent);
     for (var i in spLines) {
       var line = spLines[i];
@@ -70,13 +71,13 @@ StringBundle.prototype = {
     try {
       this._ensureLoaded();
     } catch (e) {
-      console.error("Could not get stringbundle <" + this._url +
+      console.error("Could not get stringbundle <" + this._filename +
           ">, error: " + e);
       throw e;
     }
     if (this._properties[key] === undefined) {
       var msg = "Could not get key " + key + " from stringbundle <" +
-          this._url + ">";
+          this._filename + ">";
       console.error(msg);
       throw msg;
     }

@@ -1,4 +1,4 @@
-import { assert, tr } from "../util/util.js";
+import { assert } from "../util/util.js";
 
 /**
  * Abstract base class of the objects (Person, Place, Event, ...) in the system.
@@ -900,7 +900,7 @@ export class Relation {
 
   get typeLabel() {
     try {
-      return tr("genealogy.rel." + this.type);
+      //return tr("genealogy.rel." + this.type); TODO translation
     } catch (e) {}
     return this.type;
   }

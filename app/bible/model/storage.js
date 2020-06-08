@@ -2,7 +2,9 @@ import { assert, runAsync } from "../util/util.js";
 import { Detail } from "../model/model.js";
 
 export class Storage {
-  constructor() {
+  constructor(lang) {
+    assert(lang && typeof(lang) == "string" && lang.length == 2, "Need language");
+    this.lang = lang;
   }
 
   /**
@@ -168,8 +170,8 @@ Storage._lastID = 0;
  * This keeps all Details as JS objects in RAM.
  */
 export class RAMStorage extends Storage {
-  constructor() {
-    super();
+  constructor(lang) {
+    super(lang);
 
     /**
      * { Map of ID -> Detail }
@@ -232,8 +234,8 @@ export class LocalStorage extends Storage {
  * Delegator design pattern
  */
 export class CombinedStorage extends Storage {
-  constructor() {
-    super();
+  constructor(lang) {
+    super(lang);
 
     /**
      * Where to read objects from

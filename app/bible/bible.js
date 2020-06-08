@@ -315,6 +315,11 @@ function getBibleBookNum(bookNum) {
   return BibleText.books[bookNum - 1];
 }
 
+function getBibleBookName(bookCode, lang) {
+  let book = getBibleBook(bookCode)
+  return book.long && book.long[lang] || book.code;
+}
+
 /**
  * @returns {
  *   {string} bookCode,
@@ -332,8 +337,10 @@ function getChapter(args, client) {
 
   var chapterVerses = gBible[lang][bookCode][chapter];
   if (!chapterVerses) {
-    throw new UserError("unknown_chapter", { chapter,
-      bibleBook: getBibleBook(bookCode).long[lang] });
+    throw new UserError("unknown_chapter", {
+      chapter,
+      bibleBook: getBibleBookName(bookCode, lang),
+    });
   }
   return {
     bookCode,
@@ -348,8 +355,10 @@ function startChapter(bookCode, chapter, chapterVerses, lang, args, client) {
   }
   if (!chapterVerses) {
     // normally should not happen. check caller.
-    throw new UserError("unknown_chapter", { chapter,
-      bibleBook: getBibleBook(bookCode).long[lang] });
+    throw new UserError("unknown_chapter", {
+      chapter,
+      bibleBook: getBibleBookName(bookCode, lang),
+    });
   }
 
   let session = client.userSession;
@@ -384,10 +393,9 @@ function readVersesAsText(bookCode, chapter, verseFrom, verseTo, versesTitle,
   client.say(ssmlWrap(ssml, lang));
 
   // Card for visible text
-  let bookTitle = getBibleBook(bookCode).long[lang];
   client.card({
     type: "Simple",
-    title: bookTitle + " " + versesTitle,
+    title: getBibleBookName(bookCode, lang) + " " + versesTitle,
     content: completeText,
   });
 }
@@ -535,7 +543,7 @@ function outputBibleVersesList(bibleTexts, topHeaderText, args, client, lang) {
   for (let bibleText of bibleTexts) {
     //console.log("bible text: " + bibleText.codeRef);
     let headerText = getTranslation("bible_verse_header", lang, {
-      bibleBook: bibleText.book.long[lang],
+      bibleBook: getBibleBookName(bibleText.book.code, lang),
       chapter: bibleText.chapter,
       verse: bibleText.verse,
     });

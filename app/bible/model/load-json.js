@@ -1,7 +1,6 @@
 import { loadURL, assert, Exception } from "../util/util.js";
 import { Detail, Person, Place, Event, Source, Topic, Notes, Relation, GeoCoordinate, Media, Image } from "../model/model.js";
 import { BibleText } from "../model/bibletext.js";
-import { Storage } from "../model/storage.js";
 
 /**
  * Loads the database from a JSON file in the data format
@@ -19,8 +18,9 @@ export class LoadNativeJSON {
    * @param lookupStorage {Storage}   where the related objects should be read from
    */
   constructor(storage, lookupStorage) {
-    assert(storage instanceof Storage);
-    assert(lookupStorage instanceof Storage);
+    //assert(storage instanceof Storage);
+    assert(storage.getID, "Need storage");
+    assert(lookupStorage.getID, "Need global storage");
 
     /**
      * where the loaded objects should be added
@@ -107,7 +107,7 @@ export class LoadNativeJSON {
     } else if (json.typename == "source") {
       detail = new Source();
     } else if (json.typename == "bibletext") {
-      detail = new BibleText(this._storage);
+      detail = new BibleText(this._lookupStorage);
     } else if (json.typename == "image") {
       detail = new Image();
     } else if (json.typename == "topic") {

@@ -114,36 +114,14 @@ export function trim(str) {
   return str.replace(/^\s\s*/, "").replace(/\s\s*$/, "");
 }
 
-/* jQuery plugin to handle the enter key in <input> fields *
-$.fn.returnKey = function(fn) {
-  return this.each(function() {
-    $(this).bind("enterPressed", fn);
-    $(this).keyup(function(e) {
-      if(e.keyCode == 13) {
-        $(this).trigger("enterPressed");
-      }
-    });
-  });
-};
-*/
-
 /**
- * Translate string
- * @param id {String}   key in "appui.properties" file
- * @param args {String or Array of String}   replacement parameters
+ * @param path {String}
+ *        the filename of the string bundle, in your addon's locale/<lang>/ directory
+ * @param lang {String} ISO 2-letter language code
  */
-export function tr(id, args) {
-  if (typeof(args) == "string") {
-    args = [ args ];
-  }
-  if ( !tr._sb) {
-    tr._sb = new StringBundle("appui.properties")
-  }
-  return tr._sb.get(id, args);
-}
-
 export function dataURL(relPath, lang) {
   assert(relPath && typeof(relPath) == "string");
+  assert(lang && typeof(lang) == "string" && lang.length == 2, "Need language");
   return "data/bible/" + lang + "/" + relPath;
 }
 
