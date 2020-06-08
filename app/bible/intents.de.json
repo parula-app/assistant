@@ -17,6 +17,9 @@
                 },
                 {
                     "name": "ReadBibleVerse",
+                    "keywords": [
+                      "Vers"
+                    ],
                     "slots": [
                         {
                             "name": "BibleBook",
@@ -65,6 +68,9 @@
                 },
                 {
                     "name": "ReadBibleChapter",
+                    "keywords": [
+                      "Kapitel"
+                    ],
                     "slots": [
                         {
                             "name": "BibleBook",
@@ -79,6 +85,9 @@
                         {
                             "name": "Chapter",
                             "type": "Pia.Number",
+                            "keywords": [
+                              "Kapitel"
+                            ],
                             "samples": [
                                 "{BibleBook} {Chapter}",
                                 "Kapitel {Chapter}",
@@ -160,6 +169,9 @@
                 },
                 {
                     "name": "ReadBibleVerseRange",
+                    "keywords": [
+                      "Vers"
+                    ],
                     "slots": [
                         {
                             "name": "BibleBook",
@@ -181,6 +193,10 @@
                         {
                             "name": "VerseFrom",
                             "type": "Pia.Number",
+                            "keywords": [
+                              "von",
+                              "Vers",
+                            ],
                             "samples": [
                                 "Vers {VerseFrom} und {VerseTo}",
                                 "Verse {VerseFrom} bis  {VerseTo}",
@@ -191,6 +207,10 @@
                         {
                             "name": "VerseTo",
                             "type": "Pia.Number",
+                            "keywords": [
+                              "bis",
+                              "und"
+                            ],
                             "samples": [
                                 "{VerseTo}",
                                 "Vers {VerseTo}",

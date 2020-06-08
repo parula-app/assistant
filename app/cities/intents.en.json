@@ -29,6 +29,10 @@
                 },
                 {
                     "name": "Timezone",
+                    "keywords": [
+                      "timezone",
+                      "time zone"
+                    ],
                     "samples": [
                       "What is the timezone (of|in) {Location}"
                     ],
@@ -41,6 +45,9 @@
                 },
                 {
                     "name": "Population",
+                    "keywords": [
+                      "population"
+                    ],
                     "samples": [
                       "How many inhabitants does {Location} have",
                       "What is the population of {Location}"
@@ -54,6 +61,9 @@
                 },
                 {
                     "name": "Language",
+                    "keywords": [
+                      "language"
+                    ],
                     "samples": [
                       "Which language (is used|do they use|is spoken|do they speak) in {Location}",
                       "What is the language (of|in|spoken in) {Location}"
@@ -67,6 +77,9 @@
                 },
                 {
                     "name": "Currency",
+                    "keywords": [
+                      "currency"
+                    ],
                     "samples": [
                       "What is the currency of {Location}",
                       "Which currency (is used|do they use) in {Location}"

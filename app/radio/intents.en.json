@@ -19,6 +19,12 @@
                             "type": "Station"
                         }
                     ],
+                    "keywords": [
+                      "play",
+                      "music",
+                      "radio",
+                      "station"
+                    ],
                     "samples": [
                         "Play (the|) (radio|) (station|) {Station}",
                         "Play {Station}"
@@ -31,6 +37,10 @@
                             "name": "Genre",
                             "type": "Genre"
                         }
+                    ],
+                    "keywords": [
+                      "play",
+                      "music"
                     ],
                     "samples": [
                         "Play (some|) {Genre} (music|) (for me|)",

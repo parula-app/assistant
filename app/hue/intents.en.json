@@ -5,6 +5,10 @@
             "intents": [
                 {
                     "name": "LightOnOff",
+                    "keywords": [
+                      "light",
+                      "lights"
+                    ],
                     "samples": [
                       "Turn {State} the light (in the|) {Light}",
                       "Turn the light (in the|) {Light} {State}",

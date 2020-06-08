@@ -5,6 +5,11 @@
             "intents": [
                 {
                     "name": "Joke",
+                    "keywords": [
+                      "joke",
+                      "jokes",
+                      "funny"
+                    ],
                     "samples": [
                       "Tell me something funny",
                       "Tell me (a|another) joke",
@@ -15,6 +20,7 @@
                 {
                     "name": "JokeOfType",
                     "samples": [
+                      "Tell me a {Type} joke",
                       "Tell me (something|some|) funny (things|) about {Type}",
                       "Tell me more {Type} jokes",
                       "Tell me (a|another) joke about {Type}",
@@ -31,6 +37,11 @@
             "types": [
                 {
                     "name": "JokeType",
+                    "keywords": [
+                      "joke",
+                      "jokes",
+                      "funny"
+                    ],
                     "values": [
                         {
                             "id": "chucknorris-developer",
@@ -40,12 +51,7 @@
                                     "Chuck Norris",
                                     "Norris",
                                     "Chuck",
-                                    "(Chuck|Norris|Chuck Norris) Python",
-                                    "(Chuck|Norris|Chuck Norris) programming",
-                                    "(Chuck|Norris|Chuck Norris) programming language",
-                                    "(Chuck|Norris|Chuck Norris) hacker",
-                                    "(Chuck|Norris|Chuck Norris) software",
-                                    "(Chuck|Norris|Chuck Norris) code"
+                                    "(Chuck|Norris|Chuck Norris) (Python|programming|programming language|hacker|software|code)"
                                 ]
                             }
                         },
