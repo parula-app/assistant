@@ -65,6 +65,57 @@
                     ]
                 },
                 {
+                    "name": "ReadBibleVerseRange",
+                    "keywords": [
+                      "verse"
+                    ],
+                    "slots": [
+                        {
+                            "name": "BibleBook",
+                            "type": "BibleBook"
+                        },
+                        {
+                            "name": "Chapter",
+                            "type": "Pia.Number",
+                            "samples": [
+                                "Chapter {Chapter}"
+                            ]
+                        },
+                        {
+                            "name": "VerseFrom",
+                            "type": "Pia.Number",
+                            "keywords": [
+                              "from",
+                              "verse"
+                            ],
+                            "samples": [
+                                "Verse {VerseFrom} to {VerseTo}",
+                                "Verse {VerseFrom}",
+                                "From verse {VerseFrom} ",
+                                "{VerseFrom}"
+                            ]
+                        },
+                        {
+                            "name": "VerseTo",
+                            "type": "Pia.Number",
+                            "keywords": [
+                              "to",
+                              "and"
+                            ],
+                            "samples": [
+                                "Verse {VerseTo}"
+                            ]
+                        },
+                        {
+                            "name": "Language",
+                            "type": "Pia.Language"
+                        }
+                    ],
+                    "samples": [
+                        "(Read|Open) {BibleBook} (chapter|) {Chapter} (verse|birth|from verse|) {VerseFrom} (to|and|) {VerseTo} (in {Language}|)"
+                    ]
+                },
+                {
                     "name": "ReadBibleChapter",
                     "slots": [
                         {
@@ -160,57 +211,6 @@
                         "Previous chapter",
                         "Previous",
                         "Back"
-                    ]
-                },
-                {
-                    "name": "ReadBibleVerseRange",
-                    "keywords": [
-                      "verse"
-                    ],
-                    "slots": [
-                        {
-                            "name": "BibleBook",
-                            "type": "BibleBook"
-                        },
-                        {
-                            "name": "Chapter",
-                            "type": "Pia.Number",
-                            "samples": [
-                                "Chapter {Chapter}"
-                            ]
-                        },
-                        {
-                            "name": "VerseFrom",
-                            "type": "Pia.Number",
-                            "keywords": [
-                              "from",
-                              "verse"
-                            ],
-                            "samples": [
-                                "Verse {VerseFrom} to {VerseTo}",
-                                "Verse {VerseFrom}",
-                                "From verse {VerseFrom} ",
-                                "{VerseFrom}"
-                            ]
-                        },
-                        {
-                            "name": "VerseTo",
-                            "type": "Pia.Number",
-                            "keywords": [
-                              "to",
-                              "and"
-                            ],
-                            "samples": [
-                                "Verse {VerseTo}"
-                            ]
-                        },
-                        {
-                            "name": "Language",
-                            "type": "Pia.Language"
-                        }
-                    ],
-                    "samples": [
-                        "(Read|Open) {BibleBook} (chapter|) {Chapter} (verse|birth|from verse|) {VerseFrom} (to|and|) {VerseTo} (in {Language}|)"
                     ]
                 },
                 {

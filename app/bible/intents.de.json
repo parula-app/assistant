@@ -67,6 +67,69 @@
                     ]
                 },
                 {
+                    "name": "ReadBibleVerseRange",
+                    "keywords": [
+                      "Vers"
+                    ],
+                    "slots": [
+                        {
+                            "name": "BibleBook",
+                            "type": "BibleBook",
+                            "samples": [
+                                "{BibleBook} {Chapter}",
+                                "In {BibleBook}",
+                                "{BibleBook}"
+                            ]
+                        },
+                        {
+                            "name": "Chapter",
+                            "type": "Pia.Number",
+                            "samples": [
+                                "Kapitel {Chapter}",
+                                "{Chapter}"
+                            ]
+                        },
+                        {
+                            "name": "VerseFrom",
+                            "type": "Pia.Number",
+                            "keywords": [
+                              "von",
+                              "Vers",
+                            ],
+                            "samples": [
+                                "Vers {VerseFrom} und {VerseTo}",
+                                "Verse {VerseFrom} bis  {VerseTo}",
+                                "Vers {VerseFrom}",
+                                "{VerseFrom}"
+                            ]
+                        },
+                        {
+                            "name": "VerseTo",
+                            "type": "Pia.Number",
+                            "keywords": [
+                              "bis",
+                              "und"
+                            ],
+                            "samples": [
+                                "{VerseTo}",
+                                "Vers {VerseTo}",
+                                "Bis Vers {VerseTo}"
+                            ]
+                        },
+                        {
+                            "name": "Language",
+                            "type": "Pia.Language"
+                        }
+                    ],
+                    "samples": [
+                        "(Lies|Lese) (mir|) {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo} (in {Language}|) (vor|)",
+                        "Schlage {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|) auf",
+                        "Öffne {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|)",
+                        "Lies das Buch {BibleBook} Kapitel {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|) (vor|)",
+                        "{BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|)"
+                    ]
+                },
+                {
                     "name": "ReadBibleChapter",
                     "keywords": [
                       "Kapitel"
@@ -165,69 +228,6 @@
                         "Letztes Kapitel",
                         "Vorheriges Kapitel",
                         "Zurück"
-                    ]
-                },
-                {
-                    "name": "ReadBibleVerseRange",
-                    "keywords": [
-                      "Vers"
-                    ],
-                    "slots": [
-                        {
-                            "name": "BibleBook",
-                            "type": "BibleBook",
-                            "samples": [
-                                "{BibleBook} {Chapter}",
-                                "In {BibleBook}",
-                                "{BibleBook}"
-                            ]
-                        },
-                        {
-                            "name": "Chapter",
-                            "type": "Pia.Number",
-                            "samples": [
-                                "Kapitel {Chapter}",
-                                "{Chapter}"
-                            ]
-                        },
-                        {
-                            "name": "VerseFrom",
-                            "type": "Pia.Number",
-                            "keywords": [
-                              "von",
-                              "Vers",
-                            ],
-                            "samples": [
-                                "Vers {VerseFrom} und {VerseTo}",
-                                "Verse {VerseFrom} bis  {VerseTo}",
-                                "Vers {VerseFrom}",
-                                "{VerseFrom}"
-                            ]
-                        },
-                        {
-                            "name": "VerseTo",
-                            "type": "Pia.Number",
-                            "keywords": [
-                              "bis",
-                              "und"
-                            ],
-                            "samples": [
-                                "{VerseTo}",
-                                "Vers {VerseTo}",
-                                "Bis Vers {VerseTo}"
-                            ]
-                        },
-                        {
-                            "name": "Language",
-                            "type": "Pia.Language"
-                        }
-                    ],
-                    "samples": [
-                        "(Lies|Lese) (mir|) {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo} (in {Language}|) (vor|)",
-                        "Schlage {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|) auf",
-                        "Öffne {BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|)",
-                        "Lies das Buch {BibleBook} Kapitel {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|) (vor|)",
-                        "{BibleBook} (Kapitel|) {Chapter} (von|) (Vers|) {VerseFrom} (bis|und) {VerseTo}  (in {Language}|)"
                     ]
                 },
                 {
