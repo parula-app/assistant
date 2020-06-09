@@ -1,4 +1,5 @@
 import { FiniteDataType } from './FiniteDataType.js';
+import { Obj } from './Obj.js';
 import { assert } from '../../util/util.js';
 
 /**
@@ -20,12 +21,12 @@ export class NamedValuesDataType extends FiniteDataType {
     super(id);
 
     /**
-     * { Map of term {string} -> value {any} }
+     * { Map of term {string} -> value {Obj} }
      */
     this._values = new Map();
 
     /**
-     * { Map of ID {string or number} -> value {any} }
+     * { Map of ID {string or number} -> value {Obj} }
      */
     //this._valuesByID = new Map();
 
@@ -37,14 +38,14 @@ export class NamedValuesDataType extends FiniteDataType {
 
   /**
    * Slow
-   * @returns {Array of value {any}}
+   * @returns {Array of value {Obj}}
    */
   get values() {
     return Array.from(this._values.values());
   }
 
   /**
-   * { Map of term {string} -> value {any} }
+   * { Map of term {string} -> value {Obj} }
    */
   get entireMap() {
     return this._values;
@@ -63,40 +64,17 @@ export class NamedValuesDataType extends FiniteDataType {
   }
 
   /**
-   * For any value, return a unique ID that allows to
-   * find the value again in the internal list of values.
-   * The ID must be unique (only this value has this ID)
-   * and stable within the lifetime of this application
-   * (until it stops running), ideally even after a restart.
-   *
-   * You need to overwrite this function to customize
-   * it to your values and their properties.
-   *
-   * @param value {any}
-   * @returns {string or number} ID
-   */
-  idForValue(value) {
-    return value.id || value.name || value.term;
-  }
-
-  valueForID(id) {
-    // memory vs. speed
-    //this._valuesByID.get(id);
-    return this.values.find(value => this.idForValue(value) == id);
-  }
-
-  /**
    * @param term {string}   What the user will say.
-   * @param value {any}   The value object. Not shown to user.
+   * @param value {Obj}   The value object. Not shown to user.
    *   Can be string, integer or even an object.
    *   Will be passed to your app in `args`.
    */
   addValue(term, value) {
-    assert(value, "Need a value");
+    assert(value && value instanceof Obj, "Need a value of type Obj");
     assert(term && typeof(term) == "string");
 
     this._values.set(term, value);
-    //this._valuesByID.set(this.idForValue(value), value);
+    //this._valuesByID.set(value.id, value);
     this._terms.push(term);
   }
 }

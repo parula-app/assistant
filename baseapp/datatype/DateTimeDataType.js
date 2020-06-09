@@ -51,12 +51,4 @@ export class DateTimeDataType extends OpenEndedDataType {
     // TODO implement samples, see NumberDataType
     return [];
   }
-
-  idForValue(value) {
-    return value.valueOf();
-  }
-
-  valueForID(id) {
-    return new Date(id);
-  }
 }

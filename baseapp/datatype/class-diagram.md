@@ -11,3 +11,6 @@
     * NumberDataType
     * TextDataType
     * DateTimeDataType
+
+* Obj
+  * Location

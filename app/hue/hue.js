@@ -1,6 +1,7 @@
 import * as huePackage from 'node-hue-api';
 const hue = huePackage.default.v3;
 import { JSONApp } from '../../baseapp/JSONApp.js';
+import { Obj } from '../../baseapp/datatype/Obj.js';
 import { AppError } from '../../baseapp/AppBase.js';
 import { getConfig } from '../../util/config.js';
 import { wait, assert } from '../../util/util.js';
@@ -84,19 +85,13 @@ export default class Hue extends JSONApp {
     console.info("Hue lights:");
     for (let light of lights) {
       console.info(" ", light.name, light.id);
-      deviceType.addValue(light.name, {
-        id: light.id,
-        type: "light",
-      });
+      deviceType.addValue(light.name, new Light(light.id, light.name));
     }
     let groups = await conn.groups.getAll();
     console.info("Hue rooms and groups:");
     for (let group of groups) {
       console.info(" ", group.name, group.id);
-      deviceType.addValue(group.name, {
-        id: group.id,
-        type: "group",
-      });
+      deviceType.addValue(group.name, new Room(group.id, group.name));
     }
   }
 
@@ -167,31 +162,63 @@ export default class Hue extends JSONApp {
   /**
    * Command
    * @param args {null}
-   *    Light { // the NamedValue created in `listDevices()`
-   *      id {integer}  light or group ID
-   *      type {string enum}  "light" or "group"
-   *    }
+   *    Light {Light or Room}
    *    State {string enum} "on" or "off"
    * @param client {ClientAPI}
    */
   async lightOnOff(args, client) {
     const kValidStates = [ "on", "off" ];
     let state = args.State;
-    let type = args.Light.type;
-    let id = args.Light.id;
+    let light = args.Light;
     assert(kValidStates.includes(state), "State must be either on or off");
     let conn = await this.connect();
-    if (type == "light") {
+    if (light instanceof Light) {
       let lightState = new hue.lightStates.LightState();
       if (state == "on") {
         lightState.on();
       } else if (state == "off") {
         lightState.off();
       }
-      await conn.lights.setLightState(id, lightState);
-    } else if (type == "group") {
-      await conn.groups.setGroupState(id, { on: state == "on" });
+      await conn.lights.setLightState(light.id, lightState);
+    } else if (light instanceof Room) {
+      await conn.groups.setGroupState(light.id, { on: state == "on" });
     }
+  }
+}
+
+class Light extends Obj {
+  /**
+   * @param id {string}
+   * @param name {string}
+   */
+  constructor(id, name) {
+    super();
+    this._id = id;
+    this._name = name;
+  }
+  get id() {
+    return this._id;
+  }
+  get name() {
+    return this._name;
+  }
+}
+
+class Room extends Obj {
+  /**
+   * @param id {string}
+   * @param name {string}
+   */
+  constructor(id, name) {
+    super();
+    this._id = id;
+    this._name = name;
+  }
+  get id() {
+    return this._id;
+  }
+  get name() {
+    return this._name;
   }
 }
 

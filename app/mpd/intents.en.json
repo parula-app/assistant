@@ -44,8 +44,8 @@
                       "song"
                     ],
                     "samples": [
-                        "Play {Song}",
                         "Play the song {Song}",
+                        "Play {Song}",
                         "{Song}"
                     ]
                 },
@@ -112,11 +112,11 @@
                 },
                 {
                     "name": "SongTitle",
-                    "basetype": "Pia.List"
+                    "basetype": "Pia.NamedValues"
                 },
                 {
                     "name": "Artist",
-                    "basetype": "Pia.List"
+                    "basetype": "Pia.NamedValues"
                 }
             ],
             "responses": {

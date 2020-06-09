@@ -1,5 +1,6 @@
 import { Intent } from "../baseapp/Intent.js";
 import { DataType } from "../baseapp/datatype/DataType.js";
+import { Obj } from "../baseapp/datatype/Obj.js";
 import { assert } from "../util/util.js";
 
 /**
@@ -60,12 +61,13 @@ export class Context {
    *
    * Called by ClientAPI.addResult(), which is called by the app Intent.
    *
-   * @param result {any}
+   * @param result {Obj}
    * @param dataType {DataType}
    */
   addResult(result, dataType) {
+    assert(result instanceof Obj);
     assert(dataType instanceof DataType);
-    console.log("Result", dataType.id, result);
+    console.log("Result", dataType.id, result.name);
     assert(!Object.values(this.args).includes(result), "Input must not be repeated in result");
     this._results.push({
       value: result,

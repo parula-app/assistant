@@ -107,38 +107,6 @@ export class DataType {
   }
 
   /**
-   * A simple type - string, number, boolean -
-   * for the value.
-   * For most types, the ID is the same as the value.
-   *
-   * But if the value is a complex object, you need
-   * to return an ID - as string or number -, which
-   * allows you to map the ID back to the original value,
-   * using some internal map.
-   *
-   * In other words, this must be reversible:
-   * value == valueForID(idForValue(value))
-   * Some types like NamedValue will preserver object identity,
-   * others types like DateTime will not return the identical object,
-   * but still preserve the value.
-   *
-   * @param value {any}  a complex value object
-   * @returns ID {string or number}
-   */
-  idForValue(value) {
-    return value;
-  }
-
-  /**
-   * reverse of idForValue()
-   * @param id {string or number}
-   * @returns {any} the complex value object
-   */
-  valueForID(id) {
-    return id;
-  }
-
-  /**
    * The 2 types are compatible.
   * @return {boolean} You can assign a value from `otherDataType` to this type
   */

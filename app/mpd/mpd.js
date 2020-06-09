@@ -2,6 +2,7 @@
 import * as mpcjs from 'mpc-js';
 const MPC = mpcjs.default.MPC;
 import { JSONApp } from '../../baseapp/JSONApp.js';
+import { Obj } from '../../baseapp/datatype/Obj.js';
 import { getConfig } from '../../util/config.js';
 import { assert } from '../../util/util.js';
 
@@ -30,22 +31,22 @@ export default class MPD extends JSONApp {
     let mpc = await this.connect();
     let artistSongs = await mpc.database.list('Title', [], [ 'Artist' ]);
     for (let artistEntry of artistSongs.entries()) {
-      let artist = artistEntry[0][0];
+      let artistName = artistEntry[0][0];
       let songs = artistEntry[1];
-      if (artist) {
-        artistType.addValue(artist);
+      let artist;
+      if (artistName) {
+        artist = new Artist(artistName);
+        artistType.addValue(artistName, artist);
       }
       for (let title of songs) {
-        if (title) {
-          songType.addValue(title);
+        if (!title) {
+          continue;
         }
-        if (title && artist) {
-          let term = title + kArtistSeparator + artist;
-          let value = {
-            artist: artist,
-            songTitle: title,
-          };
-          songAndArtistType.addValue(term, value);
+        let song = new Song(title, artist);
+        songType.addValue(title, song);
+        if (title && artistName) {
+          let term = title + kArtistSeparator + artistName;
+          songAndArtistType.addValue(term, song);
         }
       }
     }
@@ -71,36 +72,28 @@ export default class MPD extends JSONApp {
   /**
    * Command
    * @param args {object}
-   *    SongAndArtist {
-   *      artist {string}
-   *      songTitle {string}
-   *   }
+   *    SongAndArtist {Song}
    * @param client {ClientAPI}
    */
   async playSongAndArtist(args, client) {
-    let artist = args.SongAndArtist.artist;
-    let song = args.SongAndArtist.songTitle;
+    let song = args.SongAndArtist;
 
     let mpc = await this.connect();
     await mpc.currentPlaylist.clear();
-    mpc.database.findAdd([['Title', song], ['Artist', artist]]);
+    mpc.database.findAdd([['Title', song.title], ['Artist', song.artist.name]]);
     mpc.playback.play();
     await this.debugShowPlaying();
 
-    let songType = this.dataTypes.SongTitle;
     let artistType = this.dataTypes.Artist;
-    if (songType.terms.includes(song)) { // should be true, just in case
-      client.addResult(song, songType);
-    }
-    if (artistType.terms.includes(artist)) { // ditto
-      client.addResult(artist, artistType);
+    if (song.artist) {
+      client.addResult(song.artist, artistType);
     }
   }
 
   /**
    * Command
    * @param args {object}
-   *    Song {string}
+   *    Song {Song}
    * @param client {ClientAPI}
    */
   async playSongTitle(args, client) {
@@ -111,20 +104,23 @@ export default class MPD extends JSONApp {
 
     let mpc = await this.connect();
     await mpc.currentPlaylist.clear();
-    mpc.database.findAdd([['Title', song]]);
+    //mpc.database.findAdd([['Title', song.title], ['Artist', song.artist]]);
+    // For cover songs, i.e. multiple songs with the same title from different artists
+    mpc.database.findAdd([['Title', song.title]]);
     mpc.playback.play();
     await this.debugShowPlaying();
 
     // Add Artist as Intent result for subsequent commands
     // (Song is already in the context, as input argument.)
+    let artistType = this.dataTypes.Artist;
+    //client.addResult(song.artist, artistType);
+    // For cover songs
     try {
-      let songObj = (await mpc.currentPlaylist.playlistInfo(0))[0];
-      if (songObj) {
-        let artist = songObj.artist;
-        let artistType = this.dataTypes.Artist;
-        if (artistType.terms.includes(artist)) {
-          client.addResult(artist, artistType);
-        }
+      let songMPD = (await mpc.currentPlaylist.playlistInfo(0))[0];
+      if (songMPD) {
+        let artistName = songMPD.artist;
+        let artist = artistType.valueForTerm(artistName);
+        client.addResult(artist, artistType);
       }
     } catch (ex) {
       console.error(ex);
@@ -134,7 +130,7 @@ export default class MPD extends JSONApp {
   /**
    * Command
    * @param args {object}
-   *    Artist {string}
+   *    Artist {Artist}
    * @param client {ClientAPI}
    */
   async playArtist(args, client) {
@@ -145,7 +141,7 @@ export default class MPD extends JSONApp {
 
     let mpc = await this.connect();
     await mpc.currentPlaylist.clear();
-    mpc.database.findAdd([['Artist', artist]]);
+    mpc.database.findAdd([['Artist', artist.name]]);
     mpc.playback.play();
     await this.debugShowPlaying();
   }
@@ -232,5 +228,39 @@ export default class MPD extends JSONApp {
     let mpc = await this.connect();
     let status = await mpc.status.status();
     await mpc.playbackOptions.setVolume(status.volume + relativeVolume);
+  }
+}
+
+class Artist extends Obj {
+  /**
+   * @param name {string} Name of the artist
+   */
+  constructor(name) {
+    super();
+    this._name = name;
+  }
+  get id() {
+    return this._name;
+  }
+  get name() {
+    return this._name;
+  }
+}
+
+class Song extends Obj {
+  /**
+   * @param title {string} Song title, without artist
+   * @param artist {Artist} (Optional)
+   */
+  constructor(title, artist) {
+    super();
+    this.title = title;
+    this.artist = artist;
+  }
+  get id() {
+    return this.title + " - " + (this.artist.id || "");
+  }
+  get name() {
+    return this.title + " - " + (this.artist.name || "");
   }
 }

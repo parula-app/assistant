@@ -163,7 +163,7 @@ export default class IntentParser {
         continue;
       }
     }
-    console.log("Match results with variables:"); for (let result of intentMatches.sort((a, b) => (a.overallScore - b.overallScore)).slice(0, 5)) { console.log(" ", result.intent.app.id, result.intent.id, ", overall score", Math.round(result.overallScore * 100) / 100, ", command score", Math.round(result.score * 100) / 100, ", args", result.args ? Object.entries(result.args).map(([ name, value]) => name + ": " + result.intent.parameters[name].dataType.idForValue(value) + ", score " + result.argsScores[name] ).join(", ") : ""); }
+    console.log("Match results with variables:"); for (let result of intentMatches.sort((a, b) => (a.overallScore - b.overallScore)).slice(0, 5)) { console.log(" ", result.intent.app.id, result.intent.id, ", overall score", Math.round(result.overallScore * 100) / 100, ", command score", Math.round(result.score * 100) / 100, ", args", result.args ? Object.entries(result.args).map(([ name, value]) => name + ": " + (value.name ? value.name : value) + ", score " + result.argsScores[name] ).join(", ") : ""); }
 
     /* Take the best match, considering score of command and variables.
      * A strong variable match should be preferred over a good command

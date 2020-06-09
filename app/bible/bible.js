@@ -1,9 +1,10 @@
 import { JSONApp } from '../../baseapp/JSONApp.js';
+import { Obj } from '../../baseapp/datatype/Obj.js';
 import { Detail, Person, Place, Event, Source, Topic, Notes, Relation, GeoCoordinate, Media, Image } from "./model/model.js";
 import { BibleText } from './model/bibletext.js';
 import { loadMainDB } from './model/load-maindb.js';
 import StringBundle from './util/stringbundle.js';
-import { dataURL } from "./util/util.js";
+import { dataURL, assert } from "./util/util.js";
 import fs from 'fs';
 import util from 'util';
 const readFileAsync = util.promisify(fs.readFile);
@@ -56,11 +57,11 @@ export default class BibleApp extends JSONApp {
     // Value is {Array of Detail}, because there can be
     // several persons with the same name.
     const add = (type, name, detail) => {
-      let entry = type.entireMap.get(name);
-      if (!entry) {
-        type.addValue(detail.name, [ detail ]);
+      let details = type.entireMap.get(name);
+      if (!details) {
+        type.addValue(detail.name, new Details(detail));
       } else {
-        entry.push(detail);
+        details.add(detail);
       }
     }
 
@@ -223,9 +224,14 @@ export default class BibleApp extends JSONApp {
     // TODO bible reading: save chapter and continue there or with the next one
   }
 
+  /**
+   * @param args {
+   *   Person {Details}  containing multiple `Person` objects
+   * }
+   */
   openPerson(args, client) {
     var lang = client.lang;
-    var persons = args.Person;
+    var persons = args.Person.all;
     if (persons.length > 1) {
       client.say(getTranslation("person_multiple", lang,
         { person: "", count: persons.length }));
@@ -236,9 +242,14 @@ export default class BibleApp extends JSONApp {
     }
   }
 
+  /**
+   * @param args {
+   *   Place {Details}  containing multiple `Place` objects
+   * }
+   */
   openPlace(args, client) {
     var lang = client.lang;
-    var places = args.Place;
+    var places = args.Place.all;
     if (places.length > 1) {
       client.say(getTranslation("place_multiple", lang,
         { place: "", count: places.length }));
@@ -265,6 +276,35 @@ export default class BibleApp extends JSONApp {
     }
     console.error(exception);
     client.say(getErrorMessage("exception", lang, { message: exception.message }));
+  }
+}
+
+
+/**
+ * Holds 1 or more |Detail|
+ * Because there can be several Persons or Places with the same name.
+ */
+class Details extends Obj {
+  constructor(detail) {
+    assert(detail instanceof Detail, "Need object of type Detail");
+    super();
+    this._details = [ detail ];
+  }
+
+  add(detail) {
+    this._details.push(detail);
+  }
+
+  get all() {
+    return this._details;
+  }
+
+  get id() {
+    return this._details[0].id;
+  }
+
+  get name() {
+    return this._details[0].name;
   }
 }
 

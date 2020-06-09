@@ -1,4 +1,5 @@
 import { NamedValuesDataType } from './NamedValuesDataType.js';
+import { Location } from './Location.js';
 import { assert } from '../../util/util.js';
 import fs from 'fs';
 import readline from 'readline';
@@ -19,18 +20,14 @@ import readline from 'readline';
  * - mid-size towns in certain distance
  * - small villages around the user.
  *
- * Also includes locations from personal contacts and calendar.
- * These apps add their location here.
- * Not implemented yet: Also locations / villages around the contact address
+ * Locations / villages around the contact address
  * with higher granularity and score, and score depending on frequency of contact
  * with that person or address.
  *
- * The value will be an object with: {
- *   name {string}  What the user says to mean this place
- *   lat {float}   (optional) latitude
- *   lon {float}   (optional) longtitude
- *   population {integer}  (optional) How many inhabitants that country, city or village has
- * }
+ * Also includes locations from personal contacts and calendar.
+ * These apps add their location here.
+ *
+ * The value is an object of type `Location`.
  */
 export class LocationDataType extends NamedValuesDataType {
   constructor() {
@@ -38,5 +35,10 @@ export class LocationDataType extends NamedValuesDataType {
   }
 
   async load(lang) {
+  }
+
+  addValue(term, location) {
+    assert(location instanceof Location, "Need a Location object");
+    super.addValue(term, location);
   }
 }
