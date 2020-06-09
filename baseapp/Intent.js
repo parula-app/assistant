@@ -84,11 +84,11 @@ export class Intent {
       }
     }
 
-    let alternatives = this.expandAlternatives(command);
+    let alternatives = Intent.expandAlternatives(command);
     if (alternatives) {
       this.commands = this.commands.concat(alternatives);
     } else {
-      command = this.fixCommand(command);
+      command = Intent.fixCommand(command);
       this.commands.push(command);
     }
   }
@@ -114,7 +114,7 @@ export class Intent {
    *   ]
    *   or null, if there's nothing to expand
    */
-  expandAlternatives(command) {
+  static expandAlternatives(command) {
     let matches = command.match(/\([^\)]+\)/);
     if (!matches) { // stops the recursion
       // Could return array with 1 element, but caller would have to always
@@ -128,11 +128,11 @@ export class Intent {
     // recursive, to expand the other alternatives as well
     let result = [];
     for (let expCommand of commands) {
-      let expCommands = this.expandAlternatives(expCommand);
+      let expCommands = Intent.expandAlternatives(expCommand);
       if (expCommands) {
         result = result.concat(expCommands);
       } else {
-        expCommand = this.fixCommand(expCommand);
+        expCommand = Intent.fixCommand(expCommand);
         result.push(expCommand);
       }
     }
@@ -142,7 +142,7 @@ export class Intent {
   /**
    * Remove double spaces and ?. etc.
    */
-  fixCommand(command) {
+  static fixCommand(command) {
     return command.replace(/[\?\.]/g, "") // ?.
       .replace(/  /g, " ").replace(/  /g, " ") // double spaces
       .trim(); // leading/trailing spaces

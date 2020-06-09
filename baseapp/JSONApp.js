@@ -104,7 +104,9 @@ export class JSONApp extends AppBase {
         }
         let terms = [ value.name.value ];
         if (value.name.synonyms && value.name.synonyms.length) {
-          terms = terms.concat(value.name.synonyms);
+          for (let synonym of value.name.synonyms) {
+            terms = terms.concat(Intent.expandAlternatives(synonym));
+          }
         }
         type.addValue(value.id, terms);
       }
