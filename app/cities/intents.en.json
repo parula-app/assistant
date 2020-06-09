@@ -143,25 +143,25 @@
                 }
             ],
             "responses": {
-                "where-city": "%location% is in %country%",
+                "where-city": "%location% is in %country%.",
                 "where-country": "%location% is in %continent%. Its neighbor countries are:",
                 "population": [
-                  "%location% has roughly %population% inhabitants",
-                  "The population of %location% is roughly %population% inhabitants"
+                  "%location% has roughly %population% inhabitants.",
+                  "The population of %location% is roughly %population% inhabitants."
                 ],
                 "population-at-year": [
-                  "%location% has roughly %population% inhabitants, as of %year%",
-                  "The population of %location% is roughly %population% inhabitants, in %year%"
+                  "%location% has roughly %population% inhabitants, as of %year%.",
+                  "The population of %location% is roughly %population% inhabitants, in %year%."
                 ],
                 "timezone": [
                   "The timezone of %location% is %timezone%. That is %hourDelay% from Greenwich."
                 ],
                 "language": [
-                  "The language spoken in %location% is %language%"
+                  "The language spoken in %location% is %language%."
                 ],
                 "currency": [
-                  "%location% uses the %currency%",
-                  "%currency% is the official currency in %location%"
+                  "%location% uses the %currency%.",
+                  "%currency% is the official currency in %location%."
                 ]
             }
         }

@@ -130,7 +130,7 @@ export default class Cities extends JSONApp {
       return this.getResponse("where-country", {
         location: location.name,
         continent: continent,
-      }) + " \n" + neighborCountries;
+      }) + " \n" + neighborCountries + ".";
     } else {
       let country = this._countries.get(location.countryCode);
       return this.getResponse("where-city", {
