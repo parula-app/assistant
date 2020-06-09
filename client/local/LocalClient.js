@@ -39,7 +39,7 @@ export class LocalClient extends Client {
         if (!inputText) {
           return;
         }
-        inputText = wordsToNumbers(inputText) + ""; // leaves text as-is, only replaces numbers
+        //inputText = wordsToNumbers(inputText) + ""; // leaves text as-is, only replaces numbers
         console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
