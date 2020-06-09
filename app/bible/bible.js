@@ -224,6 +224,10 @@ export default class BibleApp extends JSONApp {
     // TODO bible reading: save chapter and continue there or with the next one
   }
 
+  more(args, client) {
+    return "";
+  }
+
   /**
    * @param args {
    *   Person {Details}  containing multiple `Person` objects
