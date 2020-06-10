@@ -146,11 +146,22 @@ export default class MPD extends JSONApp {
     await this.debugShowPlaying();
   }
 
+  async info() {
+    let mpc = await this.connect();
+    let songObj = await mpc.status.currentSong();
+    if (songObj && songObj.title) {
+      return this.getResponse(songObj.artist ? "song-info" : "song-info-without-artist", {
+        title: songObj.title,
+        artist: songObj.artist,
+      });
+    } else {
+      return this.getResponse("donotknow");
+    }
+  }
+
   async debugShowPlaying() {
     let mpc = await this.connect();
-    //let songs = await mpc.database.find([['Title', searchText]]);
-    //console.log(songs.map(song => ({ title: song.title, artist: song.artist, file: song.path })));
-    let songObj = (await mpc.currentPlaylist.playlistInfo(0))[0];
+    let songObj = await mpc.status.currentSong();
     if (songObj) {
       console.log("\nPlaying: " + songObj.title + " by " + songObj.artist + "\n");
     } else {

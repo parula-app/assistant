@@ -97,6 +97,18 @@
                     ]
                 },
                 {
+                    "name": "Pia.Info",
+                    "slots": [
+                        {
+                            "name": "Song",
+                            "type": "Song"
+                        }
+                    ],
+                    "samples": [
+                        "(Tell me|) (which|what) (song|music) (this is|this was|is this?|was this?)"
+                    ]
+                },
+                {
                     "name": "Pia.More",
                     "samples": [
                         "More music like this",
@@ -134,6 +146,9 @@
                   "I had trouble understanding the artist"
                 ],
                 "song-artist-separator": " by ",
+                "song-info": "This is %title% by %artist%",
+                "song-info-no-artist": "This is %title%",
+                "donotknow": "I don't know",
                 "volume-too-high": "That volume number is too high. Please use numbers between 11 to 100 or from 0 to 10.",
                 "volume-too-low": "I don't know what to do with a negative volume.",
                 "relative-volume-too-high": "That relative volume number is too high.",
