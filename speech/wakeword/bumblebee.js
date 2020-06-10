@@ -38,7 +38,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   detector.start(audioInputStream, kSampleRate);
 
   let vad = new VAD(VAD.Mode.VERY_AGGRESSIVE);
-  const kBufferFrames = 2;
+  const kBufferFrames = 0;
 
   // Whether this is an active command
   let commandStartTime = null;
