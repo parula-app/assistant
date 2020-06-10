@@ -62,7 +62,7 @@ export default class Radio extends JSONApp {
   async playGenre(args, client) {
     assert(args.Genre && args.Genre instanceof Genre, "Need genre");
     // if (!genre) { throw this.error("not-found-genre"); }
-    let stations = args.Genre;
+    let stations = args.Genre.stations;
     if (!stations.length) {
       throw this.error("not-found-station-in-genre");
     }
