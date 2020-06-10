@@ -116,11 +116,13 @@ export default class MPD extends JSONApp {
     //client.addResult(song.artist, artistType);
     // For cover songs
     try {
-      let songMPD = (await mpc.currentPlaylist.playlistInfo(0))[0];
+      let songMPD = await mpc.status.currentSong();
       if (songMPD) {
         let artistName = songMPD.artist;
         let artist = artistType.valueForTerm(artistName);
-        client.addResult(artist, artistType);
+        if (artist) {
+          client.addResult(artist, artistType);
+        }
       }
     } catch (ex) {
       console.error(ex);
@@ -269,9 +271,9 @@ class Song extends Obj {
     this.artist = artist;
   }
   get id() {
-    return this.title + " - " + (this.artist.id || "");
+    return this.title + " - " + (this.artist && this.artist.id || "");
   }
   get name() {
-    return this.title + " - " + (this.artist.name || "");
+    return this.title + " - " + (this.artist && this.artist.name || "");
   }
 }

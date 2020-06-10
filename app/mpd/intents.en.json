@@ -98,12 +98,6 @@
                 },
                 {
                     "name": "Pia.Info",
-                    "slots": [
-                        {
-                            "name": "Song",
-                            "type": "Song"
-                        }
-                    ],
                     "samples": [
                         "(Tell me|) (which|what) (song|music) (this is|this was|is this?|was this?)"
                     ]

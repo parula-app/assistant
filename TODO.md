@@ -1,4 +1,7 @@
 ## Core
+* Intent Parser
+  * NamedValues with scores
+  * Based on words
 * Context
   * Include recent commands in match confidence
   * Resolve open variables with context
@@ -40,10 +43,10 @@
 
 ## TODO
 * Reminder, Alarm
+* Contacts
 * Weather
 * Calendar
   * Sync only when necessary
-* Contacts
 * Phone SIP
 * Phone Bluetooth
   * HFP Hands Free Profile or HSP Headset -> PulseAudio
