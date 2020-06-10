@@ -26,6 +26,6 @@ export function saveAudioFile(audioStream) {
     .outputFileType('wav');
     audioStream.pipe(fileWriteStream);
   return new Promise((resolve, reject) => {
-    audioStream.on('finish', resolve);
+    audioStream.on('end', resolve);
   });
 }
