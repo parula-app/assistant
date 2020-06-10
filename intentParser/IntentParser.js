@@ -123,23 +123,16 @@ export default class IntentParser {
     variableMatches:
     for (let result of intentMatches) {
       try {
-        let args = result.args = {};
+        result.args = propertyNamesLowerCaseToOriginal(result.variables, result.intent.parameters);
         if (!Object.keys(result.intent.parameters).length) { // no params
           result.overallScore = result.score;
           continue;
         }
+        let args = result.args;
         let argsScores = [];
         result.argsScores = {};
         result.overallScore = kMaxScore * 2; // for error cases
         //console.log("Checking variables for command: " + result.targetString);
-        // Fix up arg names, which we made lower case during matching :(
-        let argsLower = result.variables;
-        let orgParamsNames = Object.keys(result.intent.parameters);
-        let orgParamsLower = orgParamsNames.map(a => a.toLowerCase());
-        for (let nameLower in argsLower) {
-          let nameOrg = orgParamsNames[orgParamsLower.indexOf(nameLower)];
-          args[nameOrg] = argsLower[nameLower];
-        }
         // Match each variable
         for (let name in args) {
           let dataType = result.intent.parameters[name].dataType;
@@ -209,4 +202,28 @@ export default class IntentParser {
       return ex.message || ex;
     }
   }
+}
+
+/**
+  * Restores the original casing (upper/lower case) of the property names.
+  * This helps to fix up arg names, which we made lower case during matching.
+  *
+  * @param obj {Object} A JS object.
+  *    The properties are all lower case.
+  * @param originalPropertyNames {Object}
+  *    An object with the same properties as `obj`, but the property names
+  *    may be capitalizes, camelCase etc.
+  * @returns {Object} The same properties and values as in `obj`,
+  *    but the property names have the same casing (upper/lower case)
+  *    as in `originalPropertyNames`.
+  */
+function propertyNamesLowerCaseToOriginal(obj, originalPropertyNames) {
+  let restored = {};
+  let orgParamsNames = Object.keys(originalPropertyNames);
+  let orgParamsLower = orgParamsNames.map(a => a.toLowerCase());
+  for (let nameLower in obj) {
+    let nameOrg = orgParamsNames[orgParamsLower.indexOf(nameLower)];
+    restored[nameOrg] = obj[nameLower];
+  }
+  return restored;
 }
