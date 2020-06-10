@@ -43,7 +43,7 @@
                       "music"
                     ],
                     "samples": [
-                        "Play (some|) {Genre} (music|) (for me|)",
+                        "Play (some|the latest|) (new|) {Genre} (music|) (for me|)",
                         "Play {Genre}"
                     ]
                 },

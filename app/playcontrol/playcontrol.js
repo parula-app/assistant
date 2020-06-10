@@ -1,4 +1,5 @@
 import { JSONApp } from '../../baseapp/JSONApp.js';
+import { assert } from '../../util/util.js';
 
 export default class PlayControl extends JSONApp {
   constructor() {

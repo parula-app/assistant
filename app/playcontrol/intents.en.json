@@ -17,16 +17,16 @@
                 },
                 {
                     "name": "Pia.Next",
-                    "name": "Pia.Stop",
                     "keywords": [
                       "next",
                       "continue"
                     ],
                     "samples": [
                         "Next song",
-                        "Next",
+                        "Skip (this song|song)",
                         "Continue",
-                        "Skip"
+                        "Skip",
+                        "Next"
                     ]
                 },
                 {
