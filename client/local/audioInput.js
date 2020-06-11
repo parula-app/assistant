@@ -12,6 +12,7 @@ export async function load() {
  *   Flows after this function returned.
  */
 export default function audioInput() {
+  console.log("Using microphone at device", getConfig().audio.inputDevice || "(default)");
   let m = mic({
     channels: 1,
     bitwidth: 16,

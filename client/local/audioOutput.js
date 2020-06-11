@@ -11,6 +11,7 @@ import { getConfig } from '../../util/config.js';
  */
 export default function audioOutput(waveStream) {
   let device = getConfig().audio.outputDevice; // e.g. "hw:0,0", null = default
+  console.log("Using audio speaker device", device || "(default)");
   // TODO Gives "Failed to open output device" for me for "hw:0,0", despite matching the docs.
   let ao = new Speaker({
     channels: 1,
