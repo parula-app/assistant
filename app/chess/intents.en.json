@@ -13,6 +13,12 @@
                       "Start a (new|) game of chess (with|as|with me as) {Color} (color|pieces|)",
                       "Do you (want to|) play chess (with me|)?",
                       "Let's (play|start) (a game of|) chess"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Color",
+                            "type": "Color"
+                        }
                     ]
                 },
                 {

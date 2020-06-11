@@ -44,7 +44,12 @@ export default class Chess extends JSONApp {
       game: game,
       playerColor: playerColor,
     });
-    return this.getResponse("started");
+    let response = this.getResponse("started");
+
+    if (playerColor == "b") {
+      response += ".\n" + this.aiMove(game);
+    }
+    return response;
   }
 
   /**
