@@ -141,7 +141,7 @@ export default class IntentParser {
           argsScores.push(score);
           result.argsScores[name] = score;
           if (score == 1) {
-            break variableMatches;
+            continue variableMatches;
           }
           args[name] = value;
         }
