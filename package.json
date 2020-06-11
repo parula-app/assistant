@@ -23,7 +23,7 @@
         "mpc-js": "^1.2.1",
         "mpg123": "https://github.com/benbucksch/mpg123",
         "mpg321": "^0.1.5",
-        "naudiodon": "^2.1.2",
+        "node-audiorecorder": "https://github.com/benbucksch/node-audiorecorder",
         "node-fetch": "^2.6.0",
         "node-hue-api": "https://github.com/benbucksch/node-hue-api",
         "node-vad": "^1.1.4",
