@@ -1,7 +1,7 @@
 ## Core
 * Intent Parser
-  * NamedValues with scores
   * Based on words
+  * Make optional parameters explicit, in JSON and intent parser
 * Context
   * Include recent commands in match confidence
   * Resolve open variables with context
@@ -11,8 +11,9 @@
   * quickly (reduces reponse length)
   * again (takes variables from previous commands)
 * Apps via commandline (stdin/out) and HTTPS
-   * Load language model as JSON via special command parameter / URL suffix
-   * Command text input, output, errors etc. via JSON REST protocol.
+   * HTTP: Load language model as JSON via special command parameter / URL suffix (DONE)
+   * websocket: Like HTTP, but unregister
+   * commandline: Command text input, output, errors etc. via JSON REST protocol.
 * Storage
   * Settings writable
   * Decide on DB
@@ -40,6 +41,7 @@
 * TODO list, Shopping list
 * Lights for Hue
 * Jokes
+* Chess
 
 ## TODO
 * Reminder, Alarm

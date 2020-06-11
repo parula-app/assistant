@@ -198,7 +198,7 @@ export class Intent {
       return func.call(this.app, args, clientAPI);
     } catch (ex) {
       console.error(ex);
-      return "I had a problem. " + (ex.message || ex);
+      return ex.message || ex + "";
     }
   }
 }

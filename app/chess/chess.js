@@ -109,7 +109,7 @@ export default class Chess extends JSONApp {
       piece = piece.toLowerCase();
     }
     // @see https://github.com/josefjadrny/js-chess-engine#board-configuration
-    let pieces = game.exportToJson().pieces;
+    let pieces = game.exportJson().pieces;
     return Object.entries(pieces).find(([pos, pieceAtPos]) => pieceAtPos == piece);
   }
 
@@ -119,7 +119,7 @@ export default class Chess extends JSONApp {
    * @returns {string enum} piece, one of: KQNBRP or kqnbrp
    */
   placeToPiece(game, position) {
-    let pieces = game.exportToJson().pieces;
+    let pieces = game.exportJson().pieces;
     let entry = Object.entries(pieces).find(([pos, pieceAtPos]) => pos == position);
     assert(entry, "There is no piece at position " + position);
     return entry[1];
@@ -133,7 +133,10 @@ export default class Chess extends JSONApp {
     // 1 = Beginner, needs ~0.1s
     // 2 = Advanced, needs ~3s
     const kAISmartnessLevel = 2;
-    let move = game.aiMove(kAISmartnessLevel);
+    //let move = game.aiMove(kAISmartnessLevel); -- doesn't return the move
+    let move = game.board.calculateAiMove(kAISmartnessLevel)
+    game.move(move.from, move.to)
+    console.log(move);
     let pieceName = this.getResponse("piece-" + this.placeToPiece(game, move.from).toUpperCase());
     return this.getResponse("computer-moved", {
       piece: pieceName,
