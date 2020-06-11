@@ -17,7 +17,6 @@
         "bumblebee-hotword-node": "^0.0.6",
         "dav": "^1.8.0",
         "deepspeech": "^0.7.3",
-        "didyoumean2": "^4.0.0",
         "express": "^4.17.1",
         "ical": "^0.8.0",
         "iso-639-1": "^2.1.3",

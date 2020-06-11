@@ -1,5 +1,3 @@
-import didYouMean from 'didyoumean2';
-const didYouMean2 = didYouMean.default;
 import wildLeven from './leven.js';
 
 /**
