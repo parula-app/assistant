@@ -17,7 +17,7 @@ export default function audioInput() {
     bitwidth: 16,
     encoding: "signed-integer",
     rate: speechToText.sampleRate(),
-    device: getConfig().audio.inputDevice, // e.g. "hw:0,0", null = default
+    device: getConfig().audio.inputDevice || "default", // e.g. "hw:0,0"
   });
   let audioInputStream = m.getAudioStream();
   m.start();
