@@ -1,0 +1,329 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "chess",
+            "intents": [
+                {
+                    "name": "StartGame",
+                    "keywords": [
+                      "chess"
+                    ],
+                    "samples": [
+                      "Start a (new|) game of chess",
+                      "Start a (new|) game of chess (with|as|with me as) {Color} (color|pieces|)",
+                      "Do you (want to|) play chess (with me|)?",
+                      "Let's (play|start) (a game of|) chess"
+                    ]
+                },
+                {
+                    "name": "Move",
+                    "keywords": [
+                      "move"
+                    ],
+                    "samples": [
+                      "Move (the {Piece}|{Piece}|) (from|) {FromFile} {FromRank} to {ToFile} {ToRank}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "FromFile",
+                            "type": "PositionFile"
+                        },
+                        {
+                            "name": "FromRank",
+                            "type": "PositionRank"
+                        },
+                        {
+                            "name": "ToFile",
+                            "type": "PositionFile"
+                        },
+                        {
+                            "name": "ToRank",
+                            "type": "PositionRank"
+                        },
+                        {
+                            "name": "Piece",
+                            "type": "Piece"
+                        }
+                    ]
+                },
+                {
+                    "name": "MovePiece",
+                    "keywords": [
+                      "move"
+                    ],
+                    "samples": [
+                      "Move (the|) {Piece} to {ToFile} {ToRank}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Piece",
+                            "type": "Piece"
+                        },
+                        {
+                            "name": "ToFile",
+                            "type": "PositionFile"
+                        },
+                        {
+                            "name": "ToRank",
+                            "type": "PositionRank"
+                        }
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "PositionFile",
+                    "values": [
+                        {
+                            "id": "A",
+                            "name": {
+                                "value": "A"
+                            }
+                        },
+                        {
+                            "id": "B",
+                            "name": {
+                                "value": "B",
+                                "synonyms": [
+                                    "be",
+                                    "bee"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "C",
+                            "name": {
+                                "value": "C",
+                                "synonyms": [
+                                    "see"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "D",
+                            "name": {
+                                "value": "D"
+                            }
+                        },
+                        {
+                            "id": "E",
+                            "name": {
+                                "value": "E"
+                            }
+                        },
+                        {
+                            "id": "F",
+                            "name": {
+                                "value": "F"
+                            }
+                        },
+                        {
+                            "id": "G",
+                            "name": {
+                                "value": "G",
+                                "synonyms": [
+                                    "gee"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "H",
+                            "name": {
+                                "value": "H"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PositionRank",
+                    "values": [
+                        {
+                            "id": "1",
+                            "name": {
+                                "value": "1",
+                                "synonyms": [
+                                    "one"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "2",
+                            "name": {
+                                "value": "2",
+                                "synonyms": [
+                                    "to"
+                                    "too"
+                                    "two"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "3",
+                            "name": {
+                                "value": "3",
+                                "synonyms": [
+                                    "three"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "4",
+                            "name": {
+                                "value": "4",
+                                "synonyms": [
+                                    "four"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "5",
+                            "name": {
+                                "value": "5",
+                                "synonyms": [
+                                    "five"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "6",
+                            "name": {
+                                "value": "6",
+                                "synonyms": [
+                                    "six"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "7",
+                            "name": {
+                                "value": "7",
+                                "synonyms": [
+                                    "seven"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "8",
+                            "name": {
+                                "value": "8",
+                                "synonyms": [
+                                    "eight"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Piece",
+                    "values": [
+                        {
+                            "id": "K",
+                            "name": {
+                                "value": "King"
+                            }
+                        },
+                        {
+                            "id": "Q",
+                            "name": {
+                                "value": "Queen"
+                            }
+                        },
+                        {
+                            "id": "N",
+                            "name": {
+                                "value": "Knight",
+                                "synonyms": [
+                                    "Horse"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "B",
+                            "name": {
+                                "value": "Bishop",
+                                "synonyms": [
+                                    "Runner"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "R",
+                            "name": {
+                                "value": "Rook",
+                                "synonyms": [
+                                    "Tower",
+                                    "Castle"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "P",
+                            "name": {
+                                "value": "Pawn"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Color",
+                    "values": [
+                        {
+                            "id": "w",
+                            "name": {
+                                "value": "White"
+                            }
+                        },
+                        {
+                            "id": "b",
+                            "name": {
+                                "value": "Black"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "responses": {
+              "started": [
+                "May the better player win",
+                "Alright. Let's start a game of chess. Say for example: Move B7 to B6.",
+                "OK. Let's start a new game of chess. It's your turn."
+              ],
+              "no-active-game": [
+                "There is no ongoing chess game. Start one by saying: Start a new game of chess"
+              ],
+              "user-moved": "You moved your %piece% from %from% to %to%",
+              "computer-moved": [
+                "The computer moves its %piece% from %from% to %to%"
+              ],
+              "piece-K": "King",
+              "piece-Q": "Queen",
+              "piece-N": "Knight",
+              "piece-B": "Bishop",
+              "piece-R": "Rook",
+              "piece-P": "Pawn",
+              "invalid-move": [
+                "%from% to %to% is an invalid move",
+                "You cannot move %from% to %to%"
+              ],
+              "piece-wrong-position": "This piece is not at position %position%",
+              "user-check": [
+                "Check"
+              ],
+              "computer-check": [
+                "Check"
+              ],
+              "user-checkmate": [
+                "Check mate",
+                "Game over. I'm sorry, but I'm smarter than you.",
+                "I'm glad you're still better in driving than me"
+              ],
+              "computer-checkmate": [
+                "Check mate. You won.",
+                "OK, I'm check mate. You've been playing well.",
+                "Congratulations. You won the game. But I'd like to play again.",
+                "Congratulations. You won the game."
+              ]
+            }
+        }
+    }
+}
