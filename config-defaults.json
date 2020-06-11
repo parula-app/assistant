@@ -18,6 +18,11 @@
   "audio": {
     "maxCommandLength": 10
   },
+  "speechEngine": {
+    "wake": "bumblebee",
+    "speechRecognition": "deepSpeech",
+    "tts": "mozilla"
+  },
   "deepSpeech": {
     "modelDir": "./data/deepspeech-%version%-models/",
     "model": null,

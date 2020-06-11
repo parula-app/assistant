@@ -1,91 +1,91 @@
 import VAD from 'node-vad';
-import stream from 'stream';
-import { assert } from '../../util/util.js';
+import { speechToText } from '../../speech/speech.js';
+import { wait } from '../../util/util.js';
 
 /**
- * Silence detection
+ * Takes all speech as command.
+ * As soon as you start speaking, attempts to interpret that as command.
+ * When you stop talking for 2 seconds, it runs whatever you said as command.
  *
- * Sends the voice data - excluding silence and noise - to the down stream.
- *
- * Input stream: Audio
- * Output stream: Audio, with pause/resume to signal command start/end
- *
- * Triggers `resume` when speech is recognized (independent of a hotword)
- * and `pause` when speech finished and noise or silence is detected
- * or the `maxCommandLength` is reached.
- *
- * @param options {object} with:
- * @param sampleRate {int} (Required)
- *   Audio sample rate of input
- * @param maxCommandLength {int} in seconds. Max time to listen
- *   for speech before calling endCommandCallback().
+ * @param audioInputStream {Stream} audio data from microphone
+ * @param maxCommandLength {int} in seconds. How long to listen max
+ * @param newCommandCallback {Function()} Will be called
+ *   when you start speaking.
+ * @param audioCallback {Function(Buffer)}
+ *   More audio for an ongoing command, after `newCommandCallback`.
+ * @param endCommandCallback {Function()} Will be called
+ *   after newCommandCallback and continuedCallback() and
+ *   there is silence.
+ *   NOTE: If the user listens to music while giving a command,
+ *   will not be called until `maxCommandLength`.
  */
-export default class VADStream extends stream.Transform {
-  constructor(options) {
-    assert(typeof(options.sampleRate) == "number");
-    assert(typeof(options.maxCommandLength) == "number");
-    assert(options.sampleRate >= 8000 && options.sampleRate < 200000);
-    assert(options.maxCommandLength >= 1 && options.maxCommandLength < 200);
-    super(options);
-    this.sampleRate = options.sampleRate;
-    this.maxCommandLength = options.maxCommandLength;
-    // VAD.Mode.NORMAL
-    // VAD.Mode.LOW_BITRATE
-    // VAD.Mode.AGGRESSIVE
-    // VAD.Mode.VERY_AGGRESSIVE
-    this.vad = new VAD(VAD.Mode.VERY_AGGRESSIVE);
+export async function waitForWakeWord(audioInputStream, maxCommandLength,
+  newCommandCallback, audioCallback, endCommandCallback) {
 
-    // When the speech started
-    this.speechStartTime = null;
-    this.startBuffer = [];
-  }
+  // VAD.Mode.NORMAL
+  // VAD.Mode.LOW_BITRATE
+  // VAD.Mode.AGGRESSIVE
+  // VAD.Mode.VERY_AGGRESSIVE
+  let vad = new VAD(VAD.Mode.NORMAL);
+  let sampleRate = speechToText.sampleRate();
 
-  async _transform(buffer, encoding, callback) {
+  // Whether is an active command
+  let speechStartTime = null;
+  let startBuffer = [];
+
+  audioInputStream.on('data', async (buffer) => {
     try {
-      console.log("VAD transform"); // TODO never called
-      let event = await this.vad.processAudio(buffer, this.sampleRate);
+      let event = await vad.processAudio(buffer, sampleRate);
 
       if (event == VAD.Event.ERROR) {
-        callback(new Error("VAD error"));
+        console.error("VAD error");
         return;
       } else if (event == VAD.Event.VOICE) {
-        if (this.speechStartTime) {
+        if (speechStartTime) {
           // speech already ongoing
-          this.push(buffer);
+          audioCallback(buffer);
 
-          if (new Date() - this.speechStartTime > this.maxCommandLength * 1000) {
-            this.speechStartTime = null;
-            this.emit('voice-end');
+          if (new Date() - speechStartTime > maxCommandLength * 1000) {
+            speechStartTime = null;
+            endCommandCallback();
           }
         } else { // no speech until now
           // speech start
           console.log('Speech detected');
-          this.speechStartTime = new Date();
-          this.emit('voice-start');
-          for (let previousBuffer of this.startBuffer) {
-            this.push(previousBuffer);
+          speechStartTime = new Date();
+          newCommandCallback();
+          for (let previousBuffer of startBuffer) {
+            audioCallback(previousBuffer);
           }
-          this.startBuffer.length = 0;
-          this.push(buffer);
+          startBuffer.length = 0;
+          audioCallback(buffer);
         }
       } else { // SILENCE or NOISE
-        if (this.speechStartTime) {
+        if (speechStartTime) {
           // speech end
-          this.speechStartTime = null;
-          this.emit('voice-end');
+          speechStartTime = null;
+          endCommandCallback();
         } else { // no speech
           // VAD cuts the start of the command.
           // Workaround: Buffer last 3 frames.
-          this.startBuffer.push(buffer);
-          if (this.startBuffer.length >= 3) {
-            this.startBuffer.shift();
+          startBuffer.push(buffer);
+          if (startBuffer.length >= 3) {
+            startBuffer.shift();
           }
         }
       }
-      callback();
     } catch (ex) {
       console.error(ex);
-      callback(ex);
     }
-  }
+  });
+
+  audioInputStream.start();
+  console.info('Listening to your command.');
+  await wait(64^5); // 34 years TODO
+}
+
+export async function load() {
+}
+
+export async function unload() {
 }

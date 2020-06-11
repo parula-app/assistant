@@ -22,6 +22,9 @@
     "inputDevice": "hw:1,0",
     "outputDevice": "hw:2,2"
   },
+  "speechEngine": {
+    "tts": "mary"
+  },
   "maryTTS": {
     "voice": "cmu-slt"
   }

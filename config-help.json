@@ -23,6 +23,10 @@
     "inputDevice": "ALSA ID of the microphone audio device, e.g. hw:2,1 , for 1. card 2. device. See aplay -l for a list. Empty = default device.",
     "outputDevice": "ALSA ID of the speaker audio device, e.g. hw:1,0 . Empty = default device."
   },
+  "speechEngine": {
+    "tts": "Text to speech engine to use. Options: mary and mozilla",
+    "wake": "The wake word engine to use. Options: bumblee"
+  },
   "deepSpeech": {
     "modelDir": "DeepSpeech Model directory. Convenience parameter to specify model, lm and trie at the same time.",
     "model": "DeepSpeech model -- .pbmm or .tflit. Contains the phonemes. If not passed, path inferred from modelDir.",

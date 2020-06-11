@@ -2,9 +2,9 @@
 
 import { Client } from '../Client.js';
 import AudioVideoPlayer from './MPDPlayer.js';
-import audioInput, { load as audioInputLoad} from './audioInput.js';
+import audioInput, { load as loadAudioInput } from './audioInput.js';
 import audioOutput from './audioOutput.js';
-import { speechToText, textToSpeech, wakeword } from '../../speech/speech.js';
+import { speechToText, textToSpeech, wakeword, load as loadSpeechEngines } from '../../speech/speech.js';
 import * as wtn from 'words-to-numbers';
 const wordsToNumbers = wtn.default.wordsToNumbers;
 import { getConfig } from '../../util/config.js';
@@ -17,10 +17,8 @@ import { getConfig } from '../../util/config.js';
  */
 export class LocalClient extends Client {
   async load(lang) {
-    await audioInputLoad();
-    await wakeword.load();
-    await speechToText.load(lang);
-    await textToSpeech.load(lang);
+    await loadAudioInput();
+    await loadSpeechEngines(lang);
     this._player = new AudioVideoPlayer();
     await super.load(lang);
   }
