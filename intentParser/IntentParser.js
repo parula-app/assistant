@@ -146,13 +146,18 @@ export default class IntentParser {
           args[name] = value;
         }
 
+        if (!argsScores.length) {
+          // There are parameters, but no arguments passed
+          // TODO Make optional parameters explicit
+          continue;
+        }
         let sumArgs = argsScores.reduce((accumulator, current) => accumulator + current);
         // Average over the scores of command and all variables
         result.overallScore = (result.score + sumArgs) / (1 + argsScores.length);
 
       } catch (ex) {
         console.log(result.intent.id + " is not a match: " + (ex.message || ex));
-        //console.error(ex); // debug DataType implementations
+        console.error(ex); // debug DataType implementations
         continue;
       }
     }
