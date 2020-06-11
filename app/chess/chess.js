@@ -29,11 +29,7 @@ export default class Chess extends JSONApp {
 
   /**
    * @param args {
-   *   FromFile {string enum},
-   *   FromRank {string enum},
-   *   ToFile {string enum},
-   *   ToRank {string enum},
-   *   Color {string enum}, (Optional) default white
+   *   Color {string enum}, (Optional) w = white or b = black, default w = white
    * }
    * @param client {ClientAPI}
    */
@@ -63,9 +59,9 @@ export default class Chess extends JSONApp {
    */
   move(args, client) {
     assert(args.FromFile, "Need to know from where you want to move");
-    assert(args.FromRank, "Need to know from where you want to move");
     assert(args.ToFile, "Need to know to where you want to move");
-    assert(args.ToRank, "Need to know to where you want to move");
+    this.validateRank(args.FromRank);
+    this.validateRank(args.ToRank);
     let argFrom = args.FromFile + args.FromRank;
     let argTo = args.ToFile + args.ToRank;
     let game = this.game(client);
@@ -95,7 +91,7 @@ export default class Chess extends JSONApp {
   movePiece(args, client) {
     assert(args.Piece, "Need to know which piece you want to move");
     assert(args.ToFile, "Need to know to where you want to move");
-    assert(args.ToRank, "Need to know to where you want to move");
+    this.validateRank(args.ToRank);
     let argTo = args.ToFile + args.ToRank;
     let game = this.game(client);
     let argFrom = this.pieceToPlace(game, client, args.Piece);
@@ -144,5 +140,11 @@ export default class Chess extends JSONApp {
       from: move.from,
       to: move.to,
     });
+  }
+
+  validateRank(rank) {
+    if (!rank || rank < 1 || rank > 8) {
+      throw this.error("invalid-rank", { rank });
+    }
   }
 }

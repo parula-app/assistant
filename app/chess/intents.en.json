@@ -30,7 +30,7 @@
                         },
                         {
                             "name": "FromRank",
-                            "type": "PositionRank"
+                            "type": "Pia.Number"
                         },
                         {
                             "name": "ToFile",
@@ -38,7 +38,7 @@
                         },
                         {
                             "name": "ToRank",
-                            "type": "PositionRank"
+                            "type": "Pia.Number"
                         },
                         {
                             "name": "Piece",
@@ -65,7 +65,7 @@
                         },
                         {
                             "name": "ToRank",
-                            "type": "PositionRank"
+                            "type": "Pia.Number"
                         }
                     ]
                 }
@@ -130,85 +130,6 @@
                             "id": "H",
                             "name": {
                                 "value": "H"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "PositionRank",
-                    "values": [
-                        {
-                            "id": "1",
-                            "name": {
-                                "value": "1",
-                                "synonyms": [
-                                    "one"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "2",
-                            "name": {
-                                "value": "2",
-                                "synonyms": [
-                                    "to"
-                                    "too"
-                                    "two"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "3",
-                            "name": {
-                                "value": "3",
-                                "synonyms": [
-                                    "three"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "4",
-                            "name": {
-                                "value": "4",
-                                "synonyms": [
-                                    "four"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "5",
-                            "name": {
-                                "value": "5",
-                                "synonyms": [
-                                    "five"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "6",
-                            "name": {
-                                "value": "6",
-                                "synonyms": [
-                                    "six"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "7",
-                            "name": {
-                                "value": "7",
-                                "synonyms": [
-                                    "seven"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "8",
-                            "name": {
-                                "value": "8",
-                                "synonyms": [
-                                    "eight"
-                                ]
                             }
                         }
                     ]
@@ -306,6 +227,7 @@
                 "You cannot move %from% to %to%"
               ],
               "piece-wrong-position": "This piece is not at position %position%",
+              "invalid-rank": "%rank% is not a valid rank. Use 1 to 8.",
               "user-check": [
                 "Check"
               ],
