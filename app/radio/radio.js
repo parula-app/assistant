@@ -139,6 +139,7 @@ export default class Radio extends JSONApp {
   async next(args, client) {
     let session = client.userSession;
     let stations = session.stations;
+    let station;
     let pos = stations.indexOf(session.currentStation);
     if (!pos) {
       station = pickRandom(stations);
