@@ -93,6 +93,7 @@ export class FiniteDataType extends DataType {
    *      0.5 = half the string matches
    *      0 = perfect match
    * }
+   * @overridden by NamedValuesDataType
    */
   valueForInput(inputText, context) {
     let pronounMatch = this.valueForPronoun(inputText, context);

@@ -6,6 +6,11 @@ import langCodes from 'iso-639-1';
 import fs from 'fs';
 import readline from 'readline';
 
+var gCurrentLocation = {
+  lat: 0.0,
+  lon: 0.0,
+};
+
 /**
  * Primary purpose of this app is to load cities into the LocationDataType
  * for use as location by other apps.
@@ -24,10 +29,8 @@ export default class Cities extends JSONApp {
      */
     this._countries = new Map();
 
-    let config = getConfig().homeLocation;
-    this._lat = config.lat;
-    this._lon = config.lon;
-    if (!config.lat) {
+    gCurrentLocation = getConfig().homeLocation;
+    if (!gCurrentLocation.lat) {
       console.log("\nPlease set your city and lat/lon GPS coordinates in config.homeLocation. This is needed for any location lookups.\n");
     }
   }
@@ -41,9 +44,10 @@ export default class Cities extends JSONApp {
     await this.loadCountries();
     await this.loadCities();
     console.timeEnd("Loading cities");
-
-    /*for (let city of this._dataType.values.sort((a, b) => a.distance - b.distance)) {
-      console.log(city.name, city.distance, city.population);
+    /*for (let city of this._dataType.values.sort((a, b) => a.score - b.score)) {
+     if (city instanceof City && city.population > 100000) {
+       console.log(city.name, city.population, city.distance, city.score);
+     }
     }*/
     console.log(`Kept ${ this._dataType.values.length } cities`);
   }
@@ -82,27 +86,9 @@ export default class Cities extends JSONApp {
 
   processCity(fields) {
     let city = new City(fields);
-
-    // determine whether to add this city,
-    // depending on population size and distance from user
-    const kLonMultiplier = 0.5;
-    let distance = Math.abs(city.lat - this._lat) + Math.abs(city.lon - this._lon) * kLonMultiplier;
-    // if distance > roughly 100-200 km, drop cities < 10000 population
-    // if distance > roughly 1000 km, drop cities < 100000 population
-    // if distance > roughly 5000 km, drop cities < 1000000 population
-    // keep all cities world-wide > 1000000 population
-    /* but this is too coarse:
-    if (distance > 2 && city.population < 10000 ||
-      distance > 8 && city.population < 100000 ||
-      distance > 50 && city.population < 1000000) {
-      return;
-    } so calculate the ratio of population and distance² */
-    if (distance > 1 &&
-      city.population / (distance * distance) < 1000) {
+    if (city.score > 1) {
       return;
     }
-    city.distance = distance;
-
     this._dataType.addValue(city.name, city);
     /*for (let alternativeName of city.alternativeNames) {
       this._dataType.addValue(alternativeName, city);
@@ -230,6 +216,34 @@ class City extends Location {
   get lon() {
     return this._lon;
   }
+  get score() {
+    // determine whether to add this city,
+    // depending on population size and distance from user
+    // if distance > roughly 100-200 km, drop cities < 10000 population
+    // if distance > roughly 1000 km, drop cities < 100000 population
+    // if distance > roughly 5000 km, drop cities < 1000000 population
+    // keep all cities world-wide > 1000000 population
+    // but this is too coarse, so:
+    /*if (distance > 1 &&
+      city.population / (distance * distance) < 1000) {
+      continue;
+    }*/
+    // calculate the ratio of population and distance²
+    let distance = this.distance;
+    return (distance * distance) / (this.population / 1000);
+  }
+  /**
+   * Returns the distance of the city to the current location of the user.
+   * In latitudes (but of course also considering longitudes), which means:
+   * 2 = roughly 100-200 km
+   * 8 = roughly 1000 km
+   * 50 = roughly 5000 km
+   * @return {float}
+   */
+  get distance() {
+    const kLonMultiplier = 0.5;
+    return Math.abs(this._lat - gCurrentLocation.lat) + Math.abs(this._lon - gCurrentLocation.lon) * kLonMultiplier;
+  }
 }
 
 class Country extends Location {
@@ -276,5 +290,11 @@ class Country extends Location {
   }
   get lon() {
     return null;
+  }
+  get score() {
+    return 0.1;
+    // a country with 100 million inhabitants should have score 0.01
+    // and larger countries a better = lower score.
+    // but all countries should have a score less than 0.3
   }
 }

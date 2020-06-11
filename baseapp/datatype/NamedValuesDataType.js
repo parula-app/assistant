@@ -1,6 +1,7 @@
 import { FiniteDataType } from './FiniteDataType.js';
 import { Obj } from './Obj.js';
 import { assert } from '../../util/util.js';
+import { matchStringWithAlternatives } from '../../intentParser/matchString.js';
 
 /**
  * A list of names that each have a value or JS object associated.
@@ -61,6 +62,43 @@ export class NamedValuesDataType extends FiniteDataType {
 
   valueForTerm(term) {
     return this._values.get(term);
+  }
+
+  /**
+   * @param inputText {string} What the user said
+   * @returns {
+   *    value {string} the corresponding value, or null/undefined
+   *    score {float} Rate how well the inputText matches the data type value.
+   *      0..1, whereas
+   *      1 = no relation whatsoever
+   *      0.5 = half the string matches
+   *      0 = perfect match
+   * }
+   * @overrides FiniteDataType
+   */
+  valueForInput(inputText, context) {
+    let pronounMatch = this.valueForPronoun(inputText, context);
+    if (pronounMatch) {
+      return pronounMatch;
+    }
+
+    // normalize to allowed values
+    let matches = matchStringWithAlternatives(inputText, this.terms);
+    if (!matches.length) {
+      return {
+        value: null,
+        score: 1,
+      };
+    }
+    for (let match of matches) {
+      match.value = this.valueForTerm(match.targetString);
+      match.score += (match.value.score - 0.5) * 0.25;
+      match.score = Math.max(match.score, 0);
+      /*if (oldScore != match.score) {
+        console.log(match.value.name, "score changed from", oldScore, "to", match.score, "due to value score", match.value.score); console.log(match.value);
+      }*/
+    }
+    return matches.sort((a, b) => a.score - b.score)[0];
   }
 
   /**

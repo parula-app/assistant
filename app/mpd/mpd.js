@@ -35,7 +35,8 @@ export default class MPD extends JSONApp {
       let songs = artistEntry[1];
       let artist;
       if (artistName) {
-        artist = new Artist(artistName);
+        let score = Math.max(0.8 - (Math.log(songs.length) / Math.log(artistSongs.size)), 0);
+        artist = new Artist(artistName, score);
         artistType.addValue(artistName, artist);
       }
       for (let title of songs) {
@@ -247,16 +248,21 @@ export default class MPD extends JSONApp {
 class Artist extends Obj {
   /**
    * @param name {string} Name of the artist
+   * @param score {float}
    */
-  constructor(name) {
+  constructor(name, score) {
     super();
     this._name = name;
+    this._score = score;
   }
   get id() {
     return this._name;
   }
   get name() {
     return this._name;
+  }
+  get score() {
+    return this._score;
   }
 }
 

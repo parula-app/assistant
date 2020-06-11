@@ -29,4 +29,17 @@ export class Obj {
   get name() {
     throw new Error("Implement");
   }
+
+  /**
+   * How much the user will like this object compared to other
+   * objects of the same type. Or how likely he is to mean this.
+   *
+   * @returns {float} 0..1, whereas
+   *   0.1 = very much
+   *   0.5 = average
+   *   1 = not at all
+   */
+  get score() {
+    return 0.5;
+  }
 }
