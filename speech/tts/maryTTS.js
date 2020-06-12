@@ -51,7 +51,7 @@ export function sampleRate() {
  */
 export async function textToSpeech(text) {
   // fixup
-  text = text.replace(/'s/g, " is");
+  text = text.replace(/\b([Ii]t)'s\b/g, "$1 is");
   let startTime = new Date();
   let config = getConfig().maryTTS;
   let url = config.url + '/process?' + new URLSearchParams(gServerParams).toString() +
