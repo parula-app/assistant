@@ -29,8 +29,8 @@ export default function audioOutput(waveStream) {
         type: "raw",
     },
   });
-  waveStream.pipe(waveToRaw).pipe(ao);
   return new Promise((resolve, reject) => {
-    waveStream.on('end', resolve);
+    waveStream.pipe(waveToRaw).pipe(ao)
+      .on('finish', resolve);
   });
 }
