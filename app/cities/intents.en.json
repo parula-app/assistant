@@ -49,6 +49,7 @@
                       "population"
                     ],
                     "samples": [
+                      "How many people live in {Location}",
                       "How many inhabitants does {Location} have",
                       "What is the population of {Location}"
                     ],
