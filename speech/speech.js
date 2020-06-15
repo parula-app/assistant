@@ -1,8 +1,9 @@
 // Speech recognition
 import * as deepSpeech from './recognition/deepSpeech.js';
-import * as mozillaTTS from './tts/mozillaTTS.js';
 // TTS
+import * as mozillaTTS from './tts/mozillaTTS.js';
 import * as maryTTS from './tts/maryTTS.js';
+import * as parallelTTS from './tts/parallel.js';
 // Wake word
 import * as bumblebee from './wakeword/bumblebee.js';
 //import * as snowboy from './wakeword/snowboy.js';
@@ -18,13 +19,15 @@ export var wakeword = null;
 export async function load(lang) {
   let config = getConfig().speechEngine;
 
+  let _textToSpeech;
   if (config.tts == "mary") {
-    textToSpeech = maryTTS;
+    _textToSpeech = maryTTS;
   } else if (config.tts == "mozilla") {
-    textToSpeech = mozillaTTS;
+    _textToSpeech = mozillaTTS;
   } else {
     throw new Error("Unknown config value for the TTS engine in config.speechEngine.tts: " + config.tts);
   }
+  textToSpeech = parallelTTS;
 
   if (config.speechRecognition == "deepSpeech") {
     speechToText = deepSpeech;
@@ -43,7 +46,7 @@ export async function load(lang) {
   }
 
   await speechToText.load(lang);
-  await textToSpeech.load(lang);
+  await textToSpeech.load(lang, _textToSpeech);
   await wakeword.load(lang);
 
   return { speechToText, textToSpeech, wakeword };

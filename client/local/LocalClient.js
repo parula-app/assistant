@@ -17,8 +17,8 @@ import { getConfig } from '../../util/config.js';
  */
 export class LocalClient extends Client {
   async load(lang) {
-    await loadAudioInput();
     await loadSpeechEngines(lang);
+    await loadAudioInput();
     this._player = new AudioVideoPlayer();
     await super.load(lang);
   }

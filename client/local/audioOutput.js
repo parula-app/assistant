@@ -9,7 +9,7 @@ export async function load(lang) {
  * Play sound at the loudspeakers.
  *
  * @param audioStream {ReadableStream} audio
- *    WAV format, outputSampleRate(), 1 channel, 16 bit unsigned
+ *    RAW format, outputSampleRate(), 1 channel, 16 bit unsigned
  */
 export default async function audioOutput(audioStream) {
   let device = getConfig().audio.outputDevice; // e.g. "hw:0,0", null = default
@@ -17,7 +17,12 @@ export default async function audioOutput(audioStream) {
   let ao = soxPlay({
     device: device,
     input: {
-        type: "wav",
+      bits: 16,
+      channels: 1,
+      encoding: 'signed-integer',
+      //rate: textToSpeech.sampleRate(),
+      rate: 16000,
+      type: "raw",
     },
   });
   await new Promise((resolve, reject) => {
