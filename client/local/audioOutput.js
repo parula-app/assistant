@@ -1,36 +1,27 @@
-import Speaker from 'speaker'; // for output -- naudiodon output doesn't work for me
-import sox from 'sox-stream'; // for transform. Requires sox to be installed
+import { soxPlay } from './sox.js';
 import { textToSpeech } from '../../speech/speech.js'; // sample rate
 import { getConfig } from '../../util/config.js';
+
+export async function load(lang) {
+}
 
 /**
  * Play sound at the loudspeakers.
  *
- * @param waveStream {ReadableStream} audio
+ * @param audioStream {ReadableStream} audio
  *    WAV format, outputSampleRate(), 1 channel, 16 bit unsigned
  */
-export default function audioOutput(waveStream) {
+export default async function audioOutput(audioStream) {
   let device = getConfig().audio.outputDevice; // e.g. "hw:0,0", null = default
   // TODO Gives "Failed to open output device" for me for "hw:0,0", despite matching the docs.
-  let ao = new Speaker({
-    channels: 1,
-    bitDepth: 16,
-    sampleRate: textToSpeech.sampleRate(),
+  let ao = soxPlay({
     device: device,
-  });
-  let waveToRaw = sox({
     input: {
         type: "wav",
     },
-    output: {
-        bits: 16,
-        channels: 1,
-        rate: textToSpeech.sampleRate(),
-        type: "raw",
-    },
   });
-  return new Promise((resolve, reject) => {
-    waveStream.pipe(waveToRaw).pipe(ao)
+  await new Promise((resolve, reject) => {
+    audioStream.pipe(ao)
       .on('finish', resolve);
   });
 }
