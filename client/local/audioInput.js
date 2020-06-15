@@ -54,5 +54,6 @@ export default function audioInput() {
       closeOnError: true,
     }
   });
+  audioInputStream.start();
   return audioInputStream;
 }

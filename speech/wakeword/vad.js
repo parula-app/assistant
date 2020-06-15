@@ -79,7 +79,6 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     }
   });
 
-  audioInputStream.start();
   console.info('Listening to your command.');
   await wait(64^5); // 34 years TODO
 }

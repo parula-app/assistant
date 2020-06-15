@@ -61,6 +61,5 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
 
   console.info('Listening to your command.');
   newCommandCallback();
-  audioInputStream.start();
   await wait(maxCommandLength * 5);
 }
