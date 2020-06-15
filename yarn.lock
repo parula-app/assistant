@@ -1341,14 +1341,7 @@ snap-db@^1.1.1:
   resolved "https://registry.yarnpkg.com/snap-db/-/snap-db-1.1.6.tgz#ee223c79dcfb4945af29b6ae32c9562988623d5d"
   integrity sha512-KxsO5RnY70J48f6poy0qVm2WS8ZbqG0PUVP2fjd7dvlaCMZ/DxtDv5fhhIVwkP2lOmNQ9QsTFfDuCA7N+TF3qg==
 
-sox-audio@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/sox-audio/-/sox-audio-0.3.0.tgz#dd43a4dd7fa97ff4066390c39903ae4ab198aec5"
-  integrity sha1-3UOk3X+pf/QGY5DDmQOuSrGYrsU=
-  dependencies:
-    through "^2.3.6"
-
-sox-stream@2.0.x, sox-stream@^2.0.3:
+sox-stream@2.0.x:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/sox-stream/-/sox-stream-2.0.6.tgz#c815b72f01815e8deb85770b85ce08532125fdfd"
   integrity sha512-dzscjI1mQSNWagW9iEymYenU1QuDTQUcEvAYmdqSgWhxAOgvvwaecMa6CORzQwouRWacxHsChKWav8m7fyeVXw==
@@ -1503,7 +1496,7 @@ tempfile@^1.1.1:
     os-tmpdir "^1.0.0"
     uuid "^2.0.1"
 
-through@2, through@^2.3.6, through@^2.3.8, through@~2.3, through@~2.3.1, through@~2.3.4:
+through@2, through@^2.3.8, through@~2.3, through@~2.3.1, through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=

@@ -2,8 +2,8 @@
 
 import { Client } from '../Client.js';
 import AudioVideoPlayer from './MPDPlayer.js';
-import audioInput, { load as loadAudioInput } from './audioInput.js';
-import audioOutput from './audioOutput.js';
+import audioInput, { load as loadAudioInput } from './audioInputNAudioDon.js';
+import audioOutput from './audioOutputSpeaker.js';
 import { speechToText, textToSpeech, wakeword, load as loadSpeechEngines } from '../../speech/speech.js';
 import * as wtn from 'words-to-numbers';
 const wordsToNumbers = wtn.default.wordsToNumbers;
