@@ -59,5 +59,6 @@ export async function textToSpeech(fullText) {
  *   If fullText is already a single sentence, returns the same as fullText (no-op)
  */
 export function splitPhrases(fullText) {
-  return fullText.match(/\w.*?(\W\s|$)/g);
+  //return fullText.match(/\w.*?(\W\s|$)/g); // Splits on any non-alpha
+  return fullText.match(/\w.*?(\.\s|$)/g); // Splits on ". "
 }
