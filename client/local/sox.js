@@ -68,7 +68,7 @@ export function soxIO(soxOptions = {}) {
  * @returns {WritableStream}
  *   Write data in the format defined by `soxOptions.input`
  */
-export async function soxPlay(soxOptions, audioStream) {
+export function soxPlay(soxOptions, audioStream) {
   soxOptions.play = true;
   return soxIO(soxOptions).inputWritableStream;
 }
