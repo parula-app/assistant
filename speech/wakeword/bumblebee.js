@@ -37,7 +37,6 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
   detector.start(audioInputStream, kSampleRate);
 
   let vad = new VAD(VAD.Mode.VERY_AGGRESSIVE);
-  const kBufferFrames = 0;
 
   // Whether this is an active command
   let commandStartTime = null;
@@ -45,6 +44,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
 
   // Cache the last few audio chunks before the wake word triggers
   let startBuffer = [];
+  const kBufferFrames = 0;
 
   function endCommand() {
     commandStartTime = null;
@@ -58,11 +58,12 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
 
   detector.on('hotword', (wakeword) => {
     console.info('Wakeword', wakeword);
-    if (commandStartTime) {
-      endCommand();
-    }
-    commandStartTime = new Date();
     try {
+      if (commandStartTime) {
+        endCommand();
+      }
+
+      commandStartTime = new Date();
       newCommandCallback();
 
       for (let previousBuffer of startBuffer) {

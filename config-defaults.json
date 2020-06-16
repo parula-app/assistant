@@ -28,6 +28,9 @@
     "model": null,
     "scorer": null
   },
+  "snowboy": {
+    "hotword": "computer"
+  },
   "maryTTS": {
     "url": "http://localhost:59125",
     "voice": "cmu-rms"

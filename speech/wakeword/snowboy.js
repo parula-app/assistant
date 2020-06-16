@@ -1,17 +1,22 @@
 import * as snowboy from 'snowboy';
 const Models = snowboy.default.Models;
 const Detector = snowboy.default.Detector;
+import VAD from 'node-vad';
+import { getConfig } from '../../util/config.js';
 import { wait } from '../../util/util.js';
 
 var detector;
 
 export async function load() {
+  let config = getConfig().snowboy;
+  let file = config.file || `./node_modules/snowboy/resources/models/${ config.hotword }.umdl`;
+
   let models = new Models();
   models.add({
-    hotwords : 'computer',
-    file: './node_modules/snowboy/resources/models/computer.umdl',
+    hotwords: config.hotword,
+    file: file,
     // <https://github.com/Kitt-AI/snowboy#pretrained-universal-models>
-    sensitivity: '0.6',
+    sensitivity: "0.6",
   });
   detector = new Detector({
     resource: "./node_modules/snowboy/resources/common.res",
@@ -47,41 +52,81 @@ export async function load() {
  */
 export async function waitForWakeWord(audioInputStream, maxCommandLength,
   newCommandCallback, audioCallback, endCommandCallback) {
+  const kMaxSilence = 1.5; // seconds
+  const kSampleRate = audioInputStream.audio.rate;
+
+  let vad = new VAD(VAD.Mode.VERY_AGGRESSIVE);
 
   // Whether this is an active command
   let commandStartTime = null;
+  let lastVoiceTime = null;
   let silenceCounter = 0;
 
+  // Cache the last few audio chunks before the wake word triggers
+  let startBuffer = [];
+  const kBufferFrames = 5;
+
+  function endCommand() {
+    commandStartTime = null;
+    lastVoiceTime = null;
+    try {
+      endCommandCallback();
+    } catch (ex) {
+      console.error(ex);
+    }
+  }
+
   detector.on('silence', () => {
-    process.stdout.write((silenceCounter++ % 2 == 0 ? '-' : '|') + '   \r');
+    process.stdout.write((silenceCounter++ % 2 == 0 ? '-' : '|') + '         \r');
     if (commandStartTime) {
       commandStartTime = null;
       try {
-        endCommandCallback();
+        endCommand();
       } catch (ex) {
         console.error(ex);
       }
     }
   });
 
-  detector.on('sound', (buffer) => {
+  detector.on('sound', async (buffer) => {
     // <buffer> contains the last chunk of the audio that triggers the "sound"
     // event. It could be written to a wav stream.
-    process.stdout.write('***\r');
     if (commandStartTime) {
       try {
         audioCallback(buffer);
+
+        // Use silence detection to know when the command finished
+        let voice = await vad.processAudio(buffer, kSampleRate);
+        if (voice == VAD.Event.VOICE) {
+          lastVoiceTime = Date.now();
+          process.stdout.write('##########\r');
+        } else { // ERROR, NOISE or SILENCE
+          process.stdout.write('***       \r');
+          if (lastVoiceTime && Date.now() - lastVoiceTime > kMaxSilence * 1000) {
+            console.info("Command finished due to silence");
+            endCommand();
+            return;
+          }
+          // Wakeword cuts the start of the command.
+          // Workaround: Buffer last 3 frames.
+          startBuffer.push(buffer);
+          if (startBuffer.length >= kBufferFrames) {
+            startBuffer.shift();
+          }
+        }
       } catch (ex) {
         console.error(ex);
       }
       if (new Date() - commandStartTime > maxCommandLength * 1000) {
-        commandStartTime = null;
+        console.info("Command finished due to timeout");
         try {
-          endCommandCallback();
+          endCommand();
         } catch (ex) {
           console.error(ex);
         }
       }
+    } else {
+      process.stdout.write('...       \r');
     }
   });
 
@@ -95,9 +140,18 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     // together with the <buffer> in the "sound" event if you want to get audio
     // data after the hotword.
     console.log('hotword', hotword);
-    commandStartTime = new Date();
     try {
+      if (commandStartTime) {
+        endCommand();
+      }
+
+      commandStartTime = new Date();
       newCommandCallback();
+
+      for (let previousBuffer of startBuffer) {
+        audioCallback(previousBuffer);
+      }
+      startBuffer.length = 0;
       audioCallback(buffer);
     } catch (ex) {
       console.error(ex);
