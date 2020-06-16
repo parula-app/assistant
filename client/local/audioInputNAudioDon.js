@@ -1,6 +1,6 @@
 import portAudio from 'naudiodon'; // for input -- output doesn't work for me
-import { speechToText } from '../../speech/speech.js'; // sample rate
 import { getConfig } from '../../util/config.js';
+import { assert } from '../../util/util.js';
 
 /**
  * {Int} PortAudio device ID
@@ -40,20 +40,24 @@ function listDevices() {
 /**
  * Listens to microphone, and returns the audio data.
  *
+ * @params audioProperties {AudioProperties}  the desired format type, sample rate etc.
  * @returns {ReadableStream} audio data as stream
  *   Flows after this function returned.
+ *   `.audio` {AudioProperties} the format type, sample rate etc. of the stream (same as `audioProperties`)
  */
-export default function audioInput() {
+export default function audioInput(audioProperties) {
+  assert(audioProperties.bits == 16, "Only 16 bit known");
   let audioInputStream = new portAudio.AudioIO({
     inOptions: {
-      channelCount: 1,
+      channelCount: audioProperties.channels,
       sampleFormat: portAudio.SampleFormat16Bit,
-      sampleRate: speechToText.sampleRate(),
+      sampleRate: audioProperties.rate,
       // Use -1 to select the default device
       deviceId: gDeviceID,
       closeOnError: true,
     }
   });
+  audioInputStream.audio = audioProperties;
   audioInputStream.start();
   return audioInputStream;
 }

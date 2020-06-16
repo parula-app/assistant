@@ -1,5 +1,4 @@
 import VAD from 'node-vad';
-import { speechToText } from '../../speech/speech.js';
 import { wait } from '../../util/util.js';
 
 /**
@@ -21,13 +20,13 @@ import { wait } from '../../util/util.js';
  */
 export async function waitForWakeWord(audioInputStream, maxCommandLength,
   newCommandCallback, audioCallback, endCommandCallback) {
+  const sampleRate = audioInputStream.audio.rate;
 
   // VAD.Mode.NORMAL
   // VAD.Mode.LOW_BITRATE
   // VAD.Mode.AGGRESSIVE
   // VAD.Mode.VERY_AGGRESSIVE
   let vad = new VAD(VAD.Mode.NORMAL);
-  let sampleRate = speechToText.sampleRate();
 
   // Whether is an active command
   let speechStartTime = null;

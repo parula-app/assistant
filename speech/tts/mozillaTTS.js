@@ -8,19 +8,24 @@
 import fetch from 'node-fetch';
 
 const kTTS_URL = "http://localhost:5002";
-const kTTS_Bitrate = 22050;
 
 export async function load(args) {
 }
 
-export function sampleRate() {
-  return kTTS_Bitrate;
+export function audioProperties() {
+  return {
+    bits: 16,
+    channels: 1,
+    encoding: 'signed-integer',
+    rate: 22050,
+    type: 'wav',
+  };
 }
 
 /**
  * @param text {string}   what to say
  * @returns {ReadableStream}   audio
- *    WAV format, sampleRate(), 1 channel, 16 bit
+ *   `.audio` {AudioProperties} the format type, sample rate etc. of the stream
  */
 export async function textToSpeech(text) {
   text = text.replace(/,/g, " ").replace(/'s/g, " is").replace(/\./g, " "); // fix Tacotron2
@@ -33,5 +38,7 @@ export async function textToSpeech(text) {
   console.info("Speech generation took " + ((new Date() - startTime) / 1000) + "s");
   //let waveURL = URL.createObjectURL(blob);
   //return await blob.arrayBuffer();
-  return blob.stream();
+  let stream = blob.stream();
+  stream.audio = audioProperties();
+  return stream;
 }

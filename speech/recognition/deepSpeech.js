@@ -37,8 +37,14 @@ export function unload() {
   DeepSpeech.FreeModel(model);
 }
 
-export function sampleRate() {
-  return model.sampleRate();
+export function audioProperties() {
+  return {
+    bits: 16,
+    channels: 1,
+    encoding: 'signed-integer',
+    rate: model.sampleRate(),
+    type: 'raw',
+  };
 }
 
 /**
@@ -62,7 +68,8 @@ export class SpeechRecognizer {
 
   /**
    * Add new voice audio data to an ongoing recognition.
-   * @param audioButton {Buffer} audio data from the microphone
+   * @param audioBuffer {Buffer} audio data from the microphone
+   *    Audio needs to be in format `audioProperties()`
    *
    * TODO should be async, but DeepSpeech is currently blocking :(
    * Workaround: Wrap in `(async () => {...}();` ?
@@ -85,6 +92,8 @@ export class SpeechRecognizer {
 /**
  * Converts audio into text
  * Does it all at once, after the audio has finished, and is therefore slow.
+ * @param audioBuffer {Buffer}   Entire spoken sentence
+ *    Audio needs to be in format `audioProperties()`
  */
 export function speechToText(audioBuffer) {
   console.info('Running speech recognition');
@@ -93,7 +102,8 @@ export function speechToText(audioBuffer) {
   // TODO blocking
   let text = model.stt(audioBuffer);
 
-  let audioLength = (audioBuffer.length / 2) * (1 / model.sampleRate());
+  let prop = audioProperties();
+  let audioLength = (audioBuffer.length * 8 / prop.bits) / prop.rate;
   console.info('Inference took %ds for %ds audio file.', (new Date() - startTime) / 1000, audioLength.toPrecision(4));
   console.log('Speech recognition result: ' + text);
   return text;

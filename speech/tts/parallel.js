@@ -1,5 +1,5 @@
 import { PassThrough } from 'stream';
-import { sox } from '../../client/local/sox.js';
+import { soxIO } from '../../client/local/sox.js';
 import { assert } from '../../util/util.js';
 
 var gTextToSpeechModule;
@@ -9,9 +9,9 @@ export async function load(lang, textToSpeechModule) {
   await gTextToSpeechModule.load(lang);
 }
 
-export function sampleRate() {
-  assert(gTextToSpeechModule && gTextToSpeechModule.sampleRate, "Parallel TTS load() not yet called");
-  return gTextToSpeechModule.sampleRate();
+export function audioProperties() {
+  assert(gTextToSpeechModule && gTextToSpeechModule.audioProperties, "Parallel TTS load() not yet called");
+  return gTextToSpeechModule.audioProperties();
 }
 
 /**
@@ -20,7 +20,7 @@ export function sampleRate() {
  * and then waits for each sentence in sequence and plays them
  * back in order.
  * @returns {ReadableStream}   audio
- *    RAW format, sampleRate(), 1 channel, 16 bit
+ *   `.audio` {AudioProperties} the format type, sample rate etc. of the stream
  */
 export async function textToSpeech(fullText) {
   let phrases = splitPhrases(fullText);
@@ -28,20 +28,14 @@ export async function textToSpeech(fullText) {
   let ttsPromises = phrases.map(gTextToSpeechModule.textToSpeech);
 
   let mergedStream = new PassThrough();
+  mergedStream.audio = gTextToSpeechModule.audioProperties();
+  mergedStream.audio.type = "raw";
 
   (async () => { // run after returning the output stream
     for (let ttsPromise of ttsPromises) {
-      let { inputWritableStream, outputReadableStream } = sox({
-        input: {
-          type: 'wav',
-        },
-        output: {
-          bits: 16,
-          channels: 1,
-          encoding: 'signed-integer',
-          rate: sampleRate(),
-          type: 'raw',
-        },
+      let { inputWritableStream, outputReadableStream } = soxIO({
+        input: gTextToSpeechModule.audioProperties(),
+        output: mergedStream.audio,
       });
       outputReadableStream.pipe(mergedStream, { end: false });
       let waveStream = await ttsPromise; // waits for the TTS

@@ -27,7 +27,8 @@ export class LocalClient extends Client {
     await super.start();
     const kMax = getConfig().audio.maxCommandLength;
     let recognizer;
-    wakeword.waitForWakeWord(audioInput(), kMax, () => { // new command
+    let audioProps = speechToText.audioProperties();
+    wakeword.waitForWakeWord(audioInput(audioProps), kMax, () => { // new command
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);

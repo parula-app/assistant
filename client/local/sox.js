@@ -23,7 +23,7 @@ import os from 'os';
  *   }
  * } The options in global, input and output match sox commandline, @see man sox
  */
-export function sox(soxOptions = {}) {
+export function soxIO(soxOptions = {}) {
   if (soxOptions.record && soxOptions.play) {
     throw new Error("Choose one of play or record or transform");
   }
@@ -64,18 +64,18 @@ export function sox(soxOptions = {}) {
 
 /**
  * Plays audio to the speakers.
- * @param soxOptions @see sox()
+ * @param soxOptions @see soxIO()
  * @returns {WritableStream}
  *   Write data in the format defined by `soxOptions.input`
  */
 export async function soxPlay(soxOptions, audioStream) {
   soxOptions.play = true;
-  return sox(soxOptions).inputWritableStream;
+  return soxIO(soxOptions).inputWritableStream;
 }
 
 /**
  * Records audio from the microphone or aux in.
- * @param soxOptions @see sox()
+ * @param soxOptions @see soxIO()
  * @returns {ReadableStream}
  *   Contains data in the format defined by `soxOptions.input`
  *   or `soxOptions.output`
@@ -84,5 +84,5 @@ export async function soxPlay(soxOptions, audioStream) {
  */
 export function soxRecord(soxOptions) {
   soxOptions.record = true;
-  return sox(soxOptions).outputReadableStream;
+  return soxIO(soxOptions).outputReadableStream;
 }

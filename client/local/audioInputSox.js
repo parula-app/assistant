@@ -1,5 +1,4 @@
 import { soxRecord } from './sox.js';
-import { speechToText } from '../../speech/speech.js'; // sample rate
 import { getConfig } from '../../util/config.js';
 
 export async function load(lang) {
@@ -8,20 +7,17 @@ export async function load(lang) {
 /**
  * Listens to microphone, and returns the audio data.
  *
+ * @params audioProperties {AudioProperties}  the desired format type, sample rate etc.
  * @returns {ReadableStream} audio data as stream
  *   Flows after this function returned.
+ *   `.audio` {AudioProperties} the format type, sample rate etc. of the stream (same as `audioProperties`)
  */
-export default function audioInput() {
+export default function audioInput(audioProperties) {
   let device = getConfig().audio.inputDevice;
   let audioInputStream = soxRecord({
     device: device,
-    output: {
-      bits: 16,
-      channels: 1,
-      encoding: 'signed-integer',
-      rate: speechToText.sampleRate(),
-      type: "raw",
-    },
+    output: audioProperties,
   });
+  audioInputStream.audio = audioProperties;
   return audioInputStream;
 }

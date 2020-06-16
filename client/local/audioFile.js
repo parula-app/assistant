@@ -5,21 +5,24 @@
 
 import * as fs from 'fs';
 import SoxCommand from 'sox-audio';
-import { speechToText, textToSpeech } from '../../speech/speech.js'; // sample rate
 
 let counter = 0;
 
+/**
+ * @param audioStream {ReadableStream} audio
+ *    `.audio` {AudioProperties} must contain the format type, sample rate etc.
+ */
 export function saveAudioFile(audioStream) {
   let sox = SoxCommand();
   sox.input(audioStream)
-    .inputSampleRate(speechToText.sampleRate())
-    .inputEncoding('signed')
-    .inputBits(16)
-    .inputChannels(1)
-    .inputFileType('raw');
+    .inputSampleRate(audioStream.rate)
+    .inputEncoding(audioStream.encoding.replace("-integer", "")) // e.g. "signed"
+    .inputBits(audioStream.bits)
+    .inputChannels(audioStream.channels)
+    .inputFileType(audioStream.type);
   let fileWriteStream = fs.createWriteStream("./command" + ++counter + ".wav");
   sox.output(fileWriteStream)
-    .outputSampleRate(44100)
+    .outputSampleRate(48000)
     .outputEncoding('signed')
     .outputBits(16)
     .outputChannels(1)

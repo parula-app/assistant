@@ -1,6 +1,5 @@
 import BumblebeeNode from 'bumblebee-hotword-node';
 import VAD from 'node-vad';
-import { speechToText } from '../../speech/speech.js'; // sample rate
 import { wait } from '../../util/util.js';
 
 /**
@@ -27,7 +26,7 @@ import { wait } from '../../util/util.js';
 export async function waitForWakeWord(audioInputStream, maxCommandLength,
   newCommandCallback, audioCallback, endCommandCallback) {
   const kMaxSilence = 1.5; // seconds
-  const kSampleRate = speechToText.sampleRate();
+  const kSampleRate = audioInputStream.audio.rate;
 
   let detector = new BumblebeeNode();
   detector.addHotword('grasshopper');
