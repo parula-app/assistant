@@ -4,6 +4,7 @@
  */
 
 import DeepSpeech from 'deepspeech';
+import { textPostProcess } from './postprocess.js';
 import { getConfig } from '../../util/config.js';
 import { loadJSONFile } from '../../util/util.js';
 import os from 'os';
@@ -85,7 +86,9 @@ export class SpeechRecognizer {
    * TODO should be async, but DeepSpeech is currently blocking :(
    */
   end() {
-    return this.modelStream.finishStream();
+    let text = this.modelStream.finishStream()
+    text = textPostProcess(text);
+    return text;
   }
 }
 

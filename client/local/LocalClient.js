@@ -5,8 +5,6 @@ import AudioVideoPlayer from './MPDPlayer.js';
 import audioInput, { load as loadAudioInput } from './audioInputNAudioDon.js';
 import audioOutput from './audioOutputSpeaker.js';
 import { speechToText, textToSpeech, wakeword, load as loadSpeechEngines } from '../../speech/speech.js';
-import * as wtn from 'words-to-numbers';
-const wordsToNumbers = wtn.default.wordsToNumbers;
 import { getConfig } from '../../util/config.js';
 
 /**
@@ -38,7 +36,6 @@ export class LocalClient extends Client {
         if (!inputText) {
           return;
         }
-        //inputText = wordsToNumbers(inputText) + ""; // leaves text as-is, only replaces numbers
         console.log("Command: " + inputText);
         let response = await this.intentParser.startApp(inputText);
         console.log("\n" + response + "\n");
