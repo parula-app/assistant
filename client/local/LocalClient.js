@@ -6,6 +6,7 @@ import audioInput, { load as loadAudioInput } from './audioInputNAudioDon.js';
 import audioOutput from './audioOutputSpeaker.js';
 import { speechToText, textToSpeech, wakeword, load as loadSpeechEngines } from '../../speech/speech.js';
 import { getConfig } from '../../util/config.js';
+import { assert } from '../../util/util.js';
 
 /**
  * This and `Client` is the central code that calls all the other modules.
@@ -24,15 +25,17 @@ export class LocalClient extends Client {
   async start() {
     await super.start();
     const kMax = getConfig().audio.maxCommandLength;
-    let recognizer;
+    let recognizer = null;
     let audioProps = speechToText.audioProperties();
     wakeword.waitForWakeWord(audioInput(audioProps), kMax, () => { // new command
+      assert(!recognizer, "End previous command first");
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);
     }, async () => { // command complete
       try {
-        let inputText = recognizer.end(recognizer);
+        let inputText = recognizer.end();
+        recognizer = null;
         if (!inputText) {
           return;
         }

@@ -79,11 +79,17 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     // <buffer> contains the last chunk of the audio that triggers the "sound"
     // event. It could be written to a wav stream.
     if (commandStartTime) {
+      let commandStartTimeOriginal = commandStartTime;
       try {
         audioCallback(buffer);
 
         // Use silence detection to know when the command finished
         let voice = await vad.processAudio(buffer, kSampleRate);
+        if (commandStartTimeOriginal != commandStartTime) {
+          // The command was aborted during silence detection in a parallel run.
+          // Fixes reentrancy race condition.
+          return;
+        }
         if (voice == VAD.Event.VOICE) {
           lastVoiceTime = Date.now();
           process.stdout.write('##########\r');
