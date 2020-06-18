@@ -1,3 +1,23 @@
+## Next
+* Wake word using deepSpeech
+* WebSocket app API
+* WebSocket client API
+   * wake word API
+   * responses
+     * heard
+     * understood
+     * response as text
+     * response as card
+     * response object
+        * MP3
+* Phone
+  * PyPB
+  * WebSocket API
+* Raspberry Pi
+* Chess
+  * UI
+  * WebSocket API
+
 ## Core
 * Intent Parser
   * Based on words
