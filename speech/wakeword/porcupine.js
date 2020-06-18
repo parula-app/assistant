@@ -71,7 +71,7 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
     // event. It could be written to a wav stream. You have to use it
     // together with the `buffer` in the "data" event, if you want to get audio
     // data after the hotword.
-    console.log('wakework', wakeword);
+    console.log('wakeword', wakeword);
     commandStartTime = new Date();
     try {
       newCommandCallback();

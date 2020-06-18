@@ -107,13 +107,13 @@ export async function waitForWakeWord(audioInputStream, maxCommandLength,
             startBuffer.shift();
           }
         }
+        // maximum command time, in case there's background noise
+        if (new Date() - commandStartTime > maxCommandLength * 1000) {
+          console.info("Command finished due to timeout");
+          endCommand();
+        }
       } catch (ex) {
         console.error(ex);
-      }
-      // maximum command time, in case there's background noise
-      if (new Date() - commandStartTime > maxCommandLength * 1000) {
-        console.info("Command finished due to timeout");
-        endCommand();
       }
     } else {
       process.stdout.write('...       \r');
