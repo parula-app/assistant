@@ -19,7 +19,7 @@
     "maxCommandLength": 10
   },
   "speechEngine": {
-    "wake": "bumblebee",
+    "wake": "deepSpeech",
     "speechRecognition": "deepSpeech",
     "tts": "mozilla"
   },

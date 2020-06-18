@@ -6,6 +6,7 @@ import * as maryTTS from './tts/maryTTS.js';
 import * as parallelTTS from './tts/parallel.js';
 // Wake word
 import * as bumblebee from './wakeword/bumblebee.js';
+import * as deepSpeechWakeWord from './wakeword/deepSpeech.js';
 //import * as snowboy from './wakeword/snowboy.js';
 import * as vad from './wakeword/vad.js';
 // Other
@@ -38,6 +39,8 @@ export async function load(lang) {
 
   if (config.wake == "bumblebee") {
     wakeword = bumblebee;
+  } else if (config.wake == "deepSpeech") {
+    wakeword = deepSpeechWakeWord;
   //} else if (config.wake == "snowboy") {
   //  wakeword = snowboy;
   } else if (config.wake == "vad") {
