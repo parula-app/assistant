@@ -27,7 +27,8 @@ export async function load(lang) {
   } else {
     throw new Error("Unknown config value for the TTS engine in config.speechEngine.tts: " + config.tts);
   }
-  textToSpeech = parallelTTS;
+  // textToSpeech = parallelTTS; -- not working with Mozilla TTS dev server
+  textToSpeech = _textToSpeech;
 
   if (config.speechRecognition == "deepSpeech") {
     speechToText = deepSpeech;
