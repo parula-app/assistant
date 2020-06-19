@@ -14,7 +14,7 @@ import os from 'os';
  *   input {
  *     type {string} "wav" or "raw"
  *     channels {integer} 1 = mono, 2 = stereo, ...
- *     bits {integer}  resolution per sample. 8, 16, 24, or 32
+ *     bits {integer}  resolution per sample. 8, 16 (normal), 24 (hifi), or 32
  *     rate {integer} sample rate, e.g. 8000 (phone), 16000 (speech), 44100 (CD), 48000 (music quality), 96000 (hifi)
  *     encoding {string enum} "signed-integer", "unsigned-integer", or "float"
  *   }

@@ -1,5 +1,4 @@
 ## Next
-* Wake word using deepSpeech
 * WebSocket app API
 * WebSocket client API
    * wake word API
@@ -11,7 +10,7 @@
      * response object
         * MP3
 * Phone
-  * PyPB
+  * PyPBAP
   * WebSocket API
 * Raspberry Pi
 * Chess
@@ -50,7 +49,7 @@
   * Let speech recognition re-run on values, with limited vocabulary. See e.g. DateTime.
   * DeepSpeech WithMetadata API
   * DeepSpeech scorer?
-* Better TTS
+* Faster Mozilla TTS
 
 # Apps
 ## Done
