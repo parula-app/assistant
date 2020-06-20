@@ -34,7 +34,7 @@
         "sugar-date": "^2.0.6",
         "words-to-numbers": "^1.5.1",
         "written-number": "^0.9.1",
-        "ws": "^7.2.3",
+        "ws": "^7.3.0",
         "ws-wrapper": "^2.0.2"
     },
     "devDependencies": {},
