@@ -4,6 +4,8 @@
 import IntentParser from '../intentParser/IntentParser.js';
 import { ClientAPI } from './ClientAPI.js';
 import MetaLoader from '../baseapp/loader/MetaLoader.js';
+import { WSAppHub } from '../baseapp/connector/wsapp/WSAppHub.js';
+import { HTTPAppHub } from '../baseapp/connector/httpapp/HTTPAppHub.js';
 import { getConfig } from '../util/config.js';
 
 /**
@@ -36,6 +38,9 @@ export class Client {
     this.clientAPI = new ClientAPI(this);
     this.intentParser = new IntentParser(this.clientAPI);
     await this.intentParser.loadApps(apps);
+
+    await new WSAppHub(this).start();
+    await new HTTPAppHub(this).start();
   }
 
   async loadApps(apps, lang) {
