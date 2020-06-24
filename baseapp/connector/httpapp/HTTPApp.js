@@ -1,11 +1,11 @@
-import { AppBase } from '../../baseapp/AppBase.js';
-import { JSONApp } from '../../baseapp/JSONApp.js';
-import { Intent } from '../../baseapp/Intent.js';
-import { DataType } from '../../baseapp/datatype/DataType.js';
-import { EnumDataType } from '../../baseapp/datatype/EnumDataType.js';
-import { ListDataType } from '../../baseapp/datatype/ListDataType.js';
-import { NamedValuesDataType } from '../../baseapp/datatype/NamedValuesDataType.js';
-import { assert } from '../../util/util.js';
+import { AppBase } from '../../AppBase.js';
+import { JSONApp } from '../../JSONApp.js';
+import { Intent } from '../../Intent.js';
+import { DataType } from '../../datatype/DataType.js';
+import { EnumDataType } from '../../datatype/EnumDataType.js';
+import { ListDataType } from '../../datatype/ListDataType.js';
+import { NamedValuesDataType } from '../../datatype/NamedValuesDataType.js';
+import { assert } from '../../../util/util.js';
 import r2 from 'r2';
 
 /**

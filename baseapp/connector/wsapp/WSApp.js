@@ -1,8 +1,8 @@
-import { AppBase } from '../../baseapp/AppBase.js';
-import { JSONApp } from '../../baseapp/JSONApp.js';
-import { Intent } from '../../baseapp/Intent.js';
-import { DataType } from '../../baseapp/datatype/DataType.js';
-import { assert } from '../../util/util.js';
+import { AppBase } from '../../AppBase.js';
+import { JSONApp } from '../../JSONApp.js';
+import { Intent } from '../../Intent.js';
+import { DataType } from '../../datatype/DataType.js';
+import { assert } from '../../../util/util.js';
 
 /**
  * This is the app stub. It poses as voice app, but doesn't

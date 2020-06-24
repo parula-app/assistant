@@ -1,4 +1,4 @@
-import { assert } from '../../util/util.js';
+import { assert } from './util.js';
 
 /**
  * Creates a very thin generic wrapper around WebSockets that allows to make

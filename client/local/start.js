@@ -2,8 +2,8 @@
 'use strict';
 
 import { LocalClient } from './LocalClient.js';
-import { WSAppHub } from '../wsapp/WSAppHub.js';
-import { HTTPAppHub } from '../httpapp/HTTPAppHub.js';
+import { WSAppHub } from '../../baseapp/connector/wsapp/WSAppHub.js';
+import { HTTPAppHub } from '../../baseapp/connector/httpapp/HTTPAppHub.js';
 
 (async () => {
   try {

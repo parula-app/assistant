@@ -1,6 +1,6 @@
 import { WSApp } from './WSApp.js';
-import { WSCall } from './WSCall.js';
-import { assert } from '../../util/util.js';
+import { WSCall } from '../../../util/WSCall.js';
+import { assert } from '../../../util/util.js';
 import WebSocket from 'ws';
 
 const kPort = 12778;
