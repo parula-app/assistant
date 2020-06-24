@@ -99,6 +99,7 @@
                 "not-found-genre": "I don't know this music genre",
                 "not-found-station-in-genre": "I found no radio station for this genre",
                 "station-not-available": "The radio station is not available",
+                "nothing-playing": "No additional radio stations are available. Try saying: Play pop music.",
                 "volume-too-high": "That volume number is too high. Please use numbers between 11 to 100 or from 0 to 10.",
                 "volume-too-low": "I don't know what to do with a negative volume.",
                 "relative-volume-too-high": "That relative volume number is too high.",

@@ -139,6 +139,9 @@ export default class Radio extends JSONApp {
   async next(args, client) {
     let session = client.userSession;
     let stations = session.stations;
+    if (!stations) {
+      throw this.error("nothing-playing");
+    }
     let station;
     let pos = stations.indexOf(session.currentStation);
     if (!pos) {
@@ -158,6 +161,9 @@ export default class Radio extends JSONApp {
   async previous(args, client) {
     let session = client.userSession;
     let stations = session.stations;
+    if (!stations) {
+      throw this.error("nothing-playing");
+    }
     let pos = stations.indexOf(session.currentStation);
     if (!pos) {
       station = pickRandom(stations);
