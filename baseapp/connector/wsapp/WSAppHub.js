@@ -22,16 +22,13 @@ export class WSAppHub {
 
   async _createServer() {
     let server = new WebSocket.Server({ port: kPort });
-    return new Promise((resolve, reject) => {
-      server.on("connection", webSocket => {
-        try {
-          let wsCall = new WSCall(webSocket);
-          wsCall.register("registerApp", json => this.registerApp(json, wsCall));
-          resolve();
-        } catch (ex) {
-          reject(ex);
-        }
-      });
+    server.on("connection", webSocket => {
+      try {
+        let wsCall = new WSCall(webSocket);
+        wsCall.register("registerApp", json => this.registerApp(json, wsCall));
+      } catch (ex) {
+        console.error(ex);
+      }
     });
   }
 
