@@ -80,8 +80,13 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startApp(inputText) {
-    let { intent, args } = await this.match(inputText);
-    return await this.startIntent(intent, args);
+    try {
+      let { intent, args } = await this.match(inputText);
+      return await this.startIntent(intent, args);
+    } catch (ex) { // Intent had an error, or we didn't find a match
+      console.error(ex);
+      return ex.message || ex;
+    }
   }
 
   /**
@@ -197,24 +202,19 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startIntent(intent, args) {
-    try {
-      this.clientAPI.newCommand(intent, args);
+    this.clientAPI.newCommand(intent, args);
 
-      // Start the app
-      let result = await intent.run(args, this.clientAPI);
+    // Start the app
+    let result = await intent.run(args, this.clientAPI);
 
-      // Assemble output string
-      let output = this.clientAPI.outputSentences.join(". ");
-      if (result && typeof(result) == "string") {
-        output += result;
-      } else if (result && result.responseText && typeof(result.responseText) == "string") {
-        output += result.responseText;
-      }
-      return output;
-    } catch (ex) { // Exceptions should be caught by intent. This is a fallback.
-      console.error(ex);
-      return ex.message || ex;
+    // Assemble output string
+    let output = this.clientAPI.outputSentences.join(". ");
+    if (result && typeof(result) == "string") {
+      output += result;
+    } else if (result && result.responseText && typeof(result.responseText) == "string") {
+      output += result.responseText;
     }
+    return output;
   }
 }
 
