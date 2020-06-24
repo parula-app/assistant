@@ -24,9 +24,13 @@ export class WSAppHub {
     let server = new WebSocket.Server({ port: kPort });
     return new Promise((resolve, reject) => {
       server.on("connection", webSocket => {
-        let wsCall = new WSCall(webSocket);
-        wsCall.register("registerApp", json => this.registerApp(json, wsCall));
-        resolve();
+        try {
+          let wsCall = new WSCall(webSocket);
+          wsCall.register("registerApp", json => this.registerApp(json, wsCall));
+          resolve();
+        } catch (ex) {
+          reject(ex);
+        }
       });
     });
   }
@@ -45,5 +49,6 @@ export class WSAppHub {
     app.loadIntentsJSON(json);
     this.apps.push(app);
     await this._client.intentParser.loadApp(app);
+    console.log("Application", appID, "loaded: success");
   }
 }

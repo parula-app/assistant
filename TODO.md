@@ -9,6 +9,7 @@
      * response as card
      * response object
         * MP3
+* Frontend with UI
 * Phone
   * PyPBAP
   * WebSocket API
@@ -31,7 +32,7 @@
   * again (takes variables from previous commands)
 * Apps via commandline (stdin/out) and HTTPS
    * HTTP: Load language model as JSON via special command parameter / URL suffix (DONE)
-   * websocket: Like HTTP, but unregister
+   * websocket (DONE) - like HTTP, but unregister (TODO)
    * commandline: Command text input, output, errors etc. via JSON REST protocol.
 * Storage
   * Settings writable

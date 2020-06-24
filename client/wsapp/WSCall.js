@@ -67,17 +67,17 @@ export class WSCall  {
     this._functions[path] = func;
   }
 
-  _incomingMessage(message) {
+  async _incomingMessage(message) {
     try {
       message = JSON.parse(message);
     } catch (ex) {
       return;
     }
-    if (!message.id || !(message.path || message.success || message.error)) {
+    if (typeof(message.id) != "number" || !(typeof(message.path) == "string" || typeof(message.success) == "boolean")) {
       return; // not for us
     }
     try {
-      if (message.success || message.error) {
+      if (typeof(message.success) == "boolean") {
         // We called a function on the other side, and they responded
         this._response(message);
         return;
@@ -85,17 +85,21 @@ export class WSCall  {
       // The other side is calling a function here
       let func = this._functions[message.path];
       assert(func, "404 " + message.path + ": No such function registered");
-      let result = func(message.arg); // TODO await?
+      let result = func(message.arg);
+      if (result instanceof Promise) {
+        result = await result;
+      }
       this._webSocket.send(JSON.stringify({
         id: message.id,
         success: true,
         result: result,
       }));
     } catch (ex) {
+      // Error in function called by remote side
       console.error(ex);
       this._webSocket.send(JSON.stringify({
         id: message.id,
-        error: true,
+        success: false,
         message: ex.message,
         code: ex.code,
         //exception: ex,
@@ -105,6 +109,10 @@ export class WSCall  {
 
   /**
    * Calls a function on other side
+   * @param path {string}   like the path component of a HTTP URL.
+   *    E.g. "/contact/call/" or "register".
+   *    Must match the registration on the other side exactly, including leading slash or not.
+   * @param arg {JSON}   arguments for the function call
    */
   async makeCall(path, arg) {
     assert(path && typeof(path) == "string");
@@ -127,10 +135,18 @@ export class WSCall  {
   }
 
   _response(message) {
+    assert(typeof(message.success) == "boolean");
     let callWaiting = this._callsWaiting[message.id];
     delete this._callsWaiting[message.id];
     assert(callWaiting, "Got a response for call ID " + message.id + ", but we did not make such a call, or we already got the response for it");
-    if (message.error) {
+    if (message.success) {
+      try {
+        callWaiting.resolve(message.result);
+      } catch (ex) {
+        console.error(ex); // TODO remove
+        callWaiting.reject(ex); // TODO can I call reject() after resolve()?
+      }
+    } else {
       let ex = new Error();
       ex.message = message.message;
       ex.code = message.code;
@@ -140,16 +156,6 @@ export class WSCall  {
         console.error("Our error handling threw");
         console.error(ex);
       }
-      return;
-    } else if (message.success) {
-      try {
-        callWaiting.resolve(message.result);
-      } catch (ex) {
-        console.error(ex); // TODO remove
-        callWaiting.reject(ex); // TODO can I call reject() after resolve()?
-      }
-    } else {
-      throw new Error("Not reached");
     }
   }
 

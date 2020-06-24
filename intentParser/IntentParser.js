@@ -199,9 +199,18 @@ export default class IntentParser {
   async startIntent(intent, args) {
     try {
       this.clientAPI.newCommand(intent, args);
+
       // Start the app
-      let output = await intent.run(args, this.clientAPI);
-      return (output ? output : "") + this.clientAPI.outputSentences.join(". ");
+      let result = await intent.run(args, this.clientAPI);
+
+      // Assemble output string
+      let output = this.clientAPI.outputSentences.join(". ");
+      if (result && typeof(result) == "string") {
+        output += result;
+      } else if (result && result.responseText && typeof(result.responseText) == "string") {
+        output += result.responseText;
+      }
+      return output;
     } catch (ex) { // Exceptions should be caught by intent. This is a fallback.
       console.error(ex);
       return ex.message || ex;

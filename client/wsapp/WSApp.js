@@ -46,7 +46,7 @@ export class WSApp extends JSONApp {
   async runIntent(intent, args, clientAPI) {
     assert(intent.parameters, "Need Intent object");
     assert(clientAPI.lang, "Need ClientAPI object");
-    return await this._wsCall(intent.app.id + "/" + intent.id, {
+    return await this._wsCall.makeCall(intent.app.id + "/" + intent.id, {
       app: intent.app.id,
       args: args,
       lang: clientAPI.lang,
