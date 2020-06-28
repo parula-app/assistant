@@ -578,7 +578,7 @@ function outputPlace(place, args, client, lang) {
  * @param {string} topHeaderText -- What to read before the verses (if any)
  * @param {Array of BibleText} bibleTexts
  */
-function outputBibleVersesList(bibleTexts, topHeaderText, args, client, lang) {
+async function outputBibleVersesList(bibleTexts, topHeaderText, args, client, lang) {
   if (!bibleTexts.length) {
     return;
   }
@@ -592,8 +592,7 @@ function outputBibleVersesList(bibleTexts, topHeaderText, args, client, lang) {
       verse: bibleText.verse,
     });
     client.say(ssmlWrap(`<break time='500ms'/><s>${escapeText(headerText)}</s><break time='300ms'/>`, lang));
-
-    //bibleText.readVerses(lang, args, client);
+    client.say(await bibleText.load());
   }
 }
 
