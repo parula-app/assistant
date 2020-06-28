@@ -3,8 +3,8 @@
  * This is for debugging.
  */
 
-import * as fs from 'fs';
-import SoxCommand from 'sox-audio';
+import fs from 'fs';
+//import SoxCommand from 'sox-audio';
 
 let counter = 0;
 
@@ -31,4 +31,19 @@ export function saveAudioFile(audioStream) {
   return new Promise((resolve, reject) => {
     audioStream.on('end', resolve);
   });
+}
+
+/**
+ * Return a WAVE file as audio stream.
+ *
+ * @param waveFilename {string} filename, relative to project root
+ * @returns audioStream {ReadableStream} audio
+ *    `.audio` {AudioProperties} must contain the format type, sample rate etc.
+ */
+export function waveFile(waveFilename) {
+  let waveStream = fs.createReadStream(waveFilename);
+  waveStream.audio = {
+    type: "wav",
+  };
+  return waveStream;
 }
