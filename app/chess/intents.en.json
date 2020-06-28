@@ -83,7 +83,11 @@
                         {
                             "id": "A",
                             "name": {
-                                "value": "A"
+                                "value": "A",
+                                "synonyms": [
+                                    "alpha",
+                                    "alfa"
+                                ]
                             }
                         },
                         {
@@ -92,7 +96,9 @@
                                 "value": "B",
                                 "synonyms": [
                                     "be",
-                                    "bee"
+                                    "bee",
+                                    "bravo",
+                                    "beta"
                                 ]
                             }
                         },
@@ -101,26 +107,42 @@
                             "name": {
                                 "value": "C",
                                 "synonyms": [
-                                    "see"
+                                    "see",
+                                    "sea",
+                                    "charley",
+                                    "charlie"
                                 ]
                             }
                         },
                         {
                             "id": "D",
                             "name": {
-                                "value": "D"
+                                "value": "D",
+                                "synonyms": [
+                                    "dee",
+                                    "delta"
+                                ]
                             }
                         },
                         {
                             "id": "E",
                             "name": {
-                                "value": "E"
+                                "value": "E",
+                                "synonyms": [
+                                    "be",
+                                    "echo"
+                                ]
                             }
                         },
                         {
                             "id": "F",
                             "name": {
-                                "value": "F"
+                                "value": "F",
+                                "synonyms": [
+                                    "ef",
+                                    "of",
+                                    "foxtrot"
+                                ]
                             }
                         },
                         {
@@ -128,7 +150,8 @@
                             "name": {
                                 "value": "G",
                                 "synonyms": [
-                                    "gee"
+                                    "gee",
+                                    "golf"
                                 ]
                             }
                         },
@@ -137,7 +160,9 @@
                             "name": {
                                 "value": "H",
                                 "synonyms": [
-                                    "age"
+                                    "age",
+                                    "each",
+                                    "hotel"
                                 ]
                             }
                         }
@@ -172,6 +197,7 @@
                             "name": {
                                 "value": "Bishop",
                                 "synonyms": [
+                                    "ship",
                                     "Runner"
                                 ]
                             }
