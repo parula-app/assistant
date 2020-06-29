@@ -75,7 +75,9 @@ export class LocalClient extends Client {
 
 async function playSound(file) {
   try {
-    await audioOutput(waveFile(`./client/local/sounds/${file}.wav`));
+    let waveStream = waveFile(`./client/local/sounds/${file}.wav`);
+    waveStream.audio.volume = 0.5;
+    await audioOutput(waveStream);
   } catch (ex) {
     console.error(ex);
   }

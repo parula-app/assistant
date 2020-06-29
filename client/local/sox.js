@@ -57,7 +57,7 @@ export function soxIO(soxOptions = {}) {
     spawnOptions.env.AUDIODEV = soxOptions.device;
     spawnOptions.env.AUDIODRIVER = soxOptions.driver;
   }
-  console.info("Running sox", args.join(" "), "with", spawnOptions.env.AUDIODRIVER, "device", spawnOptions.env.AUDIODEV || "(default)");
+  //console.info("Running sox", args.join(" "), "with", spawnOptions.env.AUDIODRIVER, "device", spawnOptions.env.AUDIODEV || "(default)");
   let sox = cp.spawn(soxOptions.soxPath || 'sox', args, spawnOptions);
   return { inputWritableStream: sox.stdin, outputReadableStream: sox.stdout };
 }
