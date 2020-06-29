@@ -3,7 +3,7 @@
 import { Client } from '../Client.js';
 import AudioVideoPlayer from './MPDPlayer.js';
 import audioInput, { load as loadAudioInput } from './audioInputNAudioDon.js';
-import audioOutput from './audioOutputSpeaker.js';
+import audioOutput from './audioOutputSox.js';
 import { waveFile } from './audioFile.js';
 import { speechToText, textToSpeech, wakeword, load as loadSpeechEngines } from '../../speech/speech.js';
 import { getConfig } from '../../util/config.js';
