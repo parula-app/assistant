@@ -51,7 +51,10 @@
                     "name": "Pia.Stop"
                 },
                 {
-                    "name": "Pia.Next"
+                    "name": "Pia.Next",
+                    "samples": [
+                        "Play (the next|another) radio station"
+                    ]
                 },
                 {
                     "name": "Pia.Previous"
