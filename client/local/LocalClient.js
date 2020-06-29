@@ -49,9 +49,14 @@ export class LocalClient extends Client {
           playSound("accept");
           response = await this.intentParser.startIntent(intent, args);
         } catch (ex) { // Intent had an error, or we didn't find a match
-          console.error(ex);
           playSound("error");
-          response = ex.message || ex;
+          if (ex.code == "intent-match-failed") {
+            console.error(ex.message);
+            return; // Just the error sound
+          } else {
+            console.error(ex);
+            response = ex.message || ex;
+          }
         }
         console.log("\n" + response + "\n");
         if (response) {

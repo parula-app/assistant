@@ -106,7 +106,7 @@ export default class IntentParser {
     // Find the command candidates
     let commandMatches = matchStringWithAlternatives(inputText, this.commandsFlat);
     if (!commandMatches.length) {
-      throw new Error("I did not understand you");
+      throw new IntentMatchFailed();
     }
     //console.log("command matches", commandMatches);
     let intentMatches = [];
@@ -183,10 +183,10 @@ export default class IntentParser {
        // No match. Give useful error message to end user.
       for (let paramName in bestMatch.intent.parameters) {
         if (!bestMatch.args[paramName]) {
-          throw new Error("I did not understand the " + paramName);
+          throw new IntentMatchFailed({ param: paramName });
         }
       }
-      throw new Error("I did not understand you"); // should have been caught above
+      throw new IntentMatchFailed(); // should have been caught above
     }
     return {
       intent: bestMatch.intent,
@@ -240,4 +240,15 @@ function propertyNamesLowerCaseToOriginal(obj, originalPropertyNames) {
     restored[nameOrg] = obj[nameLower];
   }
   return restored;
+}
+
+export class IntentMatchFailed extends Error {
+  constructor(options) {
+    let msg = "I did not understand you";
+    if (options && options.param) {
+      msg = "I did not understand the " + options.param;
+    }
+    super(msg);
+    this.code = "intent-match-failed";
+  }
 }
