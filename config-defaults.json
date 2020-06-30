@@ -31,6 +31,9 @@
   "snowboy": {
     "hotword": "computer"
   },
+  "mozillaTTS": {
+    "url": "http://localhost:5002"
+  },
   "maryTTS": {
     "url": "http://localhost:59125",
     "voice": "cmu-rms"

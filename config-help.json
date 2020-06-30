@@ -32,6 +32,9 @@
     "model": "DeepSpeech model -- .pbmm or .tflit. Contains the phonemes. If not passed, path inferred from modelDir.",
     "scorer": "DeepSpeech .scorer file. Contains the language model. If not passed, path inferred from modelDir."
   },
+  "mozillaTTS": {
+    "url": "URL of the MozillaTTS server, usually running locally"
+  },
   "maryTTS": {
     "url": "URL of the MaryTTS server, usually running locally",
     "voice": "The MaryTTS voice name, e.g. cmu-rms, dfki-spike, dfki-prudence or cmu-slt-hsmm. Download them by running  ./gradlew runInstallerGui  in the marytts directory."

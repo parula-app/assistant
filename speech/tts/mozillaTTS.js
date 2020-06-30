@@ -6,8 +6,7 @@
  */
 
 import fetch from 'node-fetch';
-
-const kTTS_URL = "http://localhost:5002";
+import { getConfig } from '../../util/config.js';
 
 export async function load(args) {
 }
@@ -30,7 +29,8 @@ export function audioProperties() {
 export async function textToSpeech(text) {
   text = text.replace(/,/g, " ").replace(/'s/g, " is").replace(/\./g, " "); // fix Tacotron2
   let startTime = new Date();
-  let response = await fetch(kTTS_URL + '/api/tts?text=' + encodeURIComponent(text), { cache: 'no-cache' })
+  let url = getConfig().mozillaTTS.url;
+  let response = await fetch(url + '/api/tts?text=' + encodeURIComponent(text), { cache: 'no-cache' })
   if (!response.ok) {
     throw new Error(response.statusText);
   }
