@@ -8,7 +8,7 @@
       * We'll be working on Raspberry Pi 4 support soon. Raspberry Pi 3 will not be supported.
 2. Install OS dependencies
    * Ubuntu, Debian etc.
-     * `# apt install yarnpkg mpg123 mpd sox libasound2-dev default-jre-headless default-jdk git`
+     * `# apt install yarnpkg mpg123 mpd sox libsox-fmt-pulse libasound2-dev default-jre-headless default-jdk git`
    * Fedora, RedHat etc.
      1. Install RPM Fusion \(for mpd\)
         * `# dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm`

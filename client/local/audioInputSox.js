@@ -13,9 +13,10 @@ export async function load(lang) {
  *   `.audio` {AudioProperties} the format type, sample rate etc. of the stream (same as `audioProperties`)
  */
 export default function audioInput(audioProperties) {
-  let device = getConfig().audio.inputDevice;
+  let config = getConfig().audio;
   let audioInputStream = soxRecord({
-    device: device,
+    device: config.inputDevice, // e.g. "hw:0,0", null = default
+    driver: config.driver, // "pulse" or "alsa"
     output: audioProperties,
   });
   audioInputStream.audio = audioProperties;
