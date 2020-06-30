@@ -30,7 +30,7 @@ export function soxIO(soxOptions = {}) {
   let args = [ '-q' ] // quiet
     // order matters
     .concat(hashToArray(soxOptions.global || {}))
-    .concat([ '--buffer', '32' ])
+    .concat([ '--buffer', '1024' ])
     .concat(hashToArray(soxOptions.input || {}))
     .concat(soxOptions.record ? [ '-d' ] : [ '-' ])
     .concat(hashToArray(soxOptions.output || {}))
