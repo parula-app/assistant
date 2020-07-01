@@ -16,8 +16,8 @@ import { getConfig } from '../util/config.js';
  */
 export class Client {
   constructor() {
-    this.intentParser = null;
-    this.clientAPI = null;
+    this.clientAPI = new ClientAPI(this);
+    this.intentParser = new IntentParser(this.clientAPI);
     this.lang = null;
 
     process.once("SIGINT", async (exitCode) => {
@@ -32,11 +32,10 @@ export class Client {
   }
 
   async load(lang) {
+    this.lang = lang;
+
     let apps = await (new MetaLoader()).findApps();
     await this.loadApps(apps, lang);
-    this.lang = lang;
-    this.clientAPI = new ClientAPI(this);
-    this.intentParser = new IntentParser(this.clientAPI);
     await this.intentParser.loadApps(apps);
 
     await new WSAppHub(this).start();
