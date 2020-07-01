@@ -2,7 +2,7 @@
 'use strict';
 
 import { Client } from './client/Client.js';
-import wildLeven from './intentParser/leven.js';
+import wildLeven from './intentParser/wildLeven/wildLeven.js';
 
 function testDistance(input, target) {
   let result = wildLeven(input, target);

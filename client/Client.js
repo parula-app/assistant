@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import IntentParser from '../intentParser/IntentParser.js';
+import IntentParser from '../intentParser/wildLeven/WildLevenIntentParser.js';
 import { ClientAPI } from './ClientAPI.js';
 import MetaLoader from '../baseapp/loader/MetaLoader.js';
 import { WSAppHub } from '../baseapp/connector/wsapp/WSAppHub.js';

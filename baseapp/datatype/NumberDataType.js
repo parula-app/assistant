@@ -4,7 +4,7 @@ const wordsToNumbers = wtn.default.wordsToNumbers;
 import writtenNumber from 'written-number';
 import { OpenEndedDataType } from './OpenEndedDataType.js';
 import { assert } from '../../util/util.js';
-import leven from '../../intentParser/leven.js';
+import leven from '../../intentParser/wildLeven/wildLeven.js';
 
 /**
  * An integer

@@ -1,7 +1,7 @@
 import { FiniteDataType } from './FiniteDataType.js';
 import { Obj } from './Obj.js';
 import { assert } from '../../util/util.js';
-import { matchStringWithAlternatives } from '../../intentParser/matchString.js';
+import { matchStringWithAlternatives } from '../../intentParser/wildLeven/matchString.js';
 
 /**
  * A list of names that each have a value or JS object associated.

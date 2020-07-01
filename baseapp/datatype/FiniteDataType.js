@@ -1,5 +1,5 @@
 import { DataType } from './DataType.js';
-import { matchString } from '../../intentParser/matchString.js';
+import { matchString } from '../../intentParser/wildLeven/matchString.js';
 
 
 /**

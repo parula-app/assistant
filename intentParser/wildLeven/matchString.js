@@ -1,4 +1,4 @@
-import wildLeven from './leven.js';
+import wildLeven from './wildLeven.js';
 
 /**
  * Find the closest match of the inputText within validValues.
