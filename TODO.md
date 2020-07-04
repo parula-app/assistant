@@ -1,5 +1,9 @@
 ## Next
-* WebSocket app API
+* IntentParser
+  * Words
+    * Debug
+  * Spacy
+    * Socket server
 * WebSocket client API
    * wake word API
    * responses
@@ -9,18 +13,20 @@
      * response as card
      * response object
         * MP3
-* Frontend with UI
+* Webclient frontend
 * Phone
-  * PyPBAP
-  * WebSocket API
+  * Headset app
 * Raspberry Pi
 * Chess
   * UI
   * WebSocket API
+* Wikipedia
+* ScyllaDB
 
 ## Core
 * Intent Parser
-  * Based on words
+  * Words
+  * Spacy
   * Make optional parameters explicit, in JSON and intent parser
 * Context
   * Include recent commands in match confidence
@@ -37,6 +43,7 @@
 * Storage
   * Settings writable
   * Decide on DB
+    * ScyllaDB
 
 ## Speech
 * Better wake word
@@ -76,11 +83,15 @@
   * MAP Message Access Profile
 * Wikipedia
 * Google search
+* OpenHAB
+* Home assistant
 
 ## Integration
-* Android Intents
 * Node Red
+* OpenHAB <https://www.openhab.org/>
 * Home Assistant <https://www.home-assistant.io>
+* Android Intents
+Only few apps:
 * ThingVerse, Almond, LUInet <https://almond.stanford.edu/thingpedia>
 * MyCroft <https://github.com/MycroftAI/mycroft-skills>
 
