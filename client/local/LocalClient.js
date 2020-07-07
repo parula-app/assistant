@@ -30,7 +30,7 @@ export class LocalClient extends Client {
     let audioProps = speechToText.audioProperties();
     wakeword.waitForWakeWord(audioInput(audioProps), kMax, () => { // new command
       assert(!recognizer, "End previous command first");
-      playSound("on");
+      playSound("listening");
       recognizer = new speechToText.SpeechRecognizer();
     }, (buffer) => {
       recognizer.processAudio(buffer);
@@ -46,7 +46,7 @@ export class LocalClient extends Client {
         //let response = await this.intentParser.startApp(inputText);
         try {
           let { intent, args } = await this.intentParser.match(inputText);
-          playSound("accept");
+          playSound("processing");
           response = await this.intentParser.startIntent(intent, args);
         } catch (ex) { // Intent had an error, or we didn't find a match
           playSound("error");
