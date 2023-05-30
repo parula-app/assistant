@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 'use strict';
 
 import IntentParser from '../intentParser/wildLeven/WildLevenIntentParser.js';
