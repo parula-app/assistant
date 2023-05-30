@@ -1,10 +1,6 @@
 import { Client } from "./Client.js";
 import { Context } from "../intentParser/Context.js";
 import { assert } from '../util/util.js';
-import fs from 'fs';
-import util from 'util';
-const readFileAsync = util.promisify(fs.readFile);
-const writeFileAsync = util.promisify(fs.writeFile);
 
 /**
  * The API for the `client` object that gets passed to the voice app.
