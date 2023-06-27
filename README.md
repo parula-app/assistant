@@ -1,8 +1,8 @@
-# Parual
+# Parula
 
 Personal Information Assistant
 
-Parual is a digital voice assistant. You can talk to her and give her reasonably
+Parula is a digital voice assistant. You can talk to her and give her reasonably
 natural commands and she will try to understand them and execute them.
 The commands are defined by voice apps.
 
