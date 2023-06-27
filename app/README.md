@@ -1,6 +1,6 @@
 Contains the built-in voice apps.
 
-They are implemented in JavaScript and run in the same node process as Pia.
+They are implemented in JavaScript and run in the same node process as Parula.
 So, please don't crash or leak ;-) .
 
 The main class must be in a file with the same name as the directory,

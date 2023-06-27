@@ -1,14 +1,14 @@
 {
-    "name": "pia",
+    "name": "parula-assistant",
     "version": "0.1.2",
-    "description": "Voice assistant",
+    "description": "Digital assistant",
     "main": "./start.js",
     "author": "Ben Bucksch",
     "license": "AGPL-3.0",
-    "homepage": "https://pia.im",
+    "homepage": "https://parula.app",
     "repository": {
         "type": "git",
-        "url": "git://github.com/benbucksch/pia.git"
+        "url": "git://github.com/parula-app/assistant.git"
     },
     "dependencies": {
         "@nano-sql/core": "^2.3.7",

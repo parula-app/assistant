@@ -17,7 +17,7 @@ export default class TODOList extends JSONApp {
     await nSQL().createDatabase({
       id: kDBName,
       mode: "PERM", // SnapDB
-      //path: "~/.pia/db.nano/", TODO not working
+      //path: "~/.parula/db.nano/", TODO not working
       tables: [
         {
           name: "tasks",

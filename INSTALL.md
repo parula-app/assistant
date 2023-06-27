@@ -36,23 +36,23 @@
    4. Restart the server: `./gradlew run`
    5. Open [http://localhost:59125](http://localhost:59125) in a browser, to check whether the server is running and the voices are listed in the dropdown.
 5. Download data files
-   1. Download the [Pia app data files](https://pia.im/download/pia-data.tar.bz2)
-   2. `cd` to the Pia source directory
+   1. Download the [Parula app data files](https://parula.app/download/parula-data.tar.bz2)
+   2. `cd` to the Parula source directory
    3. `mkdir data`
    4. `cd data/`
-   5. `tar xjf /path/to/pia-data.tar.bz2`
+   5. `tar xjf /path/to/parula-data.tar.bz2`
    6. `mkdir deepspeech-0.7.3-models`
       * The DeepSpeech model version needs to match the version of DeepSpeech npm module perfectly. Double-check the version that you have with `grep version node_modules/deepspeech/package.json`.
    7. `cd deepspeech-0.7.3-models/`
    8. Download the [DeepSpeech 0.7.3 model file](https://github.com/mozilla/DeepSpeech/releases/download/v0.7.3/deepspeech-0.7.3-models.pbmm) and [DeepSpeech 0.7.3 scorer file](https://github.com/mozilla/DeepSpeech/releases/download/v0.7.3/deepspeech-0.7.3-models.scorer) into this directory.
    9. They are 1.2 GB, so while they download, you can already adjust config.json, see step 6.3. below.
 6. Install node packages
-   1. `cd` to the Pia source directory
+   1. `cd` to the Parula source directory
    2. `yarn install`
    3. `cp config-min.json config.json`
    4. Adapt `config.json`
-7. Run Pia
-   1. `cd` to the Pia source directory
+7. Run Parula
+   1. `cd` to the Parula source directory
    2. `yarn start`
    3. You should see
       ```text

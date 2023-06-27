@@ -1,5 +1,5 @@
 {
-  "name": "pia-web",
+  "name": "parula-web",
   "version": "0.1",
   "dependencies": {
     "bumblebee-hotword": "0.0.6",

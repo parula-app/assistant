@@ -112,9 +112,9 @@ export default class Hue extends JSONApp {
    */
   async createCredentials(hostname) {
     let unauthenticatedAPI = await hue.api.createLocal(hostname).connect();
-    let deviceName = "pia"; // TODO add hostname
+    let deviceName = "parula"; // TODO add hostname
     try {
-      let createdUser = await unauthenticatedAPI.users.createUser("pia-" + this.id, deviceName);
+      let createdUser = await unauthenticatedAPI.users.createUser("parula-" + this.id, deviceName);
       console.log("************************************************************************\n");
       console.log("The following password to the Hue bridge has been created,\n" +
                   "which allows full access to your Hue bridge.\n" +
