@@ -16,7 +16,7 @@
         "argparse": "^1.0.10",
         "bumblebee-hotword-node": "^0.0.6",
         "dav": "^1.8.0",
-        "deepspeech": "^0.7.3",
+        "deepspeech": "^0.9.3",
         "express": "^4.17.1",
         "ical": "^0.8.0",
         "iso-639-1": "^2.1.3",
