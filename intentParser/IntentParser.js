@@ -77,10 +77,14 @@ export default class IntentParser {
    * @returns {string} What we will respond to the user. Going to speech synthensis.
    */
   async startIntent(intent, args) {
-    this.clientAPI.newCommand(intent, args);
+    let context = this.clientAPI.newCommand(intent, args);
 
     // Start the app
     let result = await intent.run(args, this.clientAPI);
+
+    // Broadcast the result, for UI
+    context.resultText = result;
+    // clientAPI.broadcast(context);
 
     // Assemble output string
     let output = this.clientAPI.outputSentences.join(". ");

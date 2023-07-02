@@ -13,6 +13,8 @@ import { getConfig } from '../util/config.js';
  *
  * This represents an application that listens to audio
  * input and responds.
+ *
+ * Client implementations are subclasses.
  */
 export class Client {
   constructor() {

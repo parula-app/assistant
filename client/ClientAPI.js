@@ -40,10 +40,13 @@ export class ClientAPI {
   /**
    * @param intent {Intent}
    * @param args {Obj map parameterName {string} -> value {any}}
+   * @returns {Context}
    */
   newCommand(intent, args) {
     this._sentences = [];
-    this._context.push(new Context(intent, args));
+    let context = new Context(intent, args);
+    this._context.push(context);
+    return context;
   }
 
   /**
@@ -70,6 +73,13 @@ export class ClientAPI {
    */
   get context() {
     return this._context.slice(); // protects from modifications, but slow
+  }
+
+  /**
+   * @returns {Context}
+   */
+  get currentContext() {
+    return this._context[this._context.length - 1];
   }
 
   /**
@@ -112,13 +122,6 @@ export class ClientAPI {
   }
 
   /**
-   * @returns {Context}
-   */
-  get _currentContext() {
-    return this._context[this._context.length - 1];
-  }
-
-  /**
    * The result of the Intent.
    * This allows subsequent commands to use the
    * result of the Intent as input.
@@ -133,7 +136,7 @@ export class ClientAPI {
    * @param dataType {DataType}
    */
   addResult(result, dataType) {
-    this._currentContext.addResult(result, dataType);
+    this.currentContext.addResult(result, dataType);
   }
 
   /**
