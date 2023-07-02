@@ -1,5 +1,10 @@
 {
   "language": "en",
+  "core": {
+    "httpPort": 12777,
+    "webSocketPort": 12778,
+    "contextWebSocketPort": 12779
+  },
   "mpd": {
     "server": "localhost"
   },

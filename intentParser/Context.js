@@ -103,4 +103,15 @@ export class Context {
     }
     this._objects.push(obj);
   }
+
+  /** @returns {plain JS object} */
+  toJSON() {
+    let json = {};
+    json.app = this.intent.app.id;
+    json.intent = this.intent.id;
+    json.args = this.args;
+    // json.results = this.results;
+    json.resultText = this.resultText;
+    return json;
+  }
 }

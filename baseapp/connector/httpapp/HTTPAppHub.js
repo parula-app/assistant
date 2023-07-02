@@ -1,5 +1,5 @@
 import { HTTPApp } from './HTTPApp.js';
-import { assert } from '../../../util/util.js';
+import { getConfig } from '../../../util/config.js';
 import express from 'express';
 import http from 'http';
 
@@ -22,10 +22,11 @@ export class HTTPAppHub {
   }
 
   async _createServer() {
+    let port = getConfig()?.core?.httpPort | kPort;
     let expressApp = this._expressApp = express();
     let server = http.createServer(expressApp);
     //expressApp.set("json spaces", 2);
-    await listen(server, kPort);
+    await listen(server, port);
 
     expressApp.put(`/app/http`, express.json(), (req, resp) => catchHTTPJSON(req, resp, async () =>
       await this.registerApp(req.body)));

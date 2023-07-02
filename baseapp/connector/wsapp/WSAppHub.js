@@ -1,5 +1,6 @@
 import { WSApp } from './WSApp.js';
 import { WSCall } from '../../../util/WSCall.js';
+import { getConfig } from '../../../util/config.js';
 import { assert } from '../../../util/util.js';
 import WebSocket from 'ws';
 
@@ -21,7 +22,8 @@ export class WSAppHub {
   }
 
   async _createServer() {
-    let server = new WebSocket.Server({ port: kPort });
+    let port = getConfig()?.core?.webSocketPort | kPort;
+    let server = new WebSocket.Server({ port: port });
     server.on("connection", webSocket => {
       try {
         let wsCall = new WSCall(webSocket);

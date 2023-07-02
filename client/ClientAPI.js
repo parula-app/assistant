@@ -50,6 +50,14 @@ export class ClientAPI {
   }
 
   /**
+   * Send this context to all UIs listening via WebSockets
+   * @param context {Context}
+   */
+  broadcast(context) {
+    this.client.contextServer.broadcast(context);
+  }
+
+  /**
    * The language of the current user session.
    * The voice app should translate all responses into this language.
    * @returns {string} 2-letter ISO language code

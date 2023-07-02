@@ -25,6 +25,19 @@ export async function wait(seconds) {
   });
 }
 
+export function arrayRemove(array, element, all) {
+  var found = 0;
+  var pos = 0;
+  while ((pos = array.indexOf(element, pos)) != -1) {
+    array.splice(pos, 1);
+    found++;
+    if (!all) {
+      return found;
+    }
+  }
+  return found;
+}
+
 /**
  * Returns contents of file as JSON.
  *

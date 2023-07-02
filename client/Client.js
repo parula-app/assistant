@@ -7,6 +7,7 @@ import MetaLoader from '../baseapp/loader/MetaLoader.js';
 import { WSAppHub } from '../baseapp/connector/wsapp/WSAppHub.js';
 import { HTTPAppHub } from '../baseapp/connector/httpapp/HTTPAppHub.js';
 import { getConfig } from '../util/config.js';
+import WSContextServer from './WSContextServer.js';
 
 /**
  * This is the central code that calls all the other modules.
@@ -21,6 +22,7 @@ export class Client {
     this.clientAPI = new ClientAPI(this);
     this.intentParser = new IntentParser(this.clientAPI);
     this.lang = null;
+    this.contextServer = null; /** {WSContextServer} */
 
     process.once("SIGINT", async (exitCode) => {
       console.log("\nUser pressed Ctrl-C");
@@ -42,6 +44,7 @@ export class Client {
 
     await new WSAppHub(this).start();
     await new HTTPAppHub(this).start();
+    this.contextServer = await new WSContextServer(this).start();
   }
 
   async loadApps(apps, lang) {

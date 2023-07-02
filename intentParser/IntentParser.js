@@ -84,7 +84,7 @@ export default class IntentParser {
 
     // Broadcast the result, for UI
     context.resultText = result;
-    // clientAPI.broadcast(context);
+    this.clientAPI.broadcast(context);
 
     // Assemble output string
     let output = this.clientAPI.outputSentences.join(". ");
