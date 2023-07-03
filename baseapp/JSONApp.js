@@ -153,7 +153,11 @@ export class JSONApp extends AppBase {
     }
     // Replace placeholders
     for (let name in args) {
-      response = response.replace("%" + name + "%", args[name]);
+      let value = args[name];
+      if (Array.isArray(value)) {
+        value = value.join(", ");
+      }
+      response = response.replace("%" + name + "%", value);
     }
     return response;
   }

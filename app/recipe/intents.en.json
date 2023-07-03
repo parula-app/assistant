@@ -1,0 +1,35 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "recipe",
+            "intents": [
+                {
+                    "name": "Show",
+                    "samples": [
+                        "What (does it take|do I need) to (make|prepare|cook|do) {Meal}",
+                        "(Show me|Tell me) how to (make|prepare|cook|do) {Meal}",
+                        "I would like to (make|prepare|cook|do) {Meal}",
+                        "How can I (make|prepare|cook|do) {Meal}"
+                    ],
+                    "slots": [
+                        {
+                            "name": "Meal",
+                            "type": "Meal"
+                        }
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Meal",
+                    "basetype": "Pia.NamedValues"
+                }
+            ],
+            "responses": {
+                "recipe": [
+                  "How to prepare %name%: You need %ingredients%. - %steps%"
+                ]
+            }
+        }
+    }
+}
