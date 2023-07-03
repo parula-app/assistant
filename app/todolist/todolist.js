@@ -1,7 +1,7 @@
-import nanoSQL from "@nano-sql/core";
-const nSQL = nanoSQL.nSQL;
 import { JSONApp } from '../../baseapp/JSONApp.js';
 import { assert } from '../../util/util.js';
+import nanoSQL from "@nano-sql/core";
+const nSQL = nanoSQL.nSQL;
 
 const kDBName = "TODOList";
 
@@ -33,6 +33,20 @@ export default class TODOList extends JSONApp {
   }
 
   /**
+   * @param list {string}
+   * @return {Array of string}
+   */
+  async getTasks(list) {
+    nSQL().useDatabase(kDBName);
+    let results = await nSQL("tasks").query("select", [
+      "task",
+    ]).distinct([ "task" ]).where([
+      [ "list", "=", list ],
+    ]).exec()
+    return results.map(taskRow => taskRow.task);
+  }
+
+  /**
    * Command
    * @param args {obj}
    *   List {string} e.g. "TODO" or "shopping"
@@ -41,22 +55,17 @@ export default class TODOList extends JSONApp {
   async read(args, client) {
     let list = args.List;
     assert(list, "Need list");
-
-    nSQL().useDatabase(kDBName);
-    let tasks = await nSQL("tasks").query("select", [
-      "task",
-    ]).distinct([ "task" ]).where([
-      [ "list", "=", list ],
-    ]).exec();
+    let tasks = this.getTasks(list);
 
     if (!tasks.length) {
       return this.getResponse("list-empty", { list });
     }
 
+    client.addResult(tasks, this.dataTypes.List);
     return this.getResponse("list-prefix", {
       count: tasks.length,
       list: list,
-    }) + " \n" + tasks.map(taskRow => taskRow.task).join(", ");
+    }) + " \n" + tasks.join(", ");
   }
 
   /**
@@ -78,6 +87,7 @@ export default class TODOList extends JSONApp {
       list: list,
     }).exec();
 
+    client.addResult(await this.getTasks(list), this.dataTypes.List);
     return this.getResponse("added", { task, list });
   }
 
@@ -101,6 +111,7 @@ export default class TODOList extends JSONApp {
       [ "task", "=", task ],
     ]).exec();
 
+    client.addResult(await this.getTasks(list), this.dataTypes.List);
     return this.getResponse("removed", { task, list });
   }
 }

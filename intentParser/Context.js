@@ -16,6 +16,7 @@ export class Context {
     this._intent = intent;
     this._args = args;
     this._results = [];
+    this._resultText = null;
     this._startTime = new Date();
     this._objects = null;
   }
@@ -52,6 +53,18 @@ export class Context {
   }
 
   /**
+   * The response phrase spoken to the user
+   * @returns {string}
+   */
+   get resultText() {
+    return this._resultText;
+  }
+  /** Called by IntentParser */
+  set resultText(val) {
+    this._resultText = val;
+  }
+
+  /**
    * The result of the Intent.
    * This allows subsequent commands to use the
    * result of the Intent as input.
@@ -65,9 +78,8 @@ export class Context {
    * @param dataType {DataType}
    */
   addResult(result, dataType) {
-    assert(result instanceof Obj);
+    //assert(result instanceof Obj);
     assert(dataType instanceof DataType);
-    console.log("Result", dataType.id, result.name);
     assert(!Object.values(this.args).includes(result), "Input must not be repeated in result");
     this._results.push({
       value: result,
@@ -110,7 +122,7 @@ export class Context {
     json.app = this.intent.app.id;
     json.intent = this.intent.id;
     json.args = this.args;
-    // json.results = this.results;
+    json.results = this.results.map(r => r.value);
     json.resultText = this.resultText;
     return json;
   }

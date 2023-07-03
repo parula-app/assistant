@@ -138,7 +138,7 @@ export class ClientAPI {
    *
    * Must not repeat the input,
    * i.e. the objects in the Intent `args` are not repeated here.
-   * Returning the data in a different data type is legit, though,
+   * Returning the data in a different data type is legit, though.
    *
    * @param result {any}
    * @param dataType {DataType}
