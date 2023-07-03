@@ -1,5 +1,5 @@
-import { getConfig } from '../util/config.js';
-import { arrayRemove, assert } from '../util/util.js';
+import { getConfig } from '../../util/config.js';
+import { arrayRemove, assert } from '../../util/util.js';
 import WebSocket from 'ws';
 
 const kPort = 12779;
