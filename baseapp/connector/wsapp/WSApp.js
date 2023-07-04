@@ -1,7 +1,5 @@
 import { AppBase } from '../../AppBase.js';
 import { JSONApp } from '../../JSONApp.js';
-import { Intent } from '../../Intent.js';
-import { DataType } from '../../datatype/DataType.js';
 import { assert } from '../../../util/util.js';
 
 /**
@@ -9,7 +7,7 @@ import { assert } from '../../../util/util.js';
  * contain the actual app implementation, but forwards
  * all calls to the voice app in another process, via WebSocket and `WSCall`.
  */
-export class WSApp extends JSONApp {
+export default class WSApp extends JSONApp {
   /**
    * @param wsCall {WSCall}
    */

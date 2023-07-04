@@ -4,10 +4,12 @@
 import IntentParser from '../intentParser/wildLeven/WildLevenIntentParser.js';
 import { ClientAPI } from './ClientAPI.js';
 import MetaLoader from '../baseapp/loader/MetaLoader.js';
-import { WSAppHub } from '../baseapp/connector/wsapp/WSAppHub.js';
-import { HTTPAppHub } from '../baseapp/connector/httpapp/HTTPAppHub.js';
+import HTTPServer from './connector/HTTPServer.js';
+import HTTPTextResponseServer from './connector/HTTPTextResponseServer.js';
+import HTTPAppHub from '../baseapp/connector/httpapp/HTTPAppHub.js';
+import WSAppHub from '../baseapp/connector/wsapp/WSAppHub.js';
+import WSContextServer from './connector/WSContextServer.js';
 import { getConfig } from '../util/config.js';
-import WSContextServer from './WSContextServer.js';
 
 /**
  * This is the central code that calls all the other modules.
@@ -42,9 +44,12 @@ export class Client {
     await this.loadApps(apps, lang);
     await this.intentParser.loadApps(apps);
 
-    await new WSAppHub(this).start();
-    await new HTTPAppHub(this).start();
     this.contextServer = await new WSContextServer(this).start();
+    let httpServer = await new HTTPServer(this).start();
+    let expressApp = httpServer.expressApp;
+    await new HTTPTextResponseServer(this, expressApp);
+    await new HTTPAppHub(this, expressApp);
+    await new WSAppHub(this).start();
   }
 
   async loadApps(apps, lang) {

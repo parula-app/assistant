@@ -1,4 +1,4 @@
-import { WSApp } from './WSApp.js';
+import WSApp from './WSApp.js';
 import { WSCall } from '../../../util/WSCall.js';
 import { getConfig } from '../../../util/config.js';
 import { assert } from '../../../util/util.js';
@@ -8,7 +8,7 @@ const kPort = 12778;
 
 /**
  */
-export class WSAppHub {
+export default class WSAppHub {
   /**
    * @param client {Client}
    */

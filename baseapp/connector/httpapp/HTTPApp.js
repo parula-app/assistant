@@ -13,7 +13,7 @@ import r2 from 'r2';
  * contain the actual app implementation, but forwards
  * all calls to the voice app in another process, via HTTP REST.
  */
-export class HTTPApp extends JSONApp {
+export default class HTTPApp extends JSONApp {
   constructor(id, url, authKey) {
     super(id, "none");
     assert(url && typeof(url) == "string", "Need URL");

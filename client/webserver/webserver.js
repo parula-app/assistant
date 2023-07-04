@@ -1,25 +1,13 @@
 //#!/usr/bin/env node
 'use strict';
 
-import fs from 'fs';
-import http from 'http';
-import https from 'https';
-import express from 'express';
 import { Client } from '../Client.js';
 import { speechToText, textToSpeech } from '../../speech/speech.js';
+import { fromWebsite } from '../connector/HTTPServer.js';
+import http from 'http';
+import express from 'express';
 
 const port = 4224;
-
-
-// CORS to allow our website to call us
-function fromWebsite(request, response, next) {
-  // Allows EVERYTHING
-  response.header("Access-Control-Allow-Origin", request.headers.origin);
-  response.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-  response.header("Access-Control-Allow-Headers", "Content-Type,X-AuthToken");
-  next();
-};
-
 
 /**
  * This is the server part of a web client.

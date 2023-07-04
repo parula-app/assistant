@@ -1,39 +1,29 @@
-import { HTTPApp } from './HTTPApp.js';
-import { getConfig } from '../../../util/config.js';
+import HTTPApp from './HTTPApp.js';
+import { catchHTTPJSON } from '../../../client/connector/HTTPServer.js';
 import express from 'express';
-import http from 'http';
-
-const kPort = 12777;
 
 /**
+ * Allows voice apps implemented in another process
+ * to register with Parula core, using a single HTTP call.
+ * Each app will be represented by an `HTTPApp` instance.
+ * They will then be called back via HTTP by Parula core
+ * once they are invoked.
  */
-export class HTTPAppHub {
+export default class HTTPAppHub {
   /**
    * @param client {Client}
+   * @param expressApp {Express}
    */
-  constructor(client) {
-    this.apps = []; // {Array of AppBase}
+  constructor(client, expressApp) {
     this._client = client; // {Client}
-    this._expressApp = null; // {Express}
-  }
-
-  async start() {
-    await this._createServer();
-  }
-
-  async _createServer() {
-    let port = getConfig()?.core?.httpPort | kPort;
-    let expressApp = this._expressApp = express();
-    let server = http.createServer(expressApp);
-    //expressApp.set("json spaces", 2);
-    await listen(server, port);
+    this.apps = []; // {Array of AppBase}
 
     expressApp.put(`/app/http`, express.json(), (req, resp) => catchHTTPJSON(req, resp, async () =>
       await this.registerApp(req.body)));
   }
 
   /**
-   * A Pia HTTP app tells us about its existance.
+   * A Parula HTTP app tells us about its existance.
    *
    * @param json {
    *   appID {string}
@@ -48,50 +38,4 @@ export class HTTPAppHub {
     this.apps.push(app);
     await this._client.intentParser.loadApp(app);
   }
-}
-
-/**
- * Calls `func`, returns the JSON as response to the HTTP client,
- * and catches exceptions and returns them to the HTTP client.
- *
- * @param func {async function} A function that returns JSON
- */
-async function catchHTTPJSON(request, response, func) {
-  try {
-    let json = await func();
-    response.json(json || { success: true });
-  } catch (ex) {
-    console.error(ex);
-    response.status(ex.httpErrorCode || 400).json({
-      errorMessage: ex.message,
-      errorCode: ex.code,
-    });
-  }
-}
-
-class HTTPError extends Error {
-  constructor(httpErrorCode, message) {
-    super(message);
-    this.httpErrorCode = httpErrorCode;
-  }
-}
-
-/**
- * http server listen() returns and then errors out.
- * This function allows to await it, including in error cases.
- *
- * https://github.com/nodejs/node/issues/21482
- */
-function listen(server, port) {
-  return new Promise((resolve, reject) => {
-    server.listen(port)
-      .once('listening', resolve)
-      .once('error', ex => {
-        if (ex.code == "EADDRINUSE") {
-          reject(new Error(`Pia is already running on port ${kPort}`));
-        } else {
-          reject(ex);
-        }
-      });
-  });
 }
