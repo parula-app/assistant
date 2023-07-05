@@ -51,8 +51,9 @@ export default class TODOList extends JSONApp {
    * @param args {obj}
    *   List {string} e.g. "TODO" or "shopping"
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async read(args, client) {
+  async read(args, client, context) {
     let list = args.List;
     assert(list, "Need list");
     let tasks = this.getTasks(list);
@@ -61,7 +62,7 @@ export default class TODOList extends JSONApp {
       return this.getResponse("list-empty", { list });
     }
 
-    client.addResult(tasks, this.dataTypes.List);
+    context.addResult(tasks, this.dataTypes.List);
     return this.getResponse("list-prefix", {
       count: tasks.length,
       list: list,
@@ -74,8 +75,9 @@ export default class TODOList extends JSONApp {
    *   List {string} e.g. "TODO" or "shopping"
    *   Task {string}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async add(args, client) {
+  async add(args, client, context) {
     let task = args.Task;
     let list = args.List;
     assert(task, "Need task to add");
@@ -87,7 +89,7 @@ export default class TODOList extends JSONApp {
       list: list,
     }).exec();
 
-    client.addResult(await this.getTasks(list), this.dataTypes.List);
+    context.addResult(await this.getTasks(list), this.dataTypes.List);
     return this.getResponse("added", { task, list });
   }
 
@@ -97,8 +99,9 @@ export default class TODOList extends JSONApp {
    *   List {string} e.g. "TODO" or "shopping"
    *   Task {string}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async remove(args, client) {
+  async remove(args, client, context) {
     let task = args.Task;
     let list = args.List;
     assert(task, "Need task to add");
@@ -111,7 +114,7 @@ export default class TODOList extends JSONApp {
       [ "task", "=", task ],
     ]).exec();
 
-    client.addResult(await this.getTasks(list), this.dataTypes.List);
+    context.addResult(await this.getTasks(list), this.dataTypes.List);
     return this.getResponse("removed", { task, list });
   }
 }

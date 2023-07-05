@@ -85,18 +85,19 @@ export default class BibleApp extends JSONApp {
 
   /**
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  home(args, client) {
-    client.say(getTranslation("welcome", client.lang));
+  home(args, client, context) {
+    client.say(getTranslation("welcome", context.lang));
   }
 
-  help(args, client) {
-    client.say(getTranslation("help", client.lang));
+  help(args, client, context) {
+    client.say(getTranslation("help", context.lang));
     pause(1000, client);
-    this.home(args, client);
+    this.home(args, client, context);
   }
 
-  fallback(args, client) {
+  fallback(args, client, context) {
     throw new UserError("misunderstood_intent");
   }
 
@@ -105,9 +106,10 @@ export default class BibleApp extends JSONApp {
    *    EnumDataTypes are already translated to the ID.
    *    NumberDataTypes are already JS numbers.
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  readBibleVerse(args, client) {
-    var lang = args.Language || client.lang;
+  readBibleVerse(args, client, context) {
+    var lang = args.Language || context.lang;
     var { bookCode, chapter, chapterVerses } = getChapter(args, client, lang);
     var verse = parseInt(args.Verse);
     console.log(`Bible verse ${bookCode} ${chapter}:${verse} in ${lang}`);
@@ -124,13 +126,13 @@ export default class BibleApp extends JSONApp {
                     lang, args, client);
   }
 
-  readBibleVerseRange(args, client) {
+  readBibleVerseRange(args, client, context) {
     if (!args.VerseTo) {
       args.Verse = args.VerseFrom;
-      return this.readBibleVerse(args, client);
+      return this.readBibleVerse(args, client, context);
     }
-    var lang = args.Language || client.lang;
-    var { bookCode, chapter, chapterVerses } = getChapter(args, client);
+    var lang = args.Language || context.lang;
+    var { bookCode, chapter, chapterVerses } = getChapter(args, client, context);
     var verseFrom = parseInt(args.VerseFrom);
     var verseTo = parseInt(args.VerseTo);
     console.log(`Bible verse ${bookCode} ${chapter}:${verseFrom}-${verseTo} in ${lang}`);
@@ -157,27 +159,27 @@ export default class BibleApp extends JSONApp {
                             lang, args, client);
   }
 
-  readBibleChapter(args, client) {
-    var lang = args.Language || client.lang;
-    let { bookCode, chapter, chapterVerses } = getChapter(args, client);
+  readBibleChapter(args, client, context) {
+    var lang = args.Language || context.lang;
+    let { bookCode, chapter, chapterVerses } = getChapter(args, client, context);
     console.log(`Bible chapter ${bookCode} ${chapter} in ${lang}`);
 
     startChapter(bookCode, chapter, chapterVerses, lang, args, client);
   }
 
-  next(args, client) {
-    if (typeof(resumeAudio) == "function" && resumeAudio(args, client)) {
+  next(args, client, context) {
+    if (typeof(resumeAudio) == "function" && resumeAudio(args, client, context)) {
       return;
     }
-    this.nextChapter(args, client);
+    this.nextChapter(args, client, context);
   }
 
-  previous(args, client) {
-    this.previousChapter(args, client);
+  previous(args, client, context) {
+    this.previousChapter(args, client, context);
   }
 
-  nextChapter(args, client) {
-    var lang = client.lang;
+  nextChapter(args, client, context) {
+    var lang = context.lang;
     var session = client.userSession;
     var bookCode = session.get("book");
     var chapter = parseInt(session.get("chapter"));
@@ -198,8 +200,8 @@ export default class BibleApp extends JSONApp {
     startChapter(bookCode, chapter, null, lang, args, client);
   }
 
-  previousChapter(args, client) {
-    var lang = client.lang;
+  previousChapter(args, client, context) {
+    var lang = context.lang;
     var session = client.userSession;
     var bookCode = session.get("book");
     var chapter = parseInt(session.get("chapter"));
@@ -220,11 +222,11 @@ export default class BibleApp extends JSONApp {
     startChapter(bookCode, chapter, null, lang, args, client);
   }
 
-  playLatestEpisode(args, client) {
+  playLatestEpisode(args, client, context) {
     // TODO bible reading: save chapter and continue there or with the next one
   }
 
-  more(args, client) {
+  more(args, client, context) {
     return "";
   }
 
@@ -233,8 +235,8 @@ export default class BibleApp extends JSONApp {
    *   Person {Details}  containing multiple `Person` objects
    * }
    */
-  openPerson(args, client) {
-    var lang = client.lang;
+  openPerson(args, client, context) {
+    var lang = context.lang;
     var persons = args.Person.all;
     if (persons.length > 1) {
       client.say(getTranslation("person_multiple", lang,
@@ -251,8 +253,8 @@ export default class BibleApp extends JSONApp {
    *   Place {Details}  containing multiple `Place` objects
    * }
    */
-  openPlace(args, client) {
-    var lang = client.lang;
+  openPlace(args, client, context) {
+    var lang = context.lang;
     var places = args.Place.all;
     if (places.length > 1) {
       client.say(getTranslation("place_multiple", lang,
@@ -264,8 +266,8 @@ export default class BibleApp extends JSONApp {
     }
   }
 
-  error(exception, client) {
-    var lang = client.lang;
+  error(exception, client, context) {
+    var lang = context.lang;
     if (exception instanceof UserError) {
       var msg = exception.getTranslatedMessage(lang);
       console.log("UserError: " + exception.msgID + " - " + msg);
@@ -371,8 +373,8 @@ function getBibleBookName(bookCode, lang) {
  *   {Array of {string}} chapterVerses,
  * }
  */
-function getChapter(args, client) {
-  let lang = client.lang;
+function getChapter(args, client, context) {
+  let lang = context.lang;
   let bookCode = args.BibleBook;
   let chapter = args.Chapter;
   if (!chapter) {

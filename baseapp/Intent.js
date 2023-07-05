@@ -167,9 +167,10 @@ export class Intent {
    *   Before calling this function, the enum variables will already be translated
    *   from the translated word that the user spoke to their value.
    * @param clientAPI {ClientAPI}
+   * @param context {Context}
    * @returns {string} Text to say to the end user. Needs to be translated.
    */
-  async run(args, clientAPI) {
+  async run(args, clientAPI, context) {
     let intent = this;
     // validate
     for (let argID in args) {
@@ -195,7 +196,7 @@ export class Intent {
       if (!func || typeof(func) != "function") {
         throw new Error("No implementation for " + functionName + " found in app " + this.app.id);
       }
-      return func.call(this.app, args, clientAPI);
+      return func.call(this.app, args, clientAPI, context);
     } catch (ex) {
       console.error(ex);
       return ex.message || ex + "";

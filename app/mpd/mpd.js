@@ -75,8 +75,9 @@ export default class MPD extends JSONApp {
    * @param args {object}
    *    SongAndArtist {Song}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async playSongAndArtist(args, client) {
+  async playSongAndArtist(args, client, context) {
     let song = args.SongAndArtist;
 
     let mpc = await this.connect();
@@ -87,7 +88,7 @@ export default class MPD extends JSONApp {
 
     let artistType = this.dataTypes.Artist;
     if (song.artist) {
-      client.addResult(song.artist, artistType);
+      context.addResult(song.artist, artistType);
     }
   }
 
@@ -96,6 +97,7 @@ export default class MPD extends JSONApp {
    * @param args {object}
    *    Song {Song}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
   async playSongTitle(args, client) {
     let song = args.Song;
@@ -114,7 +116,7 @@ export default class MPD extends JSONApp {
     // Add Artist as Intent result for subsequent commands
     // (Song is already in the context, as input argument.)
     let artistType = this.dataTypes.Artist;
-    //client.addResult(song.artist, artistType);
+    //context.addResult(song.artist, artistType);
     // For cover songs
     try {
       let songMPD = await mpc.status.currentSong();
@@ -122,7 +124,7 @@ export default class MPD extends JSONApp {
         let artistName = songMPD.artist;
         let artist = artistType.valueForTerm(artistName);
         if (artist) {
-          client.addResult(artist, artistType);
+          context.addResult(artist, artistType);
         }
       }
     } catch (ex) {

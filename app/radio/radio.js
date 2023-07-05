@@ -44,12 +44,13 @@ export default class Radio extends JSONApp {
    * @param args {object}
    *    Station {Station}
    * @param client {ClientAPI}
+   * @param context {Context}
    * @returns {URL}  The streaming MP3
    */
-  async playStation(args, client) {
+  async playStation(args, client, context) {
     assert(args.Station && args.Station instanceof Station, "Need station");
     // if (!args.Station) { throw this.error("not-found-station"); }
-    return await this._playStation(args.Station, client);
+    return await this._playStation(args.Station, client, context);
   }
 
   /**
@@ -57,9 +58,10 @@ export default class Radio extends JSONApp {
    * @param args {object}
    *    Genre {Genre}
    * @param client {ClientAPI}
+   * @param context {Context}
    * @returns {URL}  The streaming MP3
    */
-  async playGenre(args, client) {
+  async playGenre(args, client, context) {
     assert(args.Genre && args.Genre instanceof Genre, "Need genre");
     // if (!genre) { throw this.error("not-found-genre"); }
     let stations = args.Genre.stations;
@@ -73,9 +75,9 @@ export default class Radio extends JSONApp {
 
     // Add the chosen station as result
     let stationType = this.dataTypes.Station;
-    client.addResult(station, stationType);
+    context.addResult(station, stationType);
 
-    return await this._playStation(station, client);
+    return await this._playStation(station, client, context);
   }
 
   /**
@@ -83,13 +85,14 @@ export default class Radio extends JSONApp {
    * Starts playing the station
    * @param station {Station}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async _playStation(station, client) {
+  async _playStation(station, client, context) {
     if (station.stream) {
-      await client.player.playAudio(station.stream, this, () => this.next({}, client));
+      await client.player.playAudio(station.stream, this, () => this.next({}, client, context));
       return;
     }
-    return await this._playM3U(station.m3u, client);
+    return await this._playM3U(station.m3u, client, context);
   }
 
   /**
@@ -102,11 +105,11 @@ export default class Radio extends JSONApp {
    * @param m3u {URL}
    * @param client {ClientAPI}
    */
-  async _playM3U(m3u, client) {
+  async _playM3U(m3u, client, context) {
     console.log("Fetching " + m3u);
     let headers = {
       "Accept-Encoding": "gzip, deflate",
-      "Accept-Language": client.lang + ",en-US",
+      "Accept-Language": context.lang + ",en-US",
       //"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
       //"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/76.0 Pia/0.1",
     };
@@ -118,7 +121,7 @@ export default class Radio extends JSONApp {
     }
     await client.player.playAudio(url, this, () => {
       // called when the stream ends
-      this.next({}, client);
+      this.next({}, client, context);
     });
   }
 
@@ -126,8 +129,9 @@ export default class Radio extends JSONApp {
    * Command
    * @param args {null}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async stop(args, client) {
+  async stop(args, client, context) {
     await client.player.stop();
   }
 
@@ -135,8 +139,9 @@ export default class Radio extends JSONApp {
    * Command
    * @param args {null}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async next(args, client) {
+  async next(args, client, context) {
     let session = client.userSession;
     let stations = session.stations;
     if (!stations) {
@@ -150,15 +155,16 @@ export default class Radio extends JSONApp {
       pos++;
       station = stations[pos >= stations.length ? 0 : pos];
     }
-    return await this._playStation(station, client);
+    return await this._playStation(station, client, context);
   }
 
   /**
    * Command
    * @param args {null}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async previous(args, client) {
+  async previous(args, client, context) {
     let session = client.userSession;
     let stations = session.stations;
     if (!stations) {
@@ -171,7 +177,7 @@ export default class Radio extends JSONApp {
       pos--;
       station = stations[pos < 0 ? stations.length - 1 : pos];
     }
-    return await this._playStation(station, client);
+    return await this._playStation(station, client, context);
   }
 
   /**
@@ -179,8 +185,9 @@ export default class Radio extends JSONApp {
    * @param args {object}
    *    Volume {Number} 0..100
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async volume(args, client) {
+  async volume(args, client, context) {
     let volume = args.Volume;
     assert(typeof(volume) == "number", "Need new volume as number");
     // Range 0..100
@@ -199,8 +206,9 @@ export default class Radio extends JSONApp {
    * @param args {object}
    *    RelativeVolume {Number}  -100..100
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async relativeVolume(args, client) {
+  async relativeVolume(args, client, context) {
     let relativeVolume = args.RelativeVolume;
     assert(typeof(relativeVolume) == "number", "Need relative volume");
     if (relativeVolume > 100) {

@@ -10,9 +10,11 @@ const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * Takes 160 ms for 7000 recipes
+ * @param dataDir {string} local file system path, ending with "/"
+ * @param lang {string} 2-letter ISO-code
  * @returns ArrayColl<Recipe>
  */
-export async function loadRecipes(dataDir) {
+export async function loadRecipes(dataDir, lang) {
   console.time("Loading recipes");
   let allRecipes = new ArrayColl();
   let response = await readFileAsync(dataDir + "recipes.csv", "utf8");

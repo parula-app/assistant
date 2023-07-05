@@ -16,7 +16,7 @@ export default class RecipeApp extends JSONApp {
   async load(lang) {
     await super.load(lang);
     let mealDataType = this.dataTypes.Meal;
-    this._recipes = await loadRecipes(this.dataDir);
+    this._recipes = await loadRecipes(this.dataDir, lang);
     for (let recipe of this._recipes) {
       mealDataType.addValue(recipe.name, recipe);
     }

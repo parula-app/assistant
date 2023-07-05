@@ -80,7 +80,7 @@ export default class IntentParser {
     let context = this.clientAPI.newCommand(intent, args);
 
     // Start the app
-    let result = await intent.run(args, this.clientAPI);
+    let result = await intent.run(args, this.clientAPI, context);
 
     // Broadcast the result, for UI
     context.resultText = result;

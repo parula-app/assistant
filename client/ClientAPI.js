@@ -45,6 +45,7 @@ export class ClientAPI {
   newCommand(intent, args) {
     this._sentences = [];
     let context = new Context(intent, args);
+    context.lang = this.lang;
     this._context.push(context);
     return context;
   }
@@ -63,7 +64,7 @@ export class ClientAPI {
    * @returns {string} 2-letter ISO language code
    */
   get lang() {
-    return this.client.lang;
+    return this.context.lang;
   }
 
   /**

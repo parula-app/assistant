@@ -13,20 +13,22 @@ export default class Clock extends JSONApp {
    * Command
    * @param args {null}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async time(args, client) {
+  async time(args, client, context) {
     const format = { hour: 'numeric', minute: 'numeric' };
-    return this.tr("time", { time: new Date().toLocaleTimeString(client.lang, format).replace(":", " ") });
+    return this.tr("time", { time: new Date().toLocaleTimeString(context.lang, format).replace(":", " ") });
   }
 
   /**
    * Command
    * @param args {null}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async date(args, client) {
+  async date(args, client, context) {
     const format = { weekday: 'long', month: 'long', day: 'numeric' };
-    return this.tr("date", { date: new Date().toLocaleDateString(client.lang, format) });
+    return this.tr("date", { date: new Date().toLocaleDateString(context.lang, format) });
   }
 
   /**
@@ -34,10 +36,11 @@ export default class Clock extends JSONApp {
    * @param args {obj}
    *   Time {Date}
    * @param client {ClientAPI}
+   * @param context {Context}
    */
-  async testTimeParse(args, client) {
+  async testTimeParse(args, client, context) {
     let time = args.Time;
     const format = { year: time.getUTCFullYear() == new Date().getUTCFullYear() ? undefined: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'long', month: 'long', day: 'numeric' };
-    return time.toLocaleTimeString(client.lang, format).replace(":", " ");
+    return time.toLocaleTimeString(context.lang, format).replace(":", " ");
   }
 }
